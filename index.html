@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/CSS/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="/JS/script.js" defer></script>
     <title>Main Page</title>
 </head>
 <body>
@@ -16,12 +17,9 @@
                     <input type="text" placeholder="Search...">
                     <i class="fa fa-search"></i>
                 </div>
-                <div class="button"> 
-                    <button class="btn">Login/Register</button>
-                </div>
+                <button class="btn" id="openLoginBtn">Login/Register</button>
             </div>
             <div class="break"></div>
-            </div>
             <ul class="nav-links">
                 <li><a href="/index.html">Home</a></li>
                 <li><a href="/HTML/Products.html">Products</a></li>
@@ -31,14 +29,45 @@
         </nav>
     </header>
     <footer>
-        <table>
-            <thead>
-
-            </thead>
-            <tr>
-                <td>&copy; 2026 Quantum Gear. All rights reserved.</td>
-            </tr>
-        </table>
+        <p>&copy; 2026 Quantum Gear. All rights reserved.</p>
     </footer>
+    <section class="login-section" id="loginSection">
+        <div class="container" id="authContainer">
+            <button class="close-btn" id="closeLoginBtn" aria-label="Close and return to home">&times;</button>
+            <div class="form-container sign-up">
+                <form class="login-form">
+                    <h1>Create Account</h1>
+                    <input type="text" placeholder="Username">
+                    <input type="email" placeholder="Email">
+                    <input type="password" placeholder="Password">
+                    <button type="submit">Sign Up</button>
+                </form>
+            </div>
+            <div class="form-container sign-in">
+                <form class="login-form">
+                    <h1>Sign In</h1>
+                    <input type="text" placeholder="Username">
+                    <input type="email" placeholder="Email">
+                    <input type="password" placeholder="Password">
+                    <a href="#">Forgot Password?</a>
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+            <div class="toggle-container">
+                <div class="toggle">
+                    <div class="toggle-panel toggle-left">
+                        <h1>Already have an account?</h1>
+                        <p>Login to pick up right where you left off.</p>
+                        <button class="hidden-btn" id="loginBtn">Login</button>
+                    </div>
+                    <div class="toggle-panel toggle-right">
+                        <h1>Create Account</h1>
+                        <p>Sign up to create an account</p>
+                        <button class="hidden-btn" id="registerBtn">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </body>
 </html>
