@@ -1,20 +1,20 @@
 <?php
-// Handles the "Create Account" form on login.html.
+// Handles the "Create Account" form on index.html.
 // Expects POST fields: username, email, password
-// Success: back to login.html?register=success
-// Failure: back to login.html?register_error=<code>
+// Success: back to index.html?register=success
+// Failure: back to index.html?register_error=<code>
 
 require_once __DIR__ . "/../db_connect.php";
 
-function backToLogin($query)
+function backToHome($query)
 {
-    header("Location: ../../login.html?" . $query);
+    header("Location: ../../index.html?" . $query);
     exit;
 }
 
 // Page control: only accept the form being submitted, not someone typing the URL directly
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: ../../login.html");
+    header("Location: ../../index.html");
     exit;
 }
 
@@ -24,16 +24,16 @@ $password = $_POST['password'] ?? '';
 
 // Check again on the server: browser/JS validation can be bypassed
 if ($username === '' || $email === '' || $password === '') {
-    backToLogin("register_error=missing");
+    backToHome("register_error=missing");
 }
 if (!preg_match('/^[A-Za-z0-9_]{3,50}$/', $username)) {
-    backToLogin("register_error=username");
+    backToHome("register_error=username");
 }
 if (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email) > 100) {
-    backToLogin("register_error=email");
+    backToHome("register_error=email");
 }
 if (strlen($password) < 8) {
-    backToLogin("register_error=password");
+    backToHome("register_error=password");
 }
 
 // Is the username or email already registered? 
@@ -45,7 +45,7 @@ $alreadyTaken = mysqli_stmt_num_rows($stmt) > 0;
 mysqli_stmt_close($stmt);
 
 if ($alreadyTaken) {
-    backToLogin("register_error=taken");
+    backToHome("register_error=taken");
 }
 
 // Never store the real password, only a one-way hash of it 
@@ -57,4 +57,4 @@ mysqli_stmt_execute($stmt);
 mysqli_stmt_close($stmt);
 mysqli_close($conn);
 
-backToLogin("register=success");
+backToHome("register=success");

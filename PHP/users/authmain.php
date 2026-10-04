@@ -1,16 +1,10 @@
 <?php
-// Handles the "Sign In" form on login.html.
+// Handles the "Sign In" form on index.html.
 // Expects POST fields: login (username or email), password
 // Success: starts a session, back to index.html?login=success
-// Failure: back to login.html?login_error=<code>
+// Failure: back to index.html?login_error=<code>
 
 require_once __DIR__ . "/../db_connect.php";
-
-function backToLogin($query)
-{
-    header("Location: ../../login.html?" . $query);
-    exit;
-}
 
 function backToHome($query)
 {
@@ -20,7 +14,7 @@ function backToHome($query)
 
 // Page control: only accept the form being submitted, not someone typing the URL directly
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: ../../login.html");
+    header("Location: ../../index.html");
     exit;
 }
 
@@ -28,7 +22,7 @@ $login = trim($_POST['login'] ?? '');
 $password = $_POST['password'] ?? '';
 
 if ($login === '' || $password === '') {
-    backToLogin("login_error=missing");
+    backToHome("login_error=missing");
 }
 
 // Is there an account with this username or email?
@@ -43,7 +37,7 @@ mysqli_close($conn);
 // Same error for "no such user" and "wrong password",
 // so the form can't be used to find out which usernames are registered
 if (!$user || !password_verify($password, $user['password_hash'])) {
-    backToLogin("login_error=invalid");
+    backToHome("login_error=invalid");
 }
 
 // Logged in: give them a fresh session id, then remember who they are
