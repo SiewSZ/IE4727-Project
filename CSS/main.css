@@ -1248,6 +1248,12 @@ footer {
     box-shadow: 0 0 25px #38bdf8;
 }
 
+/* Login/Register is a link to login.html, so drop the default link underline */
+a.btn {
+    display: inline-block;
+    text-decoration: none;
+}
+
 /* Navigation Links Style */
 nav {
     width: 100%;
@@ -1563,6 +1569,17 @@ nav {
     border-radius: 8px;
     width: 100%;
     outline: none;
+}
+
+.login-section p.form-message {
+    color: #dc2626;
+    font-size: 0.85rem;
+    margin: 4px 0 0;
+    min-height: 1.2em;
+}
+
+.login-section p.form-message.success {
+    color: #16a34a;
 }
 
 .form-container {
