@@ -5,6 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginBtn = document.getElementById("loginBtn");
     const closeBtn = document.getElementById("closeLoginBtn");
     const openLoginBtn = document.getElementById("openLoginBtn");
+    const footerSignInBtn = document.getElementById("footerSignInBtn");
+    const footerSignUpBtn = document.getElementById("footerSignUpBtn");
+
+    if (!loginSection) return;
 
     const closeLoginModal = () => {
         loginSection.classList.remove("active");
@@ -12,10 +16,28 @@ document.addEventListener("DOMContentLoaded", () => {
         authContainer.classList.remove("active");
     };
 
-    openLoginBtn.addEventListener("click", () => {
+    const openLoginModal = () => {
         loginSection.classList.add("active");
         document.body.classList.add("login-active");
-    });
+    };
+
+    openLoginBtn.addEventListener("click", openLoginModal);
+
+    if (footerSignInBtn) {
+        footerSignInBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            authContainer.classList.remove("active");
+            openLoginModal();
+        });
+    }
+
+    if (footerSignUpBtn) {
+        footerSignUpBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            authContainer.classList.add("active");
+            openLoginModal();
+        });
+    }
 
     registerBtn.addEventListener("click", () => {
         authContainer.classList.add("active");

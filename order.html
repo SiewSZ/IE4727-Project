@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="/JS/menu.js" defer></script>
     <script src="/JS/login.js" defer></script>
-    <script src="/JS/carousel.js" defer></script>
-    <title>Main Page</title>
+    <script src="/JS/order.js" defer></script>
+    <title>Shopping Cart</title>
 </head>
 <body>
     <header>
@@ -78,18 +78,42 @@
             </ul>
         </nav>
     </header>
-    <main>
-        <section class="carousel" id="heroCarousel" aria-roledescription="carousel">
-            <div class="carousel-track">
-                <img src="/Images/carousel/nvidia.jpg" alt="NVIDIA promotion" class="carousel-slide">
-                <img src="/Images/carousel/rtx5090.jpg" alt="RTX 5090 promotion" class="carousel-slide">
-            </div>
-            <div class="carousel-controls">
-                <button class="carousel-btn" id="carouselPrev" aria-label="Previous slide"><i class="fa-solid fa-chevron-left"></i></button>
-                <span class="carousel-counter" id="carouselCounter">1/2</span>
-                <button class="carousel-btn" id="carouselNext" aria-label="Next slide"><i class="fa-solid fa-chevron-right"></i></button>
-            </div>
-        </section>
+    <main class="cart-page">
+        <h2 class="cart-title"><i class="fa-solid fa-bag-shopping"></i> Shopping Cart</h2>
+        <div class="cart-layout">
+            <section class="cart-items" id="cartItems"></section>
+            <aside class="cart-side">
+                <div class="cart-panel">
+                    <h3>Order Summary</h3>
+                    <div class="summary-row">
+                        <span>SubTotal</span>
+                        <span id="summarySubtotal">$0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Discount</span>
+                        <span id="summaryDiscount">$0.00</span>
+                    </div>
+                    <div class="summary-row summary-total">
+                        <span>Total</span>
+                        <span id="summaryTotal">$0.00</span>
+                    </div>
+                    <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
+                </div>
+                <div class="cart-panel">
+                    <h3>Delivery Address</h3>
+                    <div class="address-list" id="addressList"></div>
+                    <form class="address-form" id="addressForm" hidden>
+                        <input type="text" name="label" placeholder="Label (e.g. Home)" required>
+                        <input type="text" name="address" placeholder="Full address" required>
+                        <div class="address-form-actions">
+                            <button type="button" class="address-cancel" id="cancelAddressBtn">Cancel</button>
+                            <button type="submit" class="address-save">Save</button>
+                        </div>
+                    </form>
+                    <button class="add-address-btn" id="addAddressBtn">Add New Address</button>
+                </div>
+            </aside>
+        </div>
     </main>
     <footer>
         <div class="footer-contact">
