@@ -1,4 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // Brand marquee: duplicate the logo list so the CSS animation loops seamlessly
+    const brandTrack = document.querySelector("#brandMarquee .brand-track");
+    if (brandTrack) {
+        const copy = brandTrack.querySelector(".brand-list").cloneNode(true);
+        copy.setAttribute("aria-hidden", "true");
+        copy.querySelectorAll("img").forEach((img) => (img.alt = ""));
+        brandTrack.appendChild(copy);
+    }
+
     const carousel = document.getElementById("heroCarousel");
     if (!carousel) return;
 

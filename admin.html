@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/CSS/global.css">
+    <link rel="stylesheet" href="/CSS/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="/JS/menu.js" defer></script>
+    <script src="/JS/admin.js" defer></script>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-top">
+                <img src="/Images/logo.png" alt="Logo" class="logo">
+                <div class="search-box">
+                    <input type="text" placeholder="Search...">
+                    <i class="fa fa-search"></i>
+                </div>
+                <a href="/order.html" class="cart-icon" aria-label="Cart">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <a href="/login.html" class="btn" id="openLoginBtn">Login/Register</a>
+            </div>
+            <div class="break"></div>
+            <ul class="nav-links">
+                <li class="menu-item">
+                    <button class="menu-toggle" id="menuToggle" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa-solid fa-bars"></i> Menu <i class="fa-solid fa-chevron-down chevron"></i>
+                    </button>
+                    <div class="mega-menu" id="megaMenu">
+                        <div class="mega-menu-col mega-menu-quick">
+                            <ul>
+                                <li><a href="#"><i class="fa-solid fa-bolt"></i> Shell Shocker</a></li>
+                                <li><a href="#"><i class="fa-regular fa-envelope"></i> Email Deals</a></li>
+                                <li><a href="#"><i class="fa-solid fa-tags"></i> Clearance Deals</a></li>
+                                <li><a href="#"><i class="fa-solid fa-rotate"></i> Trade In</a></li>
+                                <li><a href="#"><i class="fa-solid fa-credit-card"></i> Store Credit Card</a></li>
+                            </ul>
+                            <p class="mega-menu-heading">Help me build&hellip;</p>
+                            <ul class="mega-menu-plain">
+                                <li><a href="#">Desktop PC with PC Builder</a></li>
+                                <li><a href="#">Server</a></li>
+                                <li><a href="#">Workstation</a></li>
+                                <li><a href="#">NAS</a></li>
+                                <li><a href="#">Network</a></li>
+                                <li><a href="#">Game Room</a></li>
+                            </ul>
+                        </div>
+                        <div class="mega-menu-col mega-menu-products">
+                            <p class="mega-menu-heading">All Products</p>
+                            <ul>
+                                <li><a href="#"><span><i class="fa-solid fa-memory"></i> Components &amp; Storage</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="#"><span><i class="fa-solid fa-desktop"></i> Computer Systems</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="#"><span><i class="fa-solid fa-computer-mouse"></i> Computer Peripherals</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="#"><span><i class="fa-solid fa-server"></i> Server &amp; Components</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="#"><span><i class="fa-solid fa-microchip"></i> AI Hardware</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="#"><span><i class="fa-solid fa-blender"></i> Appliances</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="#"><span><i class="fa-solid fa-headphones"></i> Electronics</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="#"><span><i class="fa-solid fa-gamepad"></i> Gaming &amp; VR</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="#"><span><i class="fa-solid fa-wifi"></i> Networking</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="#"><span><i class="fa-solid fa-house-signal"></i> Smart Home &amp; Security</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="#"><span><i class="fa-solid fa-print"></i> Office Solutions</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="#"><span><i class="fa-solid fa-gears"></i> Software &amp; Services</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="#"><span><i class="fa-solid fa-cube"></i> 3D Printing</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="#"><span><i class="fa-solid fa-car"></i> Automotive &amp; Tools</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/shop.html">Shop</a></li>
+                <li><a href="/HTML/ContactUs.html">Contact Us</a></li>
+                <li><a href="/HTML/HotDeals.html">Hot Deals</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="admin-page">
+        <div class="admin-title">
+            <h1><i class="fa-solid fa-gauge-high"></i> Admin Dashboard</h1>
+            <p>Manage inventory and customer orders</p>
+        </div>
+
+        <section class="admin-stats" aria-label="Store overview">
+            <div class="stat-card">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <div>
+                    <p class="stat-label">Products</p>
+                    <p class="stat-value">12</p>
+                </div>
+            </div>
+            <div class="stat-card warn">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <div>
+                    <p class="stat-label">Low / Out of Stock</p>
+                    <p class="stat-value">3</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fa-solid fa-receipt"></i>
+                <div>
+                    <p class="stat-label">Pending Orders</p>
+                    <p class="stat-value">2</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fa-solid fa-sack-dollar"></i>
+                <div>
+                    <p class="stat-label">Revenue (This Month)</p>
+                    <p class="stat-value">$9,872.00</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="admin-tabs" role="tablist">
+            <button class="admin-tab active" role="tab" aria-selected="true" aria-controls="inventoryPanel" data-tab="inventoryPanel">
+                <i class="fa-solid fa-warehouse"></i> Inventory
+            </button>
+            <button class="admin-tab" role="tab" aria-selected="false" aria-controls="ordersPanel" data-tab="ordersPanel">
+                <i class="fa-solid fa-truck-fast"></i> Orders
+            </button>
+        </div>
+
+        <!-- Inventory -->
+        <section class="admin-panel" id="inventoryPanel" role="tabpanel">
+            <div class="admin-toolbar">
+                <div class="admin-search">
+                    <i class="fa fa-search"></i>
+                    <input type="text" placeholder="Search products..." aria-label="Search products">
+                </div>
+                <select aria-label="Filter by category">
+                    <option value="">All categories</option>
+                    <option>Components &amp; Storage</option>
+                    <option>Computer Systems</option>
+                    <option>Computer Peripherals</option>
+                    <option>Gaming &amp; VR</option>
+                    <option>Networking</option>
+                </select>
+                <button class="admin-primary-btn" id="addProductBtn">
+                    <i class="fa-solid fa-plus"></i> Add Product
+                </button>
+            </div>
+
+            <form class="admin-form" id="productForm" method="post" action="#" hidden>
+                <h3 id="productFormTitle">Add Product</h3>
+                <div class="admin-form-grid">
+                    <label class="span-2">Product Name
+                        <input type="text" name="name" required maxlength="150">
+                    </label>
+                    <label>Brand
+                        <input type="text" name="brand" required maxlength="50">
+                    </label>
+                    <label>Category
+                        <select name="category" required>
+                            <option value="">Select a category</option>
+                            <option>Components &amp; Storage</option>
+                            <option>Computer Systems</option>
+                            <option>Computer Peripherals</option>
+                            <option>Gaming &amp; VR</option>
+                            <option>Networking</option>
+                        </select>
+                    </label>
+                    <label>Price ($)
+                        <input type="number" name="price" required min="0" step="0.01">
+                    </label>
+                    <label>Original Price ($) <small>leave blank if not on sale</small>
+                        <input type="number" name="old_price" min="0" step="0.01">
+                    </label>
+                    <label>Stock
+                        <input type="number" name="stock" required min="0" step="1">
+                    </label>
+                    <label>Image
+                        <input type="file" name="image" accept="image/*">
+                    </label>
+                    <label class="span-2">Description
+                        <textarea name="description" rows="3"></textarea>
+                    </label>
+                    <label class="admin-check span-2">
+                        <input type="checkbox" name="is_active" checked>
+                        Show this product in the shop
+                    </label>
+                </div>
+                <div class="admin-form-actions">
+                    <button type="button" class="admin-secondary-btn" id="cancelProductBtn">Cancel</button>
+                    <button type="submit" class="admin-primary-btn">Save Product</button>
+                </div>
+            </form>
+
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Status</th>
+                            <th><span class="visually-hidden">Actions</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="admin-product">
+                                    <img src="/Images/carousel/rtx5090.jpg" alt="">
+                                    <div><strong>ASUS ROG Astral GeForce RTX 5090</strong><small>ASUS</small></div>
+                                </div>
+                            </td>
+                            <td>Components &amp; Storage</td>
+                            <td>$3,899.00<s>$4,199.00</s></td>
+                            <td><span class="stock-pill low">5</span></td>
+                            <td><span class="status-pill active">Active</span></td>
+                            <td class="admin-actions">
+                                <button class="icon-btn" data-action="edit" aria-label="Edit"><i class="fa-solid fa-pen"></i></button>
+                                <button class="icon-btn" data-action="hide" aria-label="Hide from shop"><i class="fa-solid fa-eye-slash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="admin-product">
+                                    <span class="admin-product-icon"><i class="fa-solid fa-memory"></i></span>
+                                    <div><strong>Samsung 990 PRO 2TB NVMe SSD</strong><small>Samsung</small></div>
+                                </div>
+                            </td>
+                            <td>Components &amp; Storage</td>
+                            <td>$289.00<s>$339.00</s></td>
+                            <td><span class="stock-pill">25</span></td>
+                            <td><span class="status-pill active">Active</span></td>
+                            <td class="admin-actions">
+                                <button class="icon-btn" data-action="edit" aria-label="Edit"><i class="fa-solid fa-pen"></i></button>
+                                <button class="icon-btn" data-action="hide" aria-label="Hide from shop"><i class="fa-solid fa-eye-slash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="admin-product">
+                                    <span class="admin-product-icon"><i class="fa-solid fa-desktop"></i></span>
+                                    <div><strong>MSI MAG Infinite Gaming Desktop</strong><small>MSI</small></div>
+                                </div>
+                            </td>
+                            <td>Computer Systems</td>
+                            <td>$2,399.00</td>
+                            <td><span class="stock-pill low">3</span></td>
+                            <td><span class="status-pill active">Active</span></td>
+                            <td class="admin-actions">
+                                <button class="icon-btn" data-action="edit" aria-label="Edit"><i class="fa-solid fa-pen"></i></button>
+                                <button class="icon-btn" data-action="hide" aria-label="Hide from shop"><i class="fa-solid fa-eye-slash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="admin-product">
+                                    <span class="admin-product-icon"><i class="fa-solid fa-computer-mouse"></i></span>
+                                    <div><strong>Logitech G Pro X Superlight 2</strong><small>Logitech</small></div>
+                                </div>
+                            </td>
+                            <td>Computer Peripherals</td>
+                            <td>$219.00<s>$249.00</s></td>
+                            <td><span class="stock-pill">40</span></td>
+                            <td><span class="status-pill active">Active</span></td>
+                            <td class="admin-actions">
+                                <button class="icon-btn" data-action="edit" aria-label="Edit"><i class="fa-solid fa-pen"></i></button>
+                                <button class="icon-btn" data-action="hide" aria-label="Hide from shop"><i class="fa-solid fa-eye-slash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="admin-product">
+                                    <span class="admin-product-icon"><i class="fa-solid fa-gamepad"></i></span>
+                                    <div><strong>Meta Quest 3 128GB</strong><small>Meta</small></div>
+                                </div>
+                            </td>
+                            <td>Gaming &amp; VR</td>
+                            <td>$749.00</td>
+                            <td><span class="stock-pill out">0</span></td>
+                            <td><span class="status-pill hidden-pill">Hidden</span></td>
+                            <td class="admin-actions">
+                                <button class="icon-btn" data-action="edit" aria-label="Edit"><i class="fa-solid fa-pen"></i></button>
+                                <button class="icon-btn" data-action="hide" aria-label="Show in shop"><i class="fa-solid fa-eye"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="admin-product">
+                                    <span class="admin-product-icon"><i class="fa-solid fa-wifi"></i></span>
+                                    <div><strong>TP-Link Archer BE800 Wi-Fi 7 Router</strong><small>TP-Link</small></div>
+                                </div>
+                            </td>
+                            <td>Networking</td>
+                            <td>$899.00<s>$999.00</s></td>
+                            <td><span class="stock-pill">10</span></td>
+                            <td><span class="status-pill active">Active</span></td>
+                            <td class="admin-actions">
+                                <button class="icon-btn" data-action="edit" aria-label="Edit"><i class="fa-solid fa-pen"></i></button>
+                                <button class="icon-btn" data-action="hide" aria-label="Hide from shop"><i class="fa-solid fa-eye-slash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Orders -->
+        <section class="admin-panel" id="ordersPanel" role="tabpanel" hidden>
+            <div class="admin-toolbar">
+                <div class="admin-search">
+                    <i class="fa fa-search"></i>
+                    <input type="text" placeholder="Search by order # or customer..." aria-label="Search orders">
+                </div>
+                <select aria-label="Filter by status">
+                    <option value="">All statuses</option>
+                    <option>Pending</option>
+                    <option>Processing</option>
+                    <option>Shipped</option>
+                    <option>Delivered</option>
+                    <option>Cancelled</option>
+                </select>
+            </div>
+
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Order</th>
+                            <th>Customer</th>
+                            <th>Date</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Update Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>#1024</strong></td>
+                            <td>Tan Wei Ming<small>weiming@example.com</small></td>
+                            <td>06 Oct 2026</td>
+                            <td>2</td>
+                            <td>$4,118.00</td>
+                            <td><span class="order-status pending">Pending</span></td>
+                            <td>
+                                <form class="status-form" method="post" action="#">
+                                    <select name="status" aria-label="New status for order 1024">
+                                        <option selected>Pending</option>
+                                        <option>Processing</option>
+                                        <option>Shipped</option>
+                                        <option>Delivered</option>
+                                        <option>Cancelled</option>
+                                    </select>
+                                    <button type="submit" class="admin-secondary-btn">Update</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>#1023</strong></td>
+                            <td>Nur Aisyah<small>aisyah@example.com</small></td>
+                            <td>05 Oct 2026</td>
+                            <td>1</td>
+                            <td>$1,599.00</td>
+                            <td><span class="order-status processing">Processing</span></td>
+                            <td>
+                                <form class="status-form" method="post" action="#">
+                                    <select name="status" aria-label="New status for order 1023">
+                                        <option>Pending</option>
+                                        <option selected>Processing</option>
+                                        <option>Shipped</option>
+                                        <option>Delivered</option>
+                                        <option>Cancelled</option>
+                                    </select>
+                                    <button type="submit" class="admin-secondary-btn">Update</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>#1022</strong></td>
+                            <td>Rajesh Kumar<small>rajesh@example.com</small></td>
+                            <td>03 Oct 2026</td>
+                            <td>3</td>
+                            <td>$1,357.00</td>
+                            <td><span class="order-status shipped">Shipped</span></td>
+                            <td>
+                                <form class="status-form" method="post" action="#">
+                                    <select name="status" aria-label="New status for order 1022">
+                                        <option>Pending</option>
+                                        <option>Processing</option>
+                                        <option selected>Shipped</option>
+                                        <option>Delivered</option>
+                                        <option>Cancelled</option>
+                                    </select>
+                                    <button type="submit" class="admin-secondary-btn">Update</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>#1021</strong></td>
+                            <td>Emily Lim<small>emily@example.com</small></td>
+                            <td>30 Sep 2026</td>
+                            <td>1</td>
+                            <td>$2,799.00</td>
+                            <td><span class="order-status delivered">Delivered</span></td>
+                            <td>
+                                <form class="status-form" method="post" action="#">
+                                    <select name="status" aria-label="New status for order 1021">
+                                        <option>Pending</option>
+                                        <option>Processing</option>
+                                        <option>Shipped</option>
+                                        <option selected>Delivered</option>
+                                        <option>Cancelled</option>
+                                    </select>
+                                    <button type="submit" class="admin-secondary-btn">Update</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>#1020</strong></td>
+                            <td>Jason Ong<small>jason@example.com</small></td>
+                            <td>28 Sep 2026</td>
+                            <td>1</td>
+                            <td>$219.00</td>
+                            <td><span class="order-status cancelled">Cancelled</span></td>
+                            <td>
+                                <form class="status-form" method="post" action="#">
+                                    <select name="status" aria-label="New status for order 1020">
+                                        <option>Pending</option>
+                                        <option>Processing</option>
+                                        <option>Shipped</option>
+                                        <option>Delivered</option>
+                                        <option selected>Cancelled</option>
+                                    </select>
+                                    <button type="submit" class="admin-secondary-btn">Update</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div class="footer-contact">
+            <div class="footer-contact-item">
+                <i class="fa-solid fa-location-dot"></i>
+                <div>
+                    <h4>Visit Us</h4>
+                    <p>50 Nanyang Ave, Singapore</p>
+                </div>
+            </div>
+            <div class="footer-contact-item">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                    <h4>Call Us</h4>
+                    <p>+65 6123 4567</p>
+                </div>
+            </div>
+            <div class="footer-contact-item">
+                <i class="fa-regular fa-clock"></i>
+                <div>
+                    <h4>Working Hours</h4>
+                    <p>Mon - Sat: 10:00 AM - 7:00 PM</p>
+                </div>
+            </div>
+            <div class="footer-contact-item">
+                <i class="fa-regular fa-envelope"></i>
+                <div>
+                    <h4>Email Us</h4>
+                    <p>support@quantumgear.com</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-top">
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/HTML/Products.html">Products</a></li>
+                    <li><a href="/HTML/AboutUs.html">About Us</a></li>
+                    <li><a href="/HTML/ContactUs.html">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Categories</h3>
+                <ul>
+                    <li><a href="#">Components &amp; Storage</a></li>
+                    <li><a href="#">Computer Systems</a></li>
+                    <li><a href="#">Computer Peripherals</a></li>
+                    <li><a href="#">Gaming &amp; VR</a></li>
+                    <li><a href="#">Networking</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Quantum Gear. All rights reserved.</p>
+            <ul class="footer-legal">
+                <li><a href="#">Terms &amp; Conditions</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+            </ul>
+        </div>
+    </footer>
+</body>
+</html>
