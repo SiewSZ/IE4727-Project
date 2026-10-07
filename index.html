@@ -3,29 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/CSS/global.css">
-    <link rel="stylesheet" href="/CSS/home.css">
+    <link rel="stylesheet" href="CSS/global.css">
+    <link rel="stylesheet" href="CSS/home.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="/JS/authRedirect.js"></script>
-    <script src="/JS/menu.js" defer></script>
-    <script src="/JS/carousel.js" defer></script>
-    <script src="/JS/backend.js" defer></script>
+    <script src="JS/authRedirect.js"></script>
+    <script src="JS/menu.js" defer></script>
+    <script src="JS/carousel.js" defer></script>
+    <script src="JS/backend.js" defer></script>
     <title>Main Page</title>
 </head>
 <body>
     <header>
         <nav>
             <div class="nav-top">
-                <img src="/Images/logo.png" alt="Logo" class="logo">
+                <img src="Images/logo.png" alt="Logo" class="logo">
                 <div class="search-box">
                     <input type="text" placeholder="Search...">
                     <i class="fa fa-search"></i>
                 </div>
-                <a href="/order.html" class="cart-icon" aria-label="Cart">
+                <a href="order.html" class="cart-icon" aria-label="Cart">
                     <i class="fa-solid fa-cart-shopping"></i>
                     <span class="cart-count">0</span>
                 </a>
-                <a href="/login.html" class="btn" id="openLoginBtn">Login/Register</a>
+                <a href="login.html" class="btn" id="openLoginBtn">Login/Register</a>
             </div>
             <div class="break"></div>
             <ul class="nav-links">
@@ -73,42 +73,41 @@
                         </div>
                     </div>
                 </li>
-                <li><a href="/index.html">Home</a></li>
-                <li><a href="/shop.html">Shop</a></li>
-                <li><a href="/HTML/ContactUs.html">Contact Us</a></li>
-                <li><a href="/HTML/HotDeals.html">Hot Deals</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="HTML/ContactUs.html">Contact Us</a></li>
+                <li><a href="HTML/HotDeals.html">Hot Deals</a></li>
             </ul>
         </nav>
     </header>
     <main>
         <section class="carousel" id="heroCarousel" aria-roledescription="carousel">
+            <!-- Slides are filled in by JS/carousel.js from the images in Images/carousel/ -->
             <div class="carousel-track">
-                <img src="/Images/carousel/nvidia.jpg" alt="NVIDIA promotion" class="carousel-slide">
-                <img src="/Images/carousel/rtx5090.jpg" alt="RTX 5090 promotion" class="carousel-slide">
             </div>
             <div class="carousel-controls">
                 <button class="carousel-btn" id="carouselPrev" aria-label="Previous slide"><i class="fa-solid fa-chevron-left"></i></button>
-                <span class="carousel-counter" id="carouselCounter">1/2</span>
+                <span class="carousel-counter" id="carouselCounter"></span>
                 <button class="carousel-btn" id="carouselNext" aria-label="Next slide"><i class="fa-solid fa-chevron-right"></i></button>
             </div>
         </section>
         <section class="brand-marquee" id="brandMarquee" aria-label="Brands we carry">
             <div class="brand-track">
                 <ul class="brand-list">
-                    <li><img src="/Images/brands/nvidia.svg" alt="NVIDIA"></li>
-                    <li><img src="/Images/brands/intel.svg" alt="Intel"></li>
-                    <li><img src="/Images/brands/amd.svg" alt="AMD"></li>
-                    <li><img src="/Images/brands/asus.svg" alt="ASUS"></li>
-                    <li><img src="/Images/brands/msi.svg" alt="MSI"></li>
-                    <li><img src="/Images/brands/lg.svg" alt="LG"></li>
-                    <li><img src="/Images/brands/hp.svg" alt="HP"></li>
-                    <li><img src="/Images/brands/samsung.svg" alt="Samsung"></li>
-                    <li><img src="/Images/brands/corsair.svg" alt="Corsair"></li>
-                    <li><img src="/Images/brands/seagate.svg" alt="Seagate"></li>
-                    <li><img src="/Images/brands/razer.svg" alt="Razer"></li>
-                    <li><img src="/Images/brands/acer.svg" alt="Acer"></li>
-                    <li><img src="/Images/brands/lenovo.svg" alt="Lenovo"></li>
-                    <li><img src="/Images/brands/dell.svg" alt="Dell"></li>
+                    <li><img src="Images/brands/nvidia.svg" alt="NVIDIA"></li>
+                    <li><img src="Images/brands/intel.svg" alt="Intel"></li>
+                    <li><img src="Images/brands/amd.svg" alt="AMD"></li>
+                    <li><img src="Images/brands/asus.svg" alt="ASUS"></li>
+                    <li><img src="Images/brands/msi.svg" alt="MSI"></li>
+                    <li><img src="Images/brands/lg.svg" alt="LG"></li>
+                    <li><img src="Images/brands/hp.svg" alt="HP"></li>
+                    <li><img src="Images/brands/samsung.svg" alt="Samsung"></li>
+                    <li><img src="Images/brands/corsair.svg" alt="Corsair"></li>
+                    <li><img src="Images/brands/seagate.svg" alt="Seagate"></li>
+                    <li><img src="Images/brands/razer.svg" alt="Razer"></li>
+                    <li><img src="Images/brands/acer.svg" alt="Acer"></li>
+                    <li><img src="Images/brands/lenovo.svg" alt="Lenovo"></li>
+                    <li><img src="Images/brands/dell.svg" alt="Dell"></li>
                 </ul>
             </div>
         </section>
@@ -148,10 +147,10 @@
             <div class="footer-col">
                 <h3>Quick Links</h3>
                 <ul>
-                    <li><a href="/index.html">Home</a></li>
-                    <li><a href="/HTML/Products.html">Products</a></li>
-                    <li><a href="/HTML/AboutUs.html">About Us</a></li>
-                    <li><a href="/HTML/ContactUs.html">Contact Us</a></li>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="HTML/Products.html">Products</a></li>
+                    <li><a href="HTML/AboutUs.html">About Us</a></li>
+                    <li><a href="HTML/ContactUs.html">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer-col">

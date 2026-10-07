@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Sample cart until the database is connected
     const cart = [
-        { name: "ASUS ROG Astral GeForce RTX 5090", category: "Components & Storage", status: "New", price: 3899.00, oldPrice: 4199.00, qty: 1, image: "/Images/carousel/rtx5090.jpg" },
+        { name: "ASUS ROG Astral GeForce RTX 5090", category: "Components & Storage", status: "New", price: 3899.00, oldPrice: 4199.00, qty: 1, image: "Images/carousel/rtx5090.jpg" },
         { name: "Logitech G Pro X Superlight 2", category: "Computer Peripherals", status: "Hot", price: 219.00, oldPrice: 249.00, qty: 2, image: "" },
         { name: "Samsung Odyssey G9 49\" Monitor", category: "Computer Peripherals", status: "Sale", price: 1599.00, oldPrice: 1899.00, qty: 1, image: "" },
         { name: "TP-Link Archer BE800 Wi-Fi 7 Router", category: "Networking", status: "New", price: 899.00, oldPrice: 0, qty: 1, image: "" }
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const renderCart = () => {
         itemsBox.innerHTML = cart.length
             ? cartHead + cart.map(cartItem).join("")
-            : `<p class="cart-empty">Your cart is empty. <a href="/shop.html">Continue shopping</a></p>`;
+            : `<p class="cart-empty">Your cart is empty. <a href="shop.html">Continue shopping</a></p>`;
 
         // SubTotal uses the original price, Discount is the amount saved
         const subtotal = cart.reduce((sum, item) => sum + (item.oldPrice || item.price) * item.qty, 0);

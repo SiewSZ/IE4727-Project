@@ -370,6 +370,23 @@
     text-align: right;
 }
 
+.admin-actions .icon-btn[data-action="delete"]:hover {
+    color: #b91c1c;
+}
+
+.admin-form-error {
+    margin: 0 0 1rem;
+    padding: 0.6rem 0.9rem;
+    border-radius: 8px;
+    background: rgba(239, 68, 68, 0.12);
+    color: #b91c1c;
+    font-size: 0.9rem;
+}
+
+.admin-form-error[hidden] {
+    display: none;
+}
+
 .status-form {
     display: flex;
     gap: 0.5rem;

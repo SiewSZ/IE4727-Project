@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const showSignUp = () => authContainer.classList.add("active");
     const showSignIn = () => authContainer.classList.remove("active");
-    const goHome = () => { window.location.href = "/index.html"; };
+    const goHome = () => { window.location.href = "index.html"; };
 
     registerBtn.addEventListener("click", showSignUp);
     loginBtn.addEventListener("click", showSignIn);

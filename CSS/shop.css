@@ -96,8 +96,41 @@
     border-radius: 4px;
 }
 
-.toolbar-count {
+/* Search sits on the right of the toolbar, just before the product count */
+.toolbar-search {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 0 1 280px;
     margin-left: auto;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 30px;
+    transition: 0.3s;
+}
+
+.toolbar-search:focus-within {
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+}
+
+.toolbar-search i {
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+
+.toolbar-search input {
+    width: 100%;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: none;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: #0f172a;
+}
+
+.toolbar-count {
     font-size: 0.9rem;
     color: #555;
 }
@@ -319,13 +352,26 @@
     align-items: center;
     justify-content: center;
     aspect-ratio: 1 / 1;
+    /* Keep the box square even when the image file is larger */
+    overflow: hidden;
+    background: #ffffff;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+/* Grey box with a category icon when a product has no image */
+.product-image.no-image {
     background: #f1f5f9;
 }
 
+/* Show the whole product, centred, instead of cropping it */
 .product-image img {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    padding: 1rem;
+    box-sizing: border-box;
+    object-fit: contain;
 }
 
 .product-image > i {
@@ -335,6 +381,8 @@
 
 .wishlist-btn {
     position: absolute;
+    z-index: 1;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
     top: 0.6rem;
     right: 0.6rem;
     width: 2rem;
@@ -403,6 +451,7 @@
 .product-price {
     font-size: 0.95rem;
     font-weight: 700;
+    margin-bottom: 0.5rem;
 }
 
 .product-price s {
@@ -413,7 +462,8 @@
 
 .add-cart-btn {
     align-self: flex-start;
-    margin-top: 0.5rem;
+    /* Push the button to the bottom so buttons line up across a row */
+    margin-top: auto;
     padding: 0.5rem 1.1rem;
     border: none;
     border-radius: 30px;
@@ -463,5 +513,16 @@
     .shop-toolbar {
         flex-wrap: wrap;
         gap: 0.75rem 1.5rem;
+    }
+
+    /* Search gets its own full-width line on small screens */
+    .toolbar-search {
+        order: 1;
+        flex-basis: 100%;
+        margin-left: 0;
+    }
+
+    .toolbar-count {
+        margin-left: auto;
     }
 }

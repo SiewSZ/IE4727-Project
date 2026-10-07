@@ -3,6 +3,6 @@
 (() => {
     const params = new URLSearchParams(window.location.search);
     if (params.has("login_error") || params.has("register_error") || params.has("register")) {
-        window.location.replace("/login.html" + window.location.search);
+        window.location.replace("login.html" + window.location.search);
     }
 })();

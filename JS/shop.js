@@ -1,30 +1,22 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const grid = document.getElementById("productGrid");
     if (!grid) return;
 
-    // Sample products until the database is connected
-    const products = [
-        { name: "ASUS ROG Astral GeForce RTX 5090", category: "Components & Storage", brand: "ASUS", price: 3899.00, oldPrice: 4199.00, stock: 5, rating: 5, reviews: 12, image: "/Images/carousel/rtx5090.jpg" },
-        { name: "MSI GeForce RTX 5080 Gaming Trio", category: "Components & Storage", brand: "MSI", price: 1899.00, oldPrice: 2049.00, stock: 8, rating: 4, reviews: 9, image: "" },
-        { name: "Samsung 990 PRO 2TB NVMe SSD", category: "Components & Storage", brand: "Samsung", price: 289.00, oldPrice: 339.00, stock: 25, rating: 5, reviews: 31, image: "" },
-        { name: "ASUS ROG Strix G16 Gaming Laptop", category: "Computer Systems", brand: "ASUS", price: 2799.00, oldPrice: 2999.00, stock: 4, rating: 4, reviews: 7, image: "" },
-        { name: "MSI MAG Infinite Gaming Desktop", category: "Computer Systems", brand: "MSI", price: 2399.00, oldPrice: 0, stock: 3, rating: 4, reviews: 5, image: "" },
-        { name: "Logitech G Pro X Superlight 2", category: "Computer Peripherals", brand: "Logitech", price: 219.00, oldPrice: 249.00, stock: 40, rating: 5, reviews: 54, image: "" },
-        { name: "Razer BlackWidow V4 Pro Keyboard", category: "Computer Peripherals", brand: "Razer", price: 329.00, oldPrice: 0, stock: 15, rating: 4, reviews: 18, image: "" },
-        { name: "Samsung Odyssey G9 49\" Monitor", category: "Computer Peripherals", brand: "Samsung", price: 1599.00, oldPrice: 1899.00, stock: 6, rating: 5, reviews: 22, image: "" },
-        { name: "Razer Kraken V4 Gaming Headset", category: "Gaming & VR", brand: "Razer", price: 199.00, oldPrice: 239.00, stock: 20, rating: 4, reviews: 14, image: "" },
-        { name: "Meta Quest 3 128GB", category: "Gaming & VR", brand: "Meta", price: 749.00, oldPrice: 0, stock: 0, rating: 5, reviews: 40, image: "" },
-        { name: "TP-Link Archer BE800 Wi-Fi 7 Router", category: "Networking", brand: "TP-Link", price: 899.00, oldPrice: 999.00, stock: 10, rating: 4, reviews: 8, image: "" },
-        { name: "ASUS RT-AX88U Pro Router", category: "Networking", brand: "ASUS", price: 459.00, oldPrice: 0, stock: 12, rating: 4, reviews: 11, image: "" }
-    ];
+    // Load the products from the database
+    let products;
+    try {
+        const res = await fetch("PHP/products/list.php");
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        products = (await res.json()).products;
+    } catch (err) {
+        console.error("Could not load products:", err);
+        grid.innerHTML = `<p class="no-products">Sorry, products could not be loaded. Please try again later.</p>`;
+        return;
+    }
 
-    const categoryIcons = {
-        "Components & Storage": "fa-memory",
-        "Computer Systems": "fa-desktop",
-        "Computer Peripherals": "fa-computer-mouse",
-        "Gaming & VR": "fa-gamepad",
-        "Networking": "fa-wifi"
-    };
+    // Product text comes from the database, so escape it before putting it into HTML
+    const esc = (text) => String(text).replace(/[&<>"']/g, (ch) =>
+        ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[ch]);
 
     const categoryBox = document.getElementById("categoryFilters");
     const brandBox = document.getElementById("brandFilters");
@@ -34,8 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const buildCheckboxes = (box, values, name) => {
         box.innerHTML = values.map((value) => `
             <label class="filter-option">
-                <input type="checkbox" name="${name}" value="${value}">
-                <span>${value}</span>
+                <input type="checkbox" name="${name}" value="${esc(value)}">
+                <span>${esc(value)}</span>
             </label>`).join("");
     };
 
@@ -47,16 +39,16 @@ document.addEventListener("DOMContentLoaded", () => {
             `<i class="fa-${i < rating ? "solid" : "regular"} fa-star"></i>`).join("");
 
     const productCard = (p) => `
-        <article class="product-card">
-            <div class="product-image">
+        <article class="product-card" data-id="${p.id}">
+            <div class="product-image${p.image ? "" : " no-image"}">
                 ${p.image
-                    ? `<img src="${p.image}" alt="${p.name}">`
-                    : `<i class="fa-solid ${categoryIcons[p.category] || "fa-box"}"></i>`}
+                    ? `<img src="${esc(p.image)}" alt="${esc(p.name)}">`
+                    : `<i class="fa-solid ${esc(p.icon || "fa-box")}"></i>`}
                 <button class="wishlist-btn" aria-label="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
             </div>
             <div class="product-info">
-                <p class="product-category">${p.category}</p>
-                <h3 class="product-name" title="${p.name}">${p.name}</h3>
+                <p class="product-category">${esc(p.category)}</p>
+                <h3 class="product-name" title="${esc(p.name)}">${esc(p.name)}</h3>
                 <div class="product-rating">${stars(p.rating)}<span>${p.reviews} Reviews</span></div>
                 <p class="product-stock">${p.stock > 0 ? `In Stock <span>${p.stock}</span>` : `<span class="out">Out of Stock</span>`}</p>
                 <p class="product-price">
@@ -70,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
         </article>`;
 
     // Price range: slider max is the most expensive product, rounded up to the next 100
-    const PRICE_MAX = Math.ceil(Math.max(...products.map((p) => p.price)) / 100) * 100;
+    const PRICE_MAX = Math.ceil(Math.max(0, ...products.map((p) => p.price)) / 100) * 100 || 100;
     const minInput = document.getElementById("priceMinInput");
     const maxInput = document.getElementById("priceMaxInput");
     const minRange = document.getElementById("priceMinRange");
@@ -101,6 +93,13 @@ document.addEventListener("DOMContentLoaded", () => {
         "price-desc": (a, b) => b.price - a.price
     };
     const sortSelect = document.getElementById("sortSelect");
+    const searchInput = document.getElementById("shopSearch");
+
+    // Every word typed must appear somewhere in the product's name, brand, category or description
+    const matchesSearch = (p, words) => {
+        const text = `${p.name} ${p.brand} ${p.category} ${p.description}`.toLowerCase();
+        return words.every((word) => text.includes(word));
+    };
     const productCount = document.getElementById("productCount");
 
     const render = () => {
@@ -108,19 +107,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const brands = checkedValues("brand");
         const min = Number(minRange.value);
         const max = Number(maxRange.value);
+        const words = searchInput.value.toLowerCase().split(/\s+/).filter(Boolean);
 
         // An empty selection means "show everything" for that filter
         const filtered = products
             .filter((p) =>
                 (categories.length === 0 || categories.includes(p.category)) &&
                 (brands.length === 0 || brands.includes(p.brand)) &&
-                p.price >= min && p.price <= max)
+                p.price >= min && p.price <= max &&
+                matchesSearch(p, words))
             .sort(sorters[sortSelect.value]);
 
         productCount.textContent = `${filtered.length} product${filtered.length === 1 ? "" : "s"}`;
         grid.innerHTML = filtered.length
             ? filtered.map(productCard).join("")
-            : `<p class="no-products">No products match the selected filters.</p>`;
+            : `<p class="no-products">No products match ${words.length ? "your search and " : ""}the selected filters.</p>`;
     };
 
     const clearFilter = (name) => {
@@ -158,12 +159,17 @@ document.addEventListener("DOMContentLoaded", () => {
         input.addEventListener("change", render);
     });
     sortSelect.addEventListener("change", render);
+    searchInput.addEventListener("input", render);
+
+    // Searches typed in the header on any page arrive as shop.html?q=...
+    searchInput.value = new URLSearchParams(window.location.search).get("q") || "";
 
     document.querySelectorAll(".filter-reset").forEach((btn) => {
         btn.addEventListener("click", () => clearFilter(btn.dataset.reset));
     });
 
     document.getElementById("resetAllFilters").addEventListener("click", () => {
+        searchInput.value = "";
         clearFilter("price");
         clearFilter("category");
         clearFilter("brand");

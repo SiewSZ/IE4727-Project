@@ -3,27 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/CSS/global.css">
-    <link rel="stylesheet" href="/CSS/admin.css">
+    <link rel="stylesheet" href="CSS/global.css">
+    <link rel="stylesheet" href="CSS/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="/JS/menu.js" defer></script>
-    <script src="/JS/admin.js" defer></script>
+    <script src="JS/menu.js" defer></script>
+    <script src="JS/admin.js" defer></script>
     <title>Admin Dashboard</title>
 </head>
 <body>
     <header>
         <nav>
             <div class="nav-top">
-                <img src="/Images/logo.png" alt="Logo" class="logo">
+                <img src="Images/logo.png" alt="Logo" class="logo">
                 <div class="search-box">
                     <input type="text" placeholder="Search...">
                     <i class="fa fa-search"></i>
                 </div>
-                <a href="/order.html" class="cart-icon" aria-label="Cart">
+                <a href="order.html" class="cart-icon" aria-label="Cart">
                     <i class="fa-solid fa-cart-shopping"></i>
                     <span class="cart-count">0</span>
                 </a>
-                <a href="/login.html" class="btn" id="openLoginBtn">Login/Register</a>
+                <a href="login.html" class="btn" id="openLoginBtn">Login/Register</a>
             </div>
             <div class="break"></div>
             <ul class="nav-links">
@@ -71,10 +71,10 @@
                         </div>
                     </div>
                 </li>
-                <li><a href="/index.html">Home</a></li>
-                <li><a href="/shop.html">Shop</a></li>
-                <li><a href="/HTML/ContactUs.html">Contact Us</a></li>
-                <li><a href="/HTML/HotDeals.html">Hot Deals</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="HTML/ContactUs.html">Contact Us</a></li>
+                <li><a href="HTML/HotDeals.html">Hot Deals</a></li>
             </ul>
         </nav>
     </header>
@@ -89,14 +89,14 @@
                 <i class="fa-solid fa-boxes-stacked"></i>
                 <div>
                     <p class="stat-label">Products</p>
-                    <p class="stat-value">12</p>
+                    <p class="stat-value" id="statProducts">–</p>
                 </div>
             </div>
             <div class="stat-card warn">
                 <i class="fa-solid fa-triangle-exclamation"></i>
                 <div>
                     <p class="stat-label">Low / Out of Stock</p>
-                    <p class="stat-value">3</p>
+                    <p class="stat-value" id="statLowStock">–</p>
                 </div>
             </div>
             <div class="stat-card">
@@ -129,23 +129,19 @@
             <div class="admin-toolbar">
                 <div class="admin-search">
                     <i class="fa fa-search"></i>
-                    <input type="text" placeholder="Search products..." aria-label="Search products">
+                    <input type="text" id="inventorySearch" placeholder="Search products..." aria-label="Search products">
                 </div>
-                <select aria-label="Filter by category">
+                <select id="inventoryCategory" aria-label="Filter by category">
                     <option value="">All categories</option>
-                    <option>Components &amp; Storage</option>
-                    <option>Computer Systems</option>
-                    <option>Computer Peripherals</option>
-                    <option>Gaming &amp; VR</option>
-                    <option>Networking</option>
                 </select>
                 <button class="admin-primary-btn" id="addProductBtn">
                     <i class="fa-solid fa-plus"></i> Add Product
                 </button>
             </div>
 
-            <form class="admin-form" id="productForm" method="post" action="#" hidden>
+            <form class="admin-form" id="productForm" method="post" action="PHP/products/save.php" enctype="multipart/form-data" hidden>
                 <h3 id="productFormTitle">Add Product</h3>
+                <input type="hidden" name="product_id">
                 <div class="admin-form-grid">
                     <label class="span-2">Product Name
                         <input type="text" name="name" required maxlength="150">
@@ -154,13 +150,8 @@
                         <input type="text" name="brand" required maxlength="50">
                     </label>
                     <label>Category
-                        <select name="category" required>
+                        <select name="category_id" required>
                             <option value="">Select a category</option>
-                            <option>Components &amp; Storage</option>
-                            <option>Computer Systems</option>
-                            <option>Computer Peripherals</option>
-                            <option>Gaming &amp; VR</option>
-                            <option>Networking</option>
                         </select>
                     </label>
                     <label>Price ($)
@@ -172,8 +163,8 @@
                     <label>Stock
                         <input type="number" name="stock" required min="0" step="1">
                     </label>
-                    <label>Image
-                        <input type="file" name="image" accept="image/*">
+                    <label>Image <small>JPG, PNG, WEBP or GIF, max 2 MB</small>
+                        <input type="file" name="image" accept="image/jpeg,image/png,image/webp,image/gif">
                     </label>
                     <label class="span-2">Description
                         <textarea name="description" rows="3"></textarea>
@@ -183,6 +174,7 @@
                         Show this product in the shop
                     </label>
                 </div>
+                <p class="admin-form-error" id="productFormError" role="alert" hidden></p>
                 <div class="admin-form-actions">
                     <button type="button" class="admin-secondary-btn" id="cancelProductBtn">Cancel</button>
                     <button type="submit" class="admin-primary-btn">Save Product</button>
@@ -201,103 +193,8 @@
                             <th><span class="visually-hidden">Actions</span></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div class="admin-product">
-                                    <img src="/Images/carousel/rtx5090.jpg" alt="">
-                                    <div><strong>ASUS ROG Astral GeForce RTX 5090</strong><small>ASUS</small></div>
-                                </div>
-                            </td>
-                            <td>Components &amp; Storage</td>
-                            <td>$3,899.00<s>$4,199.00</s></td>
-                            <td><span class="stock-pill low">5</span></td>
-                            <td><span class="status-pill active">Active</span></td>
-                            <td class="admin-actions">
-                                <button class="icon-btn" data-action="edit" aria-label="Edit"><i class="fa-solid fa-pen"></i></button>
-                                <button class="icon-btn" data-action="hide" aria-label="Hide from shop"><i class="fa-solid fa-eye-slash"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="admin-product">
-                                    <span class="admin-product-icon"><i class="fa-solid fa-memory"></i></span>
-                                    <div><strong>Samsung 990 PRO 2TB NVMe SSD</strong><small>Samsung</small></div>
-                                </div>
-                            </td>
-                            <td>Components &amp; Storage</td>
-                            <td>$289.00<s>$339.00</s></td>
-                            <td><span class="stock-pill">25</span></td>
-                            <td><span class="status-pill active">Active</span></td>
-                            <td class="admin-actions">
-                                <button class="icon-btn" data-action="edit" aria-label="Edit"><i class="fa-solid fa-pen"></i></button>
-                                <button class="icon-btn" data-action="hide" aria-label="Hide from shop"><i class="fa-solid fa-eye-slash"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="admin-product">
-                                    <span class="admin-product-icon"><i class="fa-solid fa-desktop"></i></span>
-                                    <div><strong>MSI MAG Infinite Gaming Desktop</strong><small>MSI</small></div>
-                                </div>
-                            </td>
-                            <td>Computer Systems</td>
-                            <td>$2,399.00</td>
-                            <td><span class="stock-pill low">3</span></td>
-                            <td><span class="status-pill active">Active</span></td>
-                            <td class="admin-actions">
-                                <button class="icon-btn" data-action="edit" aria-label="Edit"><i class="fa-solid fa-pen"></i></button>
-                                <button class="icon-btn" data-action="hide" aria-label="Hide from shop"><i class="fa-solid fa-eye-slash"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="admin-product">
-                                    <span class="admin-product-icon"><i class="fa-solid fa-computer-mouse"></i></span>
-                                    <div><strong>Logitech G Pro X Superlight 2</strong><small>Logitech</small></div>
-                                </div>
-                            </td>
-                            <td>Computer Peripherals</td>
-                            <td>$219.00<s>$249.00</s></td>
-                            <td><span class="stock-pill">40</span></td>
-                            <td><span class="status-pill active">Active</span></td>
-                            <td class="admin-actions">
-                                <button class="icon-btn" data-action="edit" aria-label="Edit"><i class="fa-solid fa-pen"></i></button>
-                                <button class="icon-btn" data-action="hide" aria-label="Hide from shop"><i class="fa-solid fa-eye-slash"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="admin-product">
-                                    <span class="admin-product-icon"><i class="fa-solid fa-gamepad"></i></span>
-                                    <div><strong>Meta Quest 3 128GB</strong><small>Meta</small></div>
-                                </div>
-                            </td>
-                            <td>Gaming &amp; VR</td>
-                            <td>$749.00</td>
-                            <td><span class="stock-pill out">0</span></td>
-                            <td><span class="status-pill hidden-pill">Hidden</span></td>
-                            <td class="admin-actions">
-                                <button class="icon-btn" data-action="edit" aria-label="Edit"><i class="fa-solid fa-pen"></i></button>
-                                <button class="icon-btn" data-action="hide" aria-label="Show in shop"><i class="fa-solid fa-eye"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="admin-product">
-                                    <span class="admin-product-icon"><i class="fa-solid fa-wifi"></i></span>
-                                    <div><strong>TP-Link Archer BE800 Wi-Fi 7 Router</strong><small>TP-Link</small></div>
-                                </div>
-                            </td>
-                            <td>Networking</td>
-                            <td>$899.00<s>$999.00</s></td>
-                            <td><span class="stock-pill">10</span></td>
-                            <td><span class="status-pill active">Active</span></td>
-                            <td class="admin-actions">
-                                <button class="icon-btn" data-action="edit" aria-label="Edit"><i class="fa-solid fa-pen"></i></button>
-                                <button class="icon-btn" data-action="hide" aria-label="Hide from shop"><i class="fa-solid fa-eye-slash"></i></button>
-                            </td>
-                        </tr>
+                    <tbody id="inventoryBody">
+                        <tr><td colspan="6">Loading products...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -474,10 +371,10 @@
             <div class="footer-col">
                 <h3>Quick Links</h3>
                 <ul>
-                    <li><a href="/index.html">Home</a></li>
-                    <li><a href="/HTML/Products.html">Products</a></li>
-                    <li><a href="/HTML/AboutUs.html">About Us</a></li>
-                    <li><a href="/HTML/ContactUs.html">Contact Us</a></li>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="HTML/Products.html">Products</a></li>
+                    <li><a href="HTML/AboutUs.html">About Us</a></li>
+                    <li><a href="HTML/ContactUs.html">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer-col">

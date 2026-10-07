@@ -13,12 +13,33 @@
     transition: transform 0.6s ease-in-out;
 }
 
+/* Each slide is a wide banner. Images of any shape are shown in full (never cropped),
+   and a blurred, darkened copy of the same image fills the space around them. */
 .carousel-slide {
+    position: relative;
     flex: 0 0 100%;
     width: 100%;
     aspect-ratio: 21 / 9;
-    object-fit: cover;
+    /* Cap the height so smaller images aren't stretched until they blur */
+    max-height: 480px;
+    overflow: hidden;
+    background: #0a0e14;
+}
+
+.carousel-slide::before {
+    content: "";
+    position: absolute;
+    inset: -40px;
+    background: var(--bg) center / cover no-repeat;
+    filter: blur(30px) brightness(0.55);
+}
+
+.carousel-slide img {
+    position: relative;
     display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 .carousel-controls {
@@ -28,6 +49,11 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
+}
+
+/* Hidden by carousel.js when there is only one slide */
+.carousel-controls[hidden] {
+    display: none;
 }
 
 .carousel-btn {
