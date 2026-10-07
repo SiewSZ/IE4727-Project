@@ -81,7 +81,10 @@ document.addEventListener("DOMContentLoaded", () => {
         subtotalEl.textContent = money(subtotal);
         discountEl.textContent = money(subtotal - total);
         totalEl.textContent = money(total);
-        checkoutBtn.disabled = cart.length === 0;
+        // Once the order is placed the button stays disabled on "Order Placed"
+        if (!checkoutBtn.classList.contains("done")) {
+            checkoutBtn.disabled = cart.length === 0;
+        }
 
         if (cartCount) {
             cartCount.textContent = cart.reduce((sum, item) => sum + item.qty, 0);
@@ -153,8 +156,13 @@ document.addEventListener("DOMContentLoaded", () => {
         toggleAddressForm(false);
     });
 
+    // Truck animation from JS/order-button.js, then announce the result for screen readers
+    const orderStatus = document.getElementById("orderStatus");
     checkoutBtn.addEventListener("click", () => {
-        alert(`Order placed! Delivering to ${addresses[selectedAddress].label}.`);
+        orderStatus.textContent = "Placing your order...";
+        animateOrderButton(checkoutBtn).then(() => {
+            orderStatus.textContent = `Order placed! Delivering to ${addresses[selectedAddress].label}.`;
+        });
     });
 
     renderCart();

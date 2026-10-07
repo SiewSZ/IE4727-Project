@@ -221,32 +221,6 @@
     font-weight: 700;
 }
 
-.checkout-btn {
-    width: 100%;
-    padding: 0.75rem;
-    border: none;
-    border-radius: 30px;
-    background: #38bdf8;
-    color: #ffffff;
-    font-family: inherit;
-    font-weight: 600;
-    font-size: 0.95rem;
-    box-shadow: 0 0 15px #38bdf8;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.checkout-btn:hover {
-    background: #0aa9f3;
-    box-shadow: 0 0 25px #38bdf8;
-}
-
-.checkout-btn:disabled {
-    background: #cbd5e1;
-    box-shadow: none;
-    cursor: not-allowed;
-}
-
 .address-list {
     display: flex;
     flex-direction: column;

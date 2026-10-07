@@ -1,0 +1,433 @@
+/* Order Button: delivery truck animation
+   Based on "Order confirm animation" by Aaron Iker (https://codepen.io/aaroniker/pen/eYOVrNa, MIT licence),
+   converted from SCSS (original colours kept) and adapted to a button of any width.
+   --w is the button's width in px; JS/order-button.js sets it when the animation starts. */
+.order-btn {
+    --w: 240px;
+    --dark: #1c212e;
+    --primary: #275efe;
+    --primary-light: #7699ff;
+    --grey-dark: #3f4656;
+    --grey: #6c7486;
+    --grey-light: #cdd9ed;
+    --white: #ffffff;
+    --green: #16bf78;
+    --sand: #dcb773;
+    --sand-light: #edd9a9;
+
+    appearance: none;
+    position: relative;
+    width: 100%;
+    height: 63px;
+    padding: 0;
+    border: 0;
+    border-radius: 32px;
+    background: var(--dark);
+    font-family: inherit;
+    cursor: pointer;
+    overflow: hidden;
+    /* Keeps the rounded corners clipping the truck in Safari */
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.3s ease;
+}
+
+.order-btn:active:not(:disabled) {
+    transform: scale(0.96);
+}
+
+.order-btn:focus-visible {
+    outline: 3px solid var(--primary-light);
+    outline-offset: 3px;
+}
+
+/* Empty cart. (The button is also disabled while animating and once done,
+   but keeps its dark road colour then, so only grey it out otherwise.) */
+.order-btn:disabled:not(.animate):not(.done) {
+    background: #cbd5e1;
+    cursor: not-allowed;
+}
+
+/* Once the order is placed the button stays on "Order Placed" */
+.order-btn.animate,
+.order-btn.done {
+    cursor: default;
+}
+
+/* Text */
+.order-btn span {
+    --o: 1;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 19px;
+    line-height: 24px;
+    text-align: center;
+    color: var(--white);
+    font-size: 16px;
+    font-weight: 600;
+    opacity: var(--o);
+    transition: opacity 0.3s ease;
+}
+
+.order-btn .default {
+    transition-delay: 0.3s;
+}
+
+.order-btn .success {
+    --offset: 16px;
+    --o: 0;
+}
+
+.order-btn .success svg {
+    display: inline-block;
+    width: 12px;
+    height: 10px;
+    margin: 7px 0 0 4px;
+    vertical-align: top;
+    fill: none;
+    stroke: var(--green);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 16px;
+    stroke-dashoffset: var(--offset);
+    transition: stroke-dashoffset 0.3s ease;
+}
+
+/* Road markings that scroll past while the truck drives */
+.order-btn .lines {
+    position: absolute;
+    top: 30px;
+    left: 100%;
+    width: 6px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--white);
+    opacity: 0;
+    box-shadow:
+        15px 0 0 var(--white), 30px 0 0 var(--white), 45px 0 0 var(--white), 60px 0 0 var(--white),
+        75px 0 0 var(--white), 90px 0 0 var(--white), 105px 0 0 var(--white), 120px 0 0 var(--white),
+        135px 0 0 var(--white), 150px 0 0 var(--white), 165px 0 0 var(--white), 180px 0 0 var(--white),
+        195px 0 0 var(--white), 210px 0 0 var(--white), 225px 0 0 var(--white), 240px 0 0 var(--white),
+        255px 0 0 var(--white), 270px 0 0 var(--white), 285px 0 0 var(--white), 300px 0 0 var(--white),
+        315px 0 0 var(--white), 330px 0 0 var(--white), 345px 0 0 var(--white), 360px 0 0 var(--white),
+        375px 0 0 var(--white), 390px 0 0 var(--white), 405px 0 0 var(--white), 420px 0 0 var(--white),
+        435px 0 0 var(--white), 450px 0 0 var(--white), 465px 0 0 var(--white), 480px 0 0 var(--white);
+}
+
+.order-btn .back,
+.order-btn .box {
+    --start: var(--white);
+    --stop: var(--grey-light);
+    position: absolute;
+    border-radius: 2px;
+    background: linear-gradient(var(--start), var(--stop));
+}
+
+/* Truck (seen from above), parked just off the right edge */
+.order-btn .truck {
+    position: absolute;
+    top: 11px;
+    left: 100%;
+    z-index: 1;
+    width: 60px;
+    height: 41px;
+    transform: translateX(24px);
+}
+
+/* Rear doors */
+.order-btn .truck::before,
+.order-btn .truck::after {
+    --r: -90deg;
+    content: "";
+    position: absolute;
+    right: 58px;
+    display: block;
+    width: 20px;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--white);
+    transform-origin: 100% 50%;
+    transform: rotate(var(--r));
+}
+
+.order-btn .truck::before {
+    top: 4px;
+}
+
+.order-btn .truck::after {
+    --r: 90deg;
+    bottom: 4px;
+}
+
+.order-btn .truck .back {
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 60px;
+    height: 41px;
+}
+
+.order-btn .truck .front {
+    position: absolute;
+    left: 60px;
+    width: 26px;
+    height: 41px;
+    border-radius: 2px 9px 9px 2px;
+    overflow: hidden;
+}
+
+.order-btn .truck .front::before,
+.order-btn .truck .front::after {
+    content: "";
+    position: absolute;
+    display: block;
+}
+
+.order-btn .truck .front::before {
+    top: 14px;
+    left: 0;
+    width: 2px;
+    height: 13px;
+    background: linear-gradient(var(--grey), var(--grey-dark));
+}
+
+.order-btn .truck .front::after {
+    right: 0;
+    width: 24px;
+    height: 41px;
+    border-radius: 2px 9px 9px 2px;
+    background: var(--primary);
+}
+
+.order-btn .truck .window {
+    position: absolute;
+    top: 0;
+    left: 2px;
+    z-index: 1;
+    width: 22px;
+    height: 41px;
+    border-radius: 2px 8px 8px 2px;
+    background: var(--primary-light);
+    overflow: hidden;
+    transform: perspective(4px) rotateY(3deg);
+    transform-origin: 0 50%;
+}
+
+.order-btn .truck .window::before,
+.order-btn .truck .window::after {
+    content: "";
+    position: absolute;
+    right: 0;
+}
+
+.order-btn .truck .window::before {
+    top: 0;
+    bottom: 0;
+    width: 14px;
+    background: var(--dark);
+}
+
+.order-btn .truck .window::after {
+    top: 7px;
+    width: 14px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.14);
+    transform: skewY(14deg);
+    box-shadow: 0 7px 0 rgba(255, 255, 255, 0.14);
+}
+
+/* Headlights */
+.order-btn .truck .light {
+    position: absolute;
+    left: 83px;
+    width: 3px;
+    height: 8px;
+    border-radius: 2px;
+    background: rgba(240, 220, 95, 1);
+    transform: scaleX(0.8);
+    transform-origin: 100% 50%;
+}
+
+.order-btn .truck .light::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 3px;
+    width: 7px;
+    height: 4px;
+    margin-top: -2px;
+    opacity: 0;
+    background: linear-gradient(90deg, rgba(240, 220, 95, 1), rgba(240, 220, 95, 0.7), rgba(240, 220, 95, 0));
+    transform: perspective(2px) rotateY(-15deg) scaleX(0.94);
+    transform-origin: 0 50%;
+}
+
+.order-btn .truck .light.top {
+    top: 4px;
+}
+
+.order-btn .truck .light.bottom {
+    bottom: 4px;
+}
+
+/* Parcel, waiting just off the left edge */
+.order-btn .box {
+    --start: var(--sand-light);
+    --stop: var(--sand);
+    top: 21px;
+    right: 100%;
+    width: 21px;
+    height: 21px;
+}
+
+.order-btn .box::before,
+.order-btn .box::after {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 0;
+    right: 0;
+}
+
+.order-btn .box::before {
+    height: 3px;
+    margin-top: -1px;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.order-btn .box::after {
+    height: 1px;
+    background: rgba(0, 0, 0, 0.15);
+}
+
+/* Playing (.animate) and finished (.done) states */
+.order-btn.animate .default,
+.order-btn.done .default {
+    --o: 0;
+    transition-delay: 0s;
+}
+
+.order-btn.animate .success,
+.order-btn.done .success {
+    --offset: 0;
+    --o: 1;
+}
+
+.order-btn.animate .success {
+    transition-delay: 7s;
+}
+
+.order-btn.animate .success svg {
+    transition-delay: 7.3s;
+}
+
+.order-btn.animate .truck {
+    animation: order-truck 10s ease forwards;
+}
+
+.order-btn.animate .truck::before {
+    animation: order-door1 2.4s ease forwards 0.3s;
+}
+
+.order-btn.animate .truck::after {
+    animation: order-door2 2.4s ease forwards 0.6s;
+}
+
+.order-btn.animate .truck .light::before {
+    animation: order-light 10s ease forwards;
+}
+
+.order-btn.animate .box {
+    animation: order-box 10s ease forwards;
+}
+
+.order-btn.animate .lines {
+    animation: order-lines 10s ease forwards;
+}
+
+/* The truck stops at fixed points from the left edge (76px, 136px, 16px),
+   so its offset from the right-hand start depends on the button width */
+@keyframes order-truck {
+    10%,
+    30% {
+        transform: translateX(calc(76px - var(--w)));
+    }
+    40% {
+        transform: translateX(calc(136px - var(--w)));
+    }
+    60% {
+        transform: translateX(calc(16px - var(--w)));
+    }
+    75%,
+    100% {
+        transform: translateX(24px);
+    }
+}
+
+@keyframes order-lines {
+    0%,
+    30% {
+        opacity: 0;
+        transform: scaleY(0.7) translateX(0);
+    }
+    35%,
+    65% {
+        opacity: 1;
+    }
+    70% {
+        opacity: 0;
+    }
+    100% {
+        transform: scaleY(0.7) translateX(calc(-1 * var(--w) - 160px));
+    }
+}
+
+@keyframes order-light {
+    0%,
+    30% {
+        opacity: 0;
+        transform: perspective(2px) rotateY(-15deg) scaleX(0.88);
+    }
+    40%,
+    100% {
+        opacity: 1;
+        transform: perspective(2px) rotateY(-15deg) scaleX(0.94);
+    }
+}
+
+@keyframes order-door1 {
+    30%,
+    50% {
+        transform: rotate(32deg);
+    }
+}
+
+@keyframes order-door2 {
+    30%,
+    50% {
+        transform: rotate(-32deg);
+    }
+}
+
+@keyframes order-box {
+    8%,
+    10% {
+        transform: translateX(40px);
+        opacity: 1;
+    }
+    25% {
+        transform: translateX(112px);
+        opacity: 1;
+    }
+    26% {
+        transform: translateX(112px);
+        opacity: 0;
+    }
+    27%,
+    100% {
+        transform: translateX(0);
+        opacity: 0;
+    }
+}
