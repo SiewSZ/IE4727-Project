@@ -27,7 +27,7 @@ if ($login === '' || $password === '') {
 
 // Is there an account with this username or email?
 // (usernames can't contain "@", so this never matches two different users)
-$stmt = mysqli_prepare($conn, "SELECT id, username, password_hash FROM users WHERE username = ? OR email = ?");
+$stmt = mysqli_prepare($conn, "SELECT id, username, password_hash, role FROM users WHERE username = ? OR email = ?");
 mysqli_stmt_bind_param($stmt, "ss", $login, $login);
 mysqli_stmt_execute($stmt);
 $user = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
@@ -45,5 +45,6 @@ session_start();
 session_regenerate_id(true);
 $_SESSION['user_id'] = $user['id'];
 $_SESSION['username'] = $user['username'];
+$_SESSION['role'] = $user['role'];   // 'customer' or 'admin', checked by requireAdmin() in auth.php
 
 backToHome("login=success");

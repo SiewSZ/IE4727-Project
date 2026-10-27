@@ -25,7 +25,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const loginErrors = {
         missing: "Please enter your username/email and password.",
-        invalid: "Incorrect username/email or password."
+        invalid: "Incorrect username/email or password.",
+        admin: "Please sign in with an admin account to open the admin page."
     };
 
     const registerErrors = {

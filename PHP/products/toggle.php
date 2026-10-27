@@ -5,6 +5,7 @@
 
 require_once __DIR__ . "/common.php";
 requirePost();
+requireAdmin();
 
 $productId = (int) ($_POST['product_id'] ?? 0);
 $isActive = ($_POST['is_active'] ?? '') === '1' ? 1 : 0;

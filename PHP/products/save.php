@@ -7,6 +7,7 @@
 
 require_once __DIR__ . "/common.php";
 requirePost();
+requireAdmin();
 
 $productId = (int) ($_POST['product_id'] ?? 0);
 $name = trim($_POST['name'] ?? '');

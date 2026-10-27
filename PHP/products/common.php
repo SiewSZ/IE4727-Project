@@ -3,6 +3,7 @@
 // Every endpoint answers with JSON so shop.js and admin.js can read the result.
 
 require_once __DIR__ . "/../db_connect.php";
+require_once __DIR__ . "/../users/auth.php";   // requireAdmin() for the endpoints that change products
 
 // Send a JSON reply and stop
 function respond($status, $data)

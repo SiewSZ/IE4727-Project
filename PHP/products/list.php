@@ -7,6 +7,11 @@ require_once __DIR__ . "/common.php";
 
 $showAll = ($_GET['all'] ?? '') === '1';
 
+// Hidden products are only for the admin page; the shop list stays public
+if ($showAll) {
+    requireAdmin();
+}
+
 $sql = "SELECT p.product_id, p.name, p.brand, p.description, p.price, p.old_price, p.stock,
                p.image_path, p.rating, p.reviews, p.is_active,
                c.category_id, c.name AS category, c.icon

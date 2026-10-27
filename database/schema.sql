@@ -1,9 +1,24 @@
--- Quantum Gear: categories and products
--- Import in phpMyAdmin (select the quantum_gear database, then Import this file).
+-- Quantum Gear: users, categories and products
+-- Import in phpMyAdmin from the home page (no database selected): this file creates quantum_gear itself.
 -- Safe to re-run: tables are only created if missing, and seed rows are skipped if they already exist.
 
 CREATE DATABASE IF NOT EXISTS quantum_gear;
 USE quantum_gear;
+
+-- Accounts created on login.html. Everyone who registers is a 'customer'; only an admin
+-- can change products. Admins are made by hand (see the UPDATE at the bottom of this file).
+CREATE TABLE IF NOT EXISTS users (
+    id            INT AUTO_INCREMENT PRIMARY KEY,
+    username      VARCHAR(50)  NOT NULL UNIQUE,
+    email         VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    role          ENUM('customer', 'admin') NOT NULL DEFAULT 'customer',
+    created_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Adds the role column to a users table made before roles existed
+-- (ADD COLUMN IF NOT EXISTS works on MariaDB, the database XAMPP comes with)
+ALTER TABLE users ADD COLUMN IF NOT EXISTS role ENUM('customer', 'admin') NOT NULL DEFAULT 'customer';
 
 CREATE TABLE IF NOT EXISTS categories (
     category_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -81,3 +96,7 @@ FROM (
            899.00, 1099.00, 8, 'Images/products/Sharp_55''''-4K-TV.svg'
 ) AS p
 JOIN categories c ON c.name = p.category;
+
+-- Make your own account an admin: register on login.html first, then run this in phpMyAdmin
+-- with your username. No page on the website can do this, so customers can never become admins.
+-- UPDATE users SET role = 'admin' WHERE username = 'your_username';

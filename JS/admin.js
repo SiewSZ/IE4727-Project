@@ -192,5 +192,23 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    loadProducts();
+    // Only admins may use this page, so ask the server who is signed in before loading anything.
+    // The PHP endpoints check again (requireAdmin), so this just keeps other visitors off the page.
+    const isAdmin = async () => {
+        try {
+            const res = await fetch("PHP/users/me.php");
+            const me = await res.json();
+            return me.role === "admin";
+        } catch {
+            return false;
+        }
+    };
+
+    isAdmin().then((admin) => {
+        if (admin) {
+            loadProducts();
+        } else {
+            window.location.replace("login.html?login_error=admin");
+        }
+    });
 });
