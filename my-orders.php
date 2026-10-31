@@ -131,9 +131,9 @@ function formatDate($timestamp)
                 </li>
                 <li><a href="index.php">Home</a></li>
                 <li><a href="shop.html">Shop</a></li>
+                <li><a href="hotdeals.php">Hot Deals</a></li>
                 <li><a href="pc-builder.php">PC Builder</a></li>
                 <li><a href="contact.html">Contact Us</a></li>
-                <li><a href="hotdeals.php">Hot Deals</a></li>
             </ul>
         </nav>
     </header>
@@ -269,8 +269,8 @@ function formatDate($timestamp)
                 <ul>
                     <li><a href="index.php">Home</a></li>
                     <li><a href="shop.html">Shop</a></li>
-                    <li><a href="pc-builder.php">PC Builder</a></li>
                     <li><a href="hotdeals.php">Hot Deals</a></li>
+                    <li><a href="pc-builder.php">PC Builder</a></li>
                     <li><a href="contact.html">Contact Us</a></li>
                 </ul>
             </div>

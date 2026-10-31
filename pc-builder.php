@@ -225,9 +225,9 @@ $shareUrl = "pc-builder.php" . ($build ? "?" . http_build_query(array_map(fn($p)
                 </li>
                 <li><a href="index.php">Home</a></li>
                 <li><a href="shop.html">Shop</a></li>
+                <li><a href="hotdeals.php">Hot Deals</a></li>
                 <li><a href="pc-builder.php">PC Builder</a></li>
                 <li><a href="contact.html">Contact Us</a></li>
-                <li><a href="hotdeals.php">Hot Deals</a></li>
             </ul>
         </nav>
     </header>
@@ -362,8 +362,8 @@ $shareUrl = "pc-builder.php" . ($build ? "?" . http_build_query(array_map(fn($p)
                 <ul>
                     <li><a href="index.php">Home</a></li>
                     <li><a href="shop.html">Shop</a></li>
-                    <li><a href="pc-builder.php">PC Builder</a></li>
                     <li><a href="hotdeals.php">Hot Deals</a></li>
+                    <li><a href="pc-builder.php">PC Builder</a></li>
                     <li><a href="contact.html">Contact Us</a></li>
                 </ul>
             </div>
