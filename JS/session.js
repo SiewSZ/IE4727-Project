@@ -33,10 +33,9 @@ function setCartCount(count) {
     document.querySelectorAll(".cart-count").forEach((el) => { el.textContent = count; });
 }
 
-// Reads the session cart (no fields) or changes it (fields = { action, product_id, qty }),
-// using PHP/shopping_cart/cart.php. Returns the updated cart: { items, count }.
-// Throws the server's error message, e.g. when there isn't enough stock.
-async function cartRequest(fields) {
+// Calls a PHP endpoint that replies with JSON: a GET when there are no fields, otherwise a POST
+// with the fields as form data. Returns the reply, or throws the server's error message.
+async function serverRequest(url, fields) {
     const options = {};
     if (fields) {
         options.method = "POST";
@@ -44,7 +43,7 @@ async function cartRequest(fields) {
         Object.entries(fields).forEach(([key, value]) => options.body.append(key, value));
     }
 
-    const res = await fetch("PHP/shopping_cart/cart.php", options);
+    const res = await fetch(url, options);
     let data;
     try {
         data = await res.json();
@@ -52,7 +51,14 @@ async function cartRequest(fields) {
         throw new Error("The server sent an unexpected reply. Is MySQL running?");
     }
     if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+    return data;
+}
 
+// Reads the session cart (no fields) or changes it (fields = { action, product_id, qty }),
+// using PHP/shopping_cart/cart.php. Returns the updated cart: { items, count }.
+// Throws the server's error message, e.g. when there isn't enough stock.
+async function cartRequest(fields) {
+    const data = await serverRequest("PHP/shopping_cart/cart.php", fields);
     setCartCount(data.count);
     return data;
 }

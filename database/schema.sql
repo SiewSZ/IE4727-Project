@@ -1,4 +1,4 @@
--- Quantum Gear: users, categories and products
+-- Quantum Gear: users, categories, products and orders
 -- Import in phpMyAdmin from the home page (no database selected): this file creates quantum_gear itself.
 -- Safe to re-run: tables are only created if missing, and seed rows are skipped if they already exist.
 
@@ -96,6 +96,37 @@ FROM (
            899.00, 1099.00, 8, 'Images/products/Sharp_55''''-4K-TV.svg'
 ) AS p
 JOIN categories c ON c.name = p.category;
+
+-- One row per checkout on order.html (PHP/shopping_cart/checkout.php). user_id is NULL for guests.
+CREATE TABLE IF NOT EXISTS orders (
+    order_id   INT AUTO_INCREMENT PRIMARY KEY,
+    user_id    INT NULL,
+    address    VARCHAR(255) NOT NULL,
+    total      DECIMAL(10,2) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_orders_user
+        FOREIGN KEY (user_id) REFERENCES users (id)
+        ON DELETE SET NULL,
+    INDEX idx_orders_created (created_at)   -- the sales report searches by date
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- The products in each order. The name and price are copied at checkout, so the sales report
+-- stays correct after a price change; product_id becomes NULL if the product is later deleted.
+CREATE TABLE IF NOT EXISTS order_items (
+    item_id      INT AUTO_INCREMENT PRIMARY KEY,
+    order_id     INT NOT NULL,
+    product_id   INT NULL,
+    product_name VARCHAR(150) NOT NULL,
+    unit_price   DECIMAL(10,2) NOT NULL,
+    qty          INT UNSIGNED NOT NULL,
+    CONSTRAINT fk_items_order
+        FOREIGN KEY (order_id) REFERENCES orders (order_id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_items_product
+        FOREIGN KEY (product_id) REFERENCES products (product_id)
+        ON DELETE SET NULL,
+    CONSTRAINT chk_qty CHECK (qty >= 1)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Make your own account an admin: register on login.html first, then run this in phpMyAdmin
 -- with your username. No page on the website can do this, so customers can never become admins.

@@ -159,13 +159,29 @@ document.addEventListener("DOMContentLoaded", () => {
         toggleAddressForm(false);
     });
 
-    // Truck animation from JS/order-button.js, then announce the result for screen readers
+    // Save the order (PHP/shopping_cart/checkout.php, which also empties the session cart),
+    // then play the truck animation from JS/order-button.js and announce the result for screen readers
     const orderStatus = document.getElementById("orderStatus");
-    checkoutBtn.addEventListener("click", () => {
+    checkoutBtn.addEventListener("click", async () => {
+        const { label, address } = addresses[selectedAddress];
+        checkoutBtn.disabled = true;
         orderStatus.textContent = "Placing your order...";
-        animateOrderButton(checkoutBtn).then(() => {
-            orderStatus.textContent = `Order placed! Delivering to ${addresses[selectedAddress].label}.`;
-        });
+
+        let order;
+        try {
+            order = await serverRequest("PHP/shopping_cart/checkout.php", { address: `${label}: ${address}` });
+        } catch (err) {
+            orderStatus.textContent = "";
+            alert(err.message);
+            loadCart(); // e.g. stock ran out: show the cart as the server has it now
+            return;
+        }
+
+        await animateOrderButton(checkoutBtn);
+        orderStatus.textContent = `Order #${order.orderId} placed! Delivering to ${label}.`;
+        cart = [];
+        renderCart();
+        setCartCount(0);
     });
 
     loadCart();
