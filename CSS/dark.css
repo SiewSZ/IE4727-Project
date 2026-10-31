@@ -379,6 +379,11 @@ Dark palette:
     color: #4ade80;
 }
 
+.dark-mode .policy {
+    border-color: #24324a;
+    background: #111a2b;
+}
+
 .dark-mode .info-card {
     border: 1px solid #24324a;
     background: #111a2b;
@@ -453,6 +458,49 @@ Dark palette:
 .dark-mode .order-btn.done {
     background: #15803d;
     color: #ffffff;
+}
+
+/* My Orders */
+.dark-mode .my-order,
+.dark-mode .orders-empty {
+    border-color: #24324a;
+    background: #111a2b;
+}
+
+.dark-mode .my-order-head {
+    background: #172236;
+    border-bottom-color: #24324a;
+}
+
+.dark-mode .my-order-foot,
+.dark-mode .order-lines thead th,
+.dark-mode .order-lines tbody tr + tr > *,
+.dark-mode .line-thumb {
+    border-color: #24324a;
+}
+
+.dark-mode .order-steps li + li::before {
+    background: #24324a;
+}
+
+.dark-mode .order-steps li.done::before,
+.dark-mode .order-steps li.current::before {
+    background: #4ade80;
+}
+
+.dark-mode .step-dot {
+    border-color: #24324a;
+    background: #111a2b;
+    color: #64748b;
+}
+
+.dark-mode .order-steps li.done .step-dot {
+    background: #4ade80;
+    color: #0a0e14;
+}
+
+.dark-mode .my-order .order-status.shipped {
+    color: #a78bfa;
 }
 
 /* Admin */
@@ -562,6 +610,25 @@ Dark palette:
 .dark-mode .pd-secondary-btn {
     background: #e2e8f0;
     color: #0a0e14;
+}
+
+.dark-mode .review-form,
+.dark-mode .review {
+    border-color: #24324a;
+}
+
+.dark-mode .review-form textarea {
+    border-color: #24324a;
+    background: #0b1120;
+    color: #e2e8f0;
+}
+
+.dark-mode .star-track {
+    background: #24324a;
+}
+
+.dark-mode .star-input label {
+    color: #334155;
 }
 
 .dark-mode .pd-specs th,

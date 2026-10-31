@@ -91,6 +91,24 @@
     text-decoration: none;
 }
 
+.order-confirm-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.order-confirm-link {
+    font-weight: 600;
+    color: var(--accent-text);
+}
+
+.order-confirm-note {
+    font-size: 0.85rem;
+    color: var(--muted-text);
+}
+
 .order-confirm-btn:hover {
     background: #075985;
 }
@@ -210,7 +228,6 @@
     color: var(--accent-text);
 }
 
-.icon-btn[data-action="wishlist"].active,
 .icon-btn[data-action="remove"]:hover {
     color: var(--danger-text);
 }

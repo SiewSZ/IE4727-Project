@@ -148,6 +148,49 @@
     color: #e2e8f0;
 }
 
+/* Terms & Conditions and Privacy Policy */
+.policies {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+}
+
+.policy {
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    /* Leave room above the heading when the footer link jumps here */
+    scroll-margin-top: 1.5rem;
+}
+
+.policy h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.policy h2 i {
+    color: var(--accent-text);
+}
+
+.policy ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    padding-left: 1.1rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+/* Highlight the policy the footer link jumped to */
+.policy:target {
+    border-color: var(--accent-text);
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
 @media (max-width: 900px) {
     .contact-layout,
     .form-row {

@@ -57,7 +57,6 @@ function productCard($p)
                         <span class="sale-badge">-<?= percentOff($p) ?>%</span>
 <?php endif; ?>
                     </a>
-                    <button class="wishlist-btn" aria-label="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
                     <div class="product-info">
                         <p class="product-category"><?= h($p['category']) ?></p>
                         <h3 class="product-name" title="<?= h($p['name']) ?>"><a href="<?= productUrl($p) ?>"><?= h($p['name']) ?></a></h3>

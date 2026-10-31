@@ -726,6 +726,75 @@ nav {
 }
 
 
+/* Small screens: the header wraps onto two rows and the nav bar scrolls sideways */
+@media (max-width: 720px) {
+    .nav-top {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+    }
+
+    .logo {
+        width: 110px;
+    }
+
+    .search-box {
+        margin-right: 0.5rem;
+    }
+
+    .theme-toggle,
+    .cart-icon {
+        margin-right: 0.75rem;
+    }
+
+    /* Login/Register wraps onto its own row: keep it on the right, under the icons */
+    .nav-top > .btn {
+        margin-left: auto;
+    }
+
+    /* Account links get their own row under the logo and icons */
+    .user-menu {
+        flex-basis: 100%;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .nav-links {
+        gap: 1.25rem;
+        padding: 0.5rem 1rem;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .nav-links li a,
+    .menu-toggle {
+        font-size: 0.95rem;
+    }
+
+    /* Mega menu: one column that fits the screen and scrolls */
+    .mega-menu {
+        position: fixed;
+        top: auto;
+        left: 0.5rem;
+        right: 0.5rem;
+        flex-direction: column;
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+
+    .mega-menu-col {
+        min-width: 0;
+        padding: 1rem 1.25rem;
+    }
+
+    .mega-menu-quick {
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+}
+
 /* Shared Utilities (used on more than one page) */
 /* Plain icon button, e.g. edit/remove buttons in the cart and admin tables */
 .icon-btn {

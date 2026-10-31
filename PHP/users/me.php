@@ -1,8 +1,9 @@
 <?php
 // Tells a page what is in the session: who is signed in and how many items are in the cart.
 // JS/session.js uses it to update the header; admin.html uses it to send non-admins away.
-// Replies with JSON: {"loggedIn": true, "username": "...", "role": "admin", "cartCount": 3}
-//                 or {"loggedIn": false, "cartCount": 0}
+// Replies with JSON: {"loggedIn": true, "username": "...", "role": "admin", "cartCount": 3, "csrfToken": "..."}
+//                 or {"loggedIn": false, "cartCount": 0, "csrfToken": "..."}
+// csrfToken must be sent back (as csrf_token) with every change: see csrfToken() in auth.php.
 
 require_once __DIR__ . "/../db_connect.php";
 require_once __DIR__ . "/auth.php";   // also signs out a user who has been inactive too long
@@ -22,5 +23,6 @@ if ($reply['loggedIn']) {
 
 // The cart is kept as [product_id => quantity]
 $reply['cartCount'] = array_sum($_SESSION['cart'] ?? []);
+$reply['csrfToken'] = csrfToken();
 
 echo json_encode($reply);

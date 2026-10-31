@@ -19,6 +19,24 @@ if (isset($_SESSION['user_id'])) {
     }
 }
 
+// CSRF protection: a random secret kept in the session. Pages get it from me.php (or PHP writes it
+// into a form) and send it back with every change. Another website can't read it, so it can't
+// trick a signed-in admin's browser into deleting products or placing orders.
+function csrfToken()
+{
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+// True when the request carries the session's token (form field csrf_token)
+function csrfValid()
+{
+    $sent = $_POST['csrf_token'] ?? '';
+    return !empty($_SESSION['csrf_token']) && is_string($sent) && hash_equals($_SESSION['csrf_token'], $sent);
+}
+
 // The role can change while someone is signed in (admins manage it on the Users tab), so read
 // it from the database instead of trusting the copy saved at login. An account that has been
 // deleted is signed out. Needs $conn from db_connect.php.

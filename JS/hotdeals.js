@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Add to Cart and wishlist buttons on every deal (bindProductButtons is in JS/products.js)
+    // Add to Cart buttons on every deal (bindProductButtons is in JS/products.js)
     const page = document.querySelector(".deals-page");
     if (page) bindProductButtons(page);
 

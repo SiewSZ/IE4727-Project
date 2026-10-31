@@ -45,7 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
             <p class="cart-item-price">${money(item.price * item.qty)}</p>
             <div class="cart-item-actions">
-                <button class="icon-btn" data-action="wishlist" aria-label="Move to wishlist"><i class="fa-regular fa-heart"></i></button>
                 <button class="icon-btn" data-action="remove" aria-label="Remove item"><i class="fa-regular fa-trash-can"></i></button>
             </div>
         </article>`;
@@ -84,13 +83,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const id = Number(btn.closest(".cart-item").dataset.id);
         const item = cart.find((i) => i.id === id);
-
-        if (btn.dataset.action === "wishlist") {
-            btn.classList.toggle("active");
-            btn.querySelector("i").classList.toggle("fa-solid");
-            btn.querySelector("i").classList.toggle("fa-regular");
-            return;
-        }
 
         const changes = {
             increase: { action: "update", product_id: id, qty: item.qty + 1 },
@@ -175,7 +167,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 <i class="fa-solid fa-circle-check"></i>
                 <h3>Thank you! Order #${result.orderId} is confirmed.</h3>
                 <p>${result.itemCount} item${result.itemCount === 1 ? "" : "s"}, ${money(result.total)} in total, will be delivered to <strong>${esc(address.label)}</strong> (${esc(address.address)}).</p>
-                <a href="shop.html" class="order-confirm-btn">Continue shopping</a>
+                <div class="order-confirm-actions">
+                    <a href="my-orders.php#order-${result.orderId}" class="order-confirm-btn">Track this order</a>
+                    <a href="shop.html" class="order-confirm-link">Continue shopping</a>
+                </div>
+                <p class="order-confirm-note">A confirmation email is on its way.</p>
             </div>`;
     };
 
@@ -188,6 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const body = new FormData();
         body.append("address_label", address.label);
         body.append("address", address.address);
+        body.append("csrf_token", await getCsrfToken());   // JS/session.js
 
         const animation = animateOrderButton(checkoutBtn);
         try {

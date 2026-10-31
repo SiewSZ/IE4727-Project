@@ -2,11 +2,26 @@
 // "Hi, <name>" with a Logout button (and an Admin link for admins) instead of Login/Register,
 // and the number of items in the session cart on the cart icon.
 
+// Everything the header needs comes from one request to me.php, shared by getCsrfToken() below
+let mePromise = null;
+function loadMe() {
+    mePromise = mePromise || fetch("PHP/users/me.php").then((res) => res.json());
+    return mePromise;
+}
+
+// The token the server wants with every change (admin actions, placing an order); see auth.php
+async function getCsrfToken() {
+    try {
+        return (await loadMe()).csrfToken || "";
+    } catch {
+        return "";
+    }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
     let me;
     try {
-        const res = await fetch("PHP/users/me.php");
-        me = await res.json();
+        me = await loadMe();
     } catch {
         return; // PHP not reachable (e.g. the page was opened as a file): keep the default header
     }
@@ -20,6 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     userMenu.className = "user-menu";
     userMenu.innerHTML = `
         <span class="user-greeting"><i class="fa-solid fa-user"></i> Hi, <strong></strong></span>
+        <a href="my-orders.php" class="user-link"><i class="fa-solid fa-box-open"></i> My Orders</a>
         ${me.role === "admin" ? `<a href="admin.html" class="user-link"><i class="fa-solid fa-gear"></i> Admin</a>` : ""}
         <form method="post" action="PHP/users/logout.php">
             <button type="submit" class="btn">Logout</button>

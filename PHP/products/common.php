@@ -14,11 +14,14 @@ function respond($status, $data)
     exit;
 }
 
-// Only accept POST for anything that changes the database
+// Only accept POST for anything that changes the database, and only with the session's CSRF token
 function requirePost()
 {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         respond(405, ["error" => "Use POST for this request."]);
+    }
+    if (!csrfValid()) {
+        respond(403, ["error" => "Your session has expired. Please refresh the page and try again."]);
     }
 }
 

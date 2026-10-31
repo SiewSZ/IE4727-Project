@@ -6,6 +6,7 @@
 // Replies with JSON: {"ok": true} or {"error": "..."}
 
 require_once __DIR__ . "/../products/common.php";   // $conn, respond(), requirePost(), requireAdmin()
+require_once __DIR__ . "/mailer.php";               // sendOrderEmail()
 requirePost();
 requireAdmin();
 
@@ -20,7 +21,7 @@ if (!in_array($status, STATUSES, true)) {
 
 mysqli_begin_transaction($conn);
 try {
-    $stmt = mysqli_prepare($conn, "SELECT status FROM orders WHERE order_id = ? FOR UPDATE");
+    $stmt = mysqli_prepare($conn, "SELECT status, customer_name, email FROM orders WHERE order_id = ? FOR UPDATE");
     mysqli_stmt_bind_param($stmt, "i", $orderId);
     mysqli_stmt_execute($stmt);
     $order = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
@@ -53,6 +54,20 @@ try {
 } catch (RuntimeException $e) {
     mysqli_rollback($conn);
     respond(400, ["error" => $e->getMessage()]);
+}
+
+// Tell the customer, but only when the status really changed
+if ($status !== $order['status']) {
+    $messages = [
+        "Pending" => "Your order is waiting to be processed.",
+        "Processing" => "We are packing your order now.",
+        "Shipped" => "Your order is on its way!",
+        "Delivered" => "Your order has been delivered. Enjoy your new gear!",
+        "Cancelled" => "Your order has been cancelled. If you did not ask for this, please contact us.",
+    ];
+    sendOrderEmail($conn, $order['email'], "Quantum Gear order #$orderId: $status",
+        "Hi {$order['customer_name']},\r\n\r\n{$messages[$status]}\r\n\r\nOrder #$orderId status: $status"
+        . "\r\n\r\nYou can follow your orders on the My Orders page.");
 }
 
 mysqli_close($conn);

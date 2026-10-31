@@ -1,15 +1,24 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Wishlist and Add to Cart on the related product cards (bindProductButtons is in JS/products.js)
+    // Add to Cart on the related product cards (bindProductButtons is in JS/products.js)
     const page = document.querySelector(".product-page");
     if (page) bindProductButtons(page.querySelector(".pd-related") || document.createElement("div"));
 
-    // Wishlist heart on the main image (visual only, like the shop)
-    const heart = document.querySelector(".pd-gallery .wishlist-btn");
-    if (heart) {
-        heart.addEventListener("click", () => {
-            heart.classList.toggle("active");
-            heart.querySelector("i").classList.toggle("fa-solid");
-            heart.querySelector("i").classList.toggle("fa-regular");
+    // Review form: HTML5 requires a rating and 10+ characters, but spaces count as characters,
+    // so check the review has real text before it goes to PHP/products/review.php
+    const reviewForm = document.getElementById("reviewForm");
+    if (reviewForm) {
+        const comment = reviewForm.elements.comment;
+        const reviewError = document.getElementById("reviewError");
+        reviewForm.addEventListener("submit", (e) => {
+            let error = "";
+            if (!reviewForm.querySelector('input[name="rating"]:checked')) {
+                error = "Please choose a rating from 1 to 5 stars.";
+            } else if (comment.value.trim().length < 10) {
+                error = "Please write at least 10 characters so other shoppers can learn from your review.";
+            }
+            reviewError.textContent = error;
+            comment.classList.toggle("invalid", error !== "" && comment.value.trim().length < 10);
+            if (error) e.preventDefault();
         });
     }
 

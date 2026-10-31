@@ -416,8 +416,8 @@ if ($clearance) {
         <div class="footer-bottom">
             <p>&copy; 2026 Quantum Gear. All rights reserved.</p>
             <ul class="footer-legal">
-                <li><a href="#">Terms &amp; Conditions</a></li>
-                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="contact.html#terms">Terms &amp; Conditions</a></li>
+                <li><a href="contact.html#privacy">Privacy Policy</a></li>
             </ul>
         </div>
     </footer>

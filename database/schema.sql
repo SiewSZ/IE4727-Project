@@ -23,6 +23,10 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS role ENUM('customer', 'admin') NOT NU
 -- When each user last signed in (set by PHP/users/authmain.php, shown on the admin Users tab)
 ALTER TABLE users ADD COLUMN IF NOT EXISTS last_login DATETIME NULL AFTER role;
 
+-- Wrong-password counter: 5 in a row locks the account for 5 minutes (PHP/users/authmain.php)
+ALTER TABLE users ADD COLUMN IF NOT EXISTS failed_logins TINYINT UNSIGNED NOT NULL DEFAULT 0 AFTER last_login;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS locked_until DATETIME NULL AFTER failed_logins;
+
 CREATE TABLE IF NOT EXISTS categories (
     category_id INT AUTO_INCREMENT PRIMARY KEY,
     name        VARCHAR(50) NOT NULL UNIQUE,
@@ -81,6 +85,35 @@ CREATE TABLE IF NOT EXISTS order_items (
     qty           INT UNSIGNED NOT NULL,
     CONSTRAINT fk_items_order FOREIGN KEY (order_id) REFERENCES orders (order_id) ON DELETE CASCADE,
     CONSTRAINT fk_items_product FOREIGN KEY (product_id) REFERENCES products (product_id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Product reviews (PHP/products/review.php): one per customer per product, only after buying it.
+-- products.rating and products.reviews are kept up to date from this table.
+CREATE TABLE IF NOT EXISTS reviews (
+    review_id  INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    user_id    INT NULL,                            -- NULL once the account is deleted
+    username   VARCHAR(50) NOT NULL,
+    rating     TINYINT UNSIGNED NOT NULL,
+    comment    TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NULL,                       -- set when the customer edits their review
+    CONSTRAINT fk_reviews_product FOREIGN KEY (product_id) REFERENCES products (product_id) ON DELETE CASCADE,
+    CONSTRAINT fk_reviews_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE SET NULL,
+    CONSTRAINT chk_review_rating CHECK (rating BETWEEN 1 AND 5),
+    UNIQUE KEY one_review_per_customer (product_id, user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Every order email (PHP/orders/mailer.php). Project rule: emails only go to our own local
+-- mailbox, so intended_for records which customer each one was really for.
+CREATE TABLE IF NOT EXISTS email_log (
+    email_id     INT AUTO_INCREMENT PRIMARY KEY,
+    to_address   VARCHAR(100) NOT NULL,
+    intended_for VARCHAR(100) NOT NULL,
+    subject      VARCHAR(200) NOT NULL,
+    body         TEXT NOT NULL,
+    sent         TINYINT(1) NOT NULL,              -- 1 = the mail server accepted it
+    created_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Key features shown as bullet points on product.php: one feature per line

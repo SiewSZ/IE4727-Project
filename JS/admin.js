@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // POST to a product endpoint and return its JSON reply, throwing the server's error message on failure
     const post = async (url, body) => {
+        body.append("csrf_token", await getCsrfToken());   // JS/session.js
         const res = await fetch(url, { method: "POST", body });
         let data;
         try {

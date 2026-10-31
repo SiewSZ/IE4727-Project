@@ -22,7 +22,6 @@ const productCard = (p) => `
                 : `<i class="fa-solid ${esc(p.icon || "fa-box")}"></i>`}
             ${discountPercent(p) ? `<span class="sale-badge">-${discountPercent(p)}%</span>` : ""}
         </a>
-        <button class="wishlist-btn" aria-label="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
         <div class="product-info">
             <p class="product-category">${esc(p.category)}</p>
             <h3 class="product-name" title="${esc(p.name)}"><a href="product.php?id=${p.id}">${esc(p.name)}</a></h3>
@@ -56,21 +55,12 @@ const addToCart = async (btn) => {
     }
 };
 
-// One click listener on the container handles every card inside it, even cards added later.
-// The wishlist is visual only for now.
+// One click listener on the container handles every card inside it, even cards added later
 function bindProductButtons(container) {
     container.addEventListener("click", (e) => {
         const cartBtn = e.target.closest(".add-cart-btn");
-        const heartBtn = e.target.closest(".wishlist-btn");
-
         if (cartBtn) {
             addToCart(cartBtn);
-        }
-
-        if (heartBtn) {
-            heartBtn.classList.toggle("active");
-            heartBtn.querySelector("i").classList.toggle("fa-solid");
-            heartBtn.querySelector("i").classList.toggle("fa-regular");
         }
     });
 }

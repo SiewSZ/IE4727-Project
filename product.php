@@ -4,9 +4,13 @@
 // Add to Cart / Buy Now use the same session cart as the shop (JS/product.js -> PHP/shopping_cart/cart.php).
 
 require_once __DIR__ . "/PHP/db_connect.php";
+require_once __DIR__ . "/PHP/users/auth.php";        // the session, csrfToken() for the review form
 require_once __DIR__ . "/PHP/products/render.php";   // h(), money(), productCard() ...
 
 const LOW_STOCK = 5;   // same "low stock" level as the admin page
+
+refreshSessionUser($conn);
+$userId = (int) ($_SESSION['user_id'] ?? 0);
 
 $id = (int) ($_GET['id'] ?? 0);
 
@@ -35,6 +39,28 @@ if ($product) {
     mysqli_stmt_execute($stmt);
     $related = mysqli_fetch_all(mysqli_stmt_get_result($stmt), MYSQLI_ASSOC);
     mysqli_stmt_close($stmt);
+
+    // Customer reviews, newest first
+    $stmt = mysqli_prepare($conn,
+        "SELECT review_id, user_id, username, rating, comment, created_at, updated_at
+         FROM reviews WHERE product_id = ? ORDER BY created_at DESC");
+    mysqli_stmt_bind_param($stmt, "i", $id);
+    mysqli_stmt_execute($stmt);
+    $reviews = mysqli_fetch_all(mysqli_stmt_get_result($stmt), MYSQLI_ASSOC);
+    mysqli_stmt_close($stmt);
+
+    // Only customers who have bought this product (in an order that wasn't cancelled) can review it
+    $hasBought = false;
+    if ($userId) {
+        $stmt = mysqli_prepare($conn,
+            "SELECT 1 FROM order_items i JOIN orders o USING (order_id)
+             WHERE o.user_id = ? AND i.product_id = ? AND o.status <> 'Cancelled' LIMIT 1");
+        mysqli_stmt_bind_param($stmt, "ii", $userId, $id);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_store_result($stmt);
+        $hasBought = mysqli_stmt_num_rows($stmt) > 0;
+        mysqli_stmt_close($stmt);
+    }
 } else {
     http_response_code(404);
 }
@@ -50,6 +76,32 @@ if ($product) {
     // Price split into dollars and cents so the cents can be drawn smaller
     [$dollars, $cents] = explode(".", number_format((float) $product['price'], 2, ".", ","));
     $categoryUrl = "shop.html?category=" . rawurlencode($product['category']);
+
+    // Review summary: average and how many reviews gave each number of stars
+    $reviewCount = count($reviews);
+    $averageRating = $reviewCount ? array_sum(array_column($reviews, 'rating')) / $reviewCount : 0;
+    $starCounts = array_fill_keys([5, 4, 3, 2, 1], 0);
+    foreach ($reviews as $review) {
+        $starCounts[(int) $review['rating']]++;
+    }
+    $myReview = null;
+    foreach ($reviews as $review) {
+        if ($userId && (int) $review['user_id'] === $userId) {
+            $myReview = $review;
+        }
+    }
+
+    // PHP/products/review.php redirects back with ?review=saved or ?review_error=<code>
+    $reviewErrors = [
+        "signin" => "Please sign in to write a review.",
+        "not_bought" => "Only customers who have bought this product can review it.",
+        "rating" => "Please choose a rating from 1 to 5 stars.",
+        "comment" => "Please write a review between 10 and 1000 characters.",
+        "expired" => "Your session expired. Please try again.",
+    ];
+    $reviewMessage = isset($_GET['review_error'])
+        ? ["error", $reviewErrors[$_GET['review_error']] ?? "Your review could not be saved."]
+        : (($_GET['review'] ?? '') === 'saved' ? ["success", "Thank you! Your review has been saved."] : null);
 }
 ?>
 <!DOCTYPE html>
@@ -155,10 +207,10 @@ if ($product) {
         <div class="pd-title">
             <p class="pd-brand"><?= h($product['brand']) ?></p>
             <h1><?= h($product['name']) ?></h1>
-            <div class="pd-rating">
-                <?= stars($product['rating']) ?>
-                <span><?= $product['reviews'] > 0 ? (int) $product['rating'] . ".0 (" . (int) $product['reviews'] . " reviews)" : "No reviews yet" ?></span>
-            </div>
+            <a class="pd-rating" href="#reviews">
+                <?= stars(round($averageRating)) ?>
+                <span><?= $reviewCount ? number_format($averageRating, 1) . " ($reviewCount review" . ($reviewCount === 1 ? "" : "s") . ")" : "No reviews yet" ?></span>
+            </a>
         </div>
 
         <div class="product-detail" data-id="<?= (int) $product['product_id'] ?>">
@@ -167,7 +219,6 @@ if ($product) {
 <?php if ($onSale): ?>
                 <span class="sale-badge">-<?= percentOff($product) ?>%</span>
 <?php endif; ?>
-                <button class="wishlist-btn" aria-label="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
             </div>
 
             <section class="pd-features" aria-labelledby="featuresTitle">
@@ -237,6 +288,77 @@ if ($product) {
             </table>
         </section>
 
+        <section class="pd-section pd-reviews" id="reviews" aria-labelledby="reviewsTitle">
+            <h2 id="reviewsTitle">Customer Reviews</h2>
+            <div class="reviews-layout">
+                <div class="review-summary">
+<?php if ($reviewCount): ?>
+                    <p class="review-average"><?= number_format($averageRating, 1) ?> <small>out of 5</small></p>
+                    <div class="pd-rating"><?= stars(round($averageRating)) ?></div>
+                    <p class="review-total"><?= $reviewCount ?> review<?= $reviewCount === 1 ? "" : "s" ?></p>
+                    <!-- How many reviews gave each number of stars -->
+                    <ul class="star-bars">
+<?php foreach ($starCounts as $starsGiven => $count): ?>
+                        <li title="<?= $count ?> review<?= $count === 1 ? "" : "s" ?> with <?= $starsGiven ?> star<?= $starsGiven === 1 ? "" : "s" ?>">
+                            <span><?= $starsGiven ?> <i class="fa-solid fa-star"></i></span>
+                            <span class="star-track"><span class="star-fill" style="width: <?= round($count / $reviewCount * 100) ?>%"></span></span>
+                            <span><?= $count ?></span>
+                        </li>
+<?php endforeach; ?>
+                    </ul>
+<?php else: ?>
+                    <p class="review-average">No reviews yet</p>
+                    <p class="review-total">Bought this product? Be the first to tell other shoppers what you think.</p>
+<?php endif; ?>
+                </div>
+
+                <div class="review-main">
+<?php if ($reviewMessage): ?>
+                    <p class="review-message <?= $reviewMessage[0] ?>" role="status"><?= h($reviewMessage[1]) ?></p>
+<?php endif; ?>
+<?php if ($hasBought): ?>
+                    <!-- HTML5 checks a rating is chosen and the length; JS/product.js and PHP/products/review.php check again -->
+                    <form class="review-form" id="reviewForm" method="post" action="PHP/products/review.php">
+                        <h3><?= $myReview ? "Update your review" : "Write a review" ?></h3>
+                        <input type="hidden" name="product_id" value="<?= (int) $product['product_id'] ?>">
+                        <input type="hidden" name="csrf_token" value="<?= h(csrfToken()) ?>">
+                        <fieldset class="star-input">
+                            <legend>Your rating</legend>
+<?php for ($i = 5; $i >= 1; $i--): ?>
+                            <input type="radio" id="star<?= $i ?>" name="rating" value="<?= $i ?>" required<?= $myReview && (int) $myReview['rating'] === $i ? " checked" : "" ?>>
+                            <label for="star<?= $i ?>" title="<?= $i ?> star<?= $i === 1 ? "" : "s" ?>"><i class="fa-solid fa-star"></i><span class="visually-hidden"><?= $i ?> star<?= $i === 1 ? "" : "s" ?></span></label>
+<?php endfor; ?>
+                        </fieldset>
+                        <label for="reviewComment">Your review</label>
+                        <textarea id="reviewComment" name="comment" rows="4" minlength="10" maxlength="1000" required placeholder="What did you like or dislike? How are you using it?"><?= $myReview ? h($myReview['comment']) : "" ?></textarea>
+                        <p class="field-error" id="reviewError"></p>
+                        <button type="submit" class="pd-primary-btn"><?= $myReview ? "Update review" : "Post review" ?></button>
+                    </form>
+<?php elseif ($userId): ?>
+                    <p class="review-note"><i class="fa-solid fa-circle-info"></i> Reviews are written by customers who bought this product, so you can review it after your order.</p>
+<?php else: ?>
+                    <p class="review-note"><i class="fa-solid fa-circle-info"></i> <a href="login.html">Sign in</a> to review products you have bought.</p>
+<?php endif; ?>
+
+<?php if ($reviews): ?>
+                    <ul class="review-list">
+<?php foreach ($reviews as $review): ?>
+                        <li class="review">
+                            <div class="review-head">
+                                <span class="pd-rating"><?= stars((int) $review['rating']) ?></span>
+                                <strong><?= h($review['username']) ?></strong>
+                                <span class="verified"><i class="fa-solid fa-circle-check"></i> Verified purchase</span>
+                            </div>
+                            <p class="review-date"><?= h(date("d M Y", strtotime($review['created_at']))) ?><?= $review['updated_at'] ? " (edited)" : "" ?></p>
+                            <p><?= nl2br(h($review['comment'])) ?></p>
+                        </li>
+<?php endforeach; ?>
+                    </ul>
+<?php endif; ?>
+                </div>
+            </div>
+        </section>
+
 <?php if ($related): ?>
         <section class="pd-related" aria-labelledby="relatedTitle">
             <h2 id="relatedTitle">More in <?= h($product['category']) ?></h2>
@@ -302,8 +424,8 @@ if ($product) {
         <div class="footer-bottom">
             <p>&copy; 2026 Quantum Gear. All rights reserved.</p>
             <ul class="footer-legal">
-                <li><a href="#">Terms &amp; Conditions</a></li>
-                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="contact.html#terms">Terms &amp; Conditions</a></li>
+                <li><a href="contact.html#privacy">Privacy Policy</a></li>
             </ul>
         </div>
     </footer>

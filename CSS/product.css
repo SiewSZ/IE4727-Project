@@ -392,6 +392,233 @@
     padding: 0;
 }
 
+/* Customer reviews */
+.pd-rating {
+    text-decoration: none;
+}
+
+.reviews-layout {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) minmax(0, 2.5fr);
+    gap: 2.5rem;
+    align-items: start;
+}
+
+.review-average {
+    font-size: 2.6rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.review-average small {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--muted-text);
+}
+
+.review-total {
+    margin: 0.4rem 0 1rem;
+    font-size: 0.9rem;
+    color: var(--muted-text);
+}
+
+/* How many reviews gave each number of stars */
+.star-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    list-style: none;
+    font-size: 0.8rem;
+}
+
+.star-bars li {
+    display: grid;
+    grid-template-columns: 2.4rem 1fr 1.5rem;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.star-bars li i {
+    color: var(--star);
+}
+
+.star-bars li span:last-child {
+    text-align: right;
+    color: var(--muted-text);
+}
+
+.star-track {
+    height: 8px;
+    border-radius: 4px;
+    background: #e2e8f0;
+    overflow: hidden;
+}
+
+.star-fill {
+    display: block;
+    height: 100%;
+    border-radius: 4px;
+    background: var(--star);
+}
+
+.review-message {
+    margin-bottom: 1rem;
+    padding: 0.65rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.review-message.success {
+    background: rgba(22, 163, 74, 0.12);
+    color: var(--success-text);
+}
+
+.review-message.error {
+    background: rgba(220, 38, 38, 0.12);
+    color: var(--danger-text);
+}
+
+.review-note {
+    margin-bottom: 1.25rem;
+    font-size: 0.9rem;
+    color: var(--muted-text);
+}
+
+.review-note a {
+    color: var(--accent-text);
+    font-weight: 600;
+}
+
+.review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 1.75rem;
+    padding: 1.25rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+.review-form h3 {
+    font-size: 1.05rem;
+}
+
+.review-form > label {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.review-form textarea {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    resize: vertical;
+}
+
+.review-form textarea:focus {
+    outline: none;
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+}
+
+.review-form textarea.invalid {
+    border-color: var(--danger-text);
+}
+
+.review-form .field-error {
+    min-height: 1em;
+    font-size: 0.8rem;
+    color: var(--danger-text);
+}
+
+.review-form .pd-primary-btn {
+    align-self: flex-start;
+}
+
+/* Star picker: radio buttons drawn as stars. They are listed 5 to 1 and shown right to left,
+   so "this star and every star after it" (~) lights up the chosen star and the ones before it. */
+.star-input {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 0.25rem;
+    border: none;
+}
+
+.star-input legend {
+    margin-bottom: 0.3rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.star-input input {
+    position: absolute;
+    opacity: 0;
+}
+
+.star-input label {
+    font-size: 1.6rem;
+    color: #cbd5e1;
+    cursor: pointer;
+    transition: color 0.15s, transform 0.15s;
+}
+
+.star-input label:hover,
+.star-input label:hover ~ label,
+.star-input input:checked ~ label {
+    color: var(--star);
+}
+
+.star-input label:hover {
+    transform: scale(1.15);
+}
+
+.star-input input:focus-visible + label {
+    outline: 2px solid #38bdf8;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.review-list {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+}
+
+.review {
+    padding: 1rem 0;
+    border-top: 1px solid #e2e8f0;
+    line-height: 1.6;
+}
+
+.review-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.75rem;
+}
+
+.verified {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--success-text);
+}
+
+.review-date {
+    font-size: 0.8rem;
+    color: var(--muted-text);
+}
+
+@media (max-width: 800px) {
+    .reviews-layout {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
 /* Product not found */
 .pd-missing {
     display: flex;

@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginErrors = {
         missing: "Please enter your username/email and password.",
         invalid: "Incorrect username/email or password.",
+        locked: "Too many wrong passwords. For your security this account is locked for 5 minutes.",
         admin: "Please sign in with an admin account to open the admin page."
     };
 

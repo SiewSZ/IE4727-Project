@@ -1,0 +1,313 @@
+/* My Orders Page Style */
+.orders-page {
+    /* Same side gap as the home page carousel and the shop */
+    margin: 2.5rem clamp(1rem, 8vw, 10rem);
+    font-family: 'Inter', sans-serif;
+}
+
+.orders-title h1 {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.7rem;
+}
+
+.orders-title h1 i {
+    color: var(--accent-text);
+}
+
+.orders-title p {
+    margin-top: 0.35rem;
+    color: var(--muted-text);
+}
+
+/* Signed out / no orders */
+.orders-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+    margin-top: 2rem;
+    padding: 3.5rem 1.5rem;
+    border: 1px dashed #cbd5e1;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.orders-empty > i {
+    font-size: 3rem;
+    color: var(--muted-text);
+}
+
+.orders-empty p {
+    max-width: 30rem;
+    color: var(--muted-text);
+}
+
+.orders-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 2rem;
+    margin: 1.5rem 0;
+    padding: 1rem 1.25rem;
+    border-radius: 10px;
+    background: rgba(2, 132, 199, 0.08);
+}
+
+.orders-summary strong {
+    font-size: 1.15rem;
+}
+
+/* One order */
+.my-order {
+    margin-bottom: 1.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.my-order-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.my-order-head h2 {
+    font-size: 1.15rem;
+}
+
+.my-order-head p {
+    font-size: 0.85rem;
+    color: var(--muted-text);
+}
+
+/* Status colours match the admin Orders tab */
+.my-order .order-status {
+    padding: 0.3rem 0.8rem;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.my-order .order-status.pending    { background: rgba(194, 65, 12, 0.12);  color: var(--warning-text); }
+.my-order .order-status.processing { background: rgba(2, 132, 199, 0.12);  color: var(--accent-text); }
+.my-order .order-status.shipped    { background: rgba(124, 58, 237, 0.12); color: #7c3aed; }
+.my-order .order-status.delivered  { background: rgba(22, 163, 74, 0.12);  color: var(--success-text); }
+.my-order .order-status.cancelled  { background: rgba(220, 38, 38, 0.12);  color: var(--danger-text); }
+
+/* Progress tracker: a line through four dots, filled up to the current step */
+.order-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    list-style: none;
+    padding: 1.5rem 1.25rem 1rem;
+}
+
+.order-steps li {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: center;
+}
+
+/* The connecting line runs from each dot to the next one */
+.order-steps li + li::before {
+    content: "";
+    position: absolute;
+    top: 1.1rem;
+    right: 50%;
+    width: 100%;
+    height: 3px;
+    background: #e2e8f0;
+}
+
+.order-steps li.done::before,
+.order-steps li.current::before {
+    background: var(--success-text);
+}
+
+.step-dot {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+
+.order-steps li.done .step-dot {
+    border-color: var(--success-text);
+    background: var(--success-text);
+    color: #ffffff;
+}
+
+.order-steps li.current .step-dot {
+    border-color: var(--success-text);
+    color: var(--success-text);
+    box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.15);
+}
+
+.step-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted-text);
+}
+
+.order-steps li.done .step-label,
+.order-steps li.current .step-label {
+    color: inherit;
+}
+
+.order-cancelled {
+    margin: 1rem 1.25rem 0;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    background: rgba(220, 38, 38, 0.1);
+    color: var(--danger-text);
+    font-size: 0.9rem;
+}
+
+.order-cancelled a {
+    color: inherit;
+    font-weight: 700;
+}
+
+/* Items table */
+.order-lines {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.order-lines th,
+.order-lines td {
+    padding: 0.7rem 1.25rem;
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.order-lines th:first-child {
+    text-align: left;
+    white-space: normal;
+}
+
+.order-lines thead th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted-text);
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.order-lines tbody th {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+}
+
+.order-lines tbody tr + tr > * {
+    border-top: 1px solid #f1f5f9;
+}
+
+.order-lines a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.order-lines a:hover {
+    color: var(--accent-text);
+    text-decoration: underline;
+}
+
+.order-lines s {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--muted-text);
+}
+
+.line-thumb {
+    flex: 0 0 2.75rem;
+    height: 2.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #94a3b8;
+    overflow: hidden;
+}
+
+.line-thumb img {
+    width: 100%;
+    height: 100%;
+    padding: 0.15rem;
+    object-fit: contain;
+}
+
+/* Address and totals */
+.my-order-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.order-ship {
+    font-size: 0.9rem;
+}
+
+.order-ship i {
+    color: var(--accent-text);
+}
+
+.order-totals {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 0.3rem 1.5rem;
+    font-size: 0.9rem;
+}
+
+.order-totals dd {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.order-totals .saving {
+    color: var(--success-text);
+    font-weight: 600;
+}
+
+.order-totals .total {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+@media (max-width: 640px) {
+    .step-label {
+        font-size: 0.7rem;
+    }
+
+    .order-lines th,
+    .order-lines td {
+        padding: 0.6rem 0.6rem;
+    }
+}

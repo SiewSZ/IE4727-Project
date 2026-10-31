@@ -6,6 +6,7 @@
 // Replies with JSON: {"ok": true, "orderId": 12, "total": 996.00, "itemCount": 4} or {"error": "..."}
 
 require_once __DIR__ . "/../products/common.php";   // $conn, respond(), requirePost() and the session
+require_once __DIR__ . "/mailer.php";               // sendOrderEmail()
 requirePost();
 
 if (empty($_SESSION['user_id'])) {
@@ -101,6 +102,17 @@ try {
 
 // Only now that the order is saved is the cart emptied
 $_SESSION['cart'] = [];
+
+// Acknowledge the order by email
+$items = array_map(fn($line) => ["qty" => $line[4], "name" => $line[1], "unit_price" => $line[2]], $lines);
+sendOrderEmail($conn, $customer['email'], "Quantum Gear order #$orderId confirmed",
+    "Hi {$customer['username']},\r\n\r\nThank you for your order! Here is what you bought:\r\n\r\n"
+    . orderLinesText($items)
+    . "\r\n\r\nSubtotal: $" . number_format($subtotal, 2)
+    . "\r\nDiscount: -$" . number_format($discount, 2)
+    . "\r\nTotal paid: $" . number_format($total, 2)
+    . "\r\n\r\nDelivering to $label: $address"
+    . "\r\n\r\nWe will email you whenever the status of your order changes. You can also follow it on the My Orders page.");
 mysqli_close($conn);
 
 respond(200, ["ok" => true, "orderId" => $orderId, "total" => round($total, 2), "itemCount" => array_sum($cart)]);
