@@ -1,18 +1,21 @@
 <?php
-// Tells a page who is signed in, e.g. so admin.html can send non-admins to the login page.
-// Replies with JSON: {"loggedIn": true, "username": "...", "role": "admin"} or {"loggedIn": false}
+// Tells a page what is in the session: who is signed in and how many items are in the cart.
+// JS/session.js uses it to update the header; admin.html uses it to send non-admins away.
+// Replies with JSON: {"loggedIn": true, "username": "...", "role": "admin", "cartCount": 3}
+//                 or {"loggedIn": false, "cartCount": 0}
 
-require_once __DIR__ . "/auth.php";
+require_once __DIR__ . "/auth.php";   // also signs out a user who has been inactive too long
 
 header("Content-Type: application/json");
 
-if (empty($_SESSION['user_id'])) {
-    echo json_encode(["loggedIn" => false]);
-    exit;
+$reply = ["loggedIn" => !empty($_SESSION['user_id'])];
+
+if ($reply['loggedIn']) {
+    $reply['username'] = $_SESSION['username'];
+    $reply['role'] = $_SESSION['role'] ?? "customer";
 }
 
-echo json_encode([
-    "loggedIn" => true,
-    "username" => $_SESSION['username'],
-    "role" => $_SESSION['role'] ?? "customer"
-]);
+// The cart is kept as [product_id => quantity]
+$reply['cartCount'] = array_sum($_SESSION['cart'] ?? []);
+
+echo json_encode($reply);

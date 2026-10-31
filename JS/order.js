@@ -2,13 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const itemsBox = document.getElementById("cartItems");
     if (!itemsBox) return;
 
-    // Sample cart until the database is connected
-    const cart = [
-        { name: "ASUS ROG Astral GeForce RTX 5090", category: "Components & Storage", status: "New", price: 3899.00, oldPrice: 4199.00, qty: 1, image: "Images/carousel/rtx5090.jpg" },
-        { name: "Logitech G Pro X Superlight 2", category: "Computer Peripherals", status: "Hot", price: 219.00, oldPrice: 249.00, qty: 2, image: "" },
-        { name: "Samsung Odyssey G9 49\" Monitor", category: "Computer Peripherals", status: "Sale", price: 1599.00, oldPrice: 1899.00, qty: 1, image: "" },
-        { name: "TP-Link Archer BE800 Wi-Fi 7 Router", category: "Networking", status: "New", price: 899.00, oldPrice: 0, qty: 1, image: "" }
-    ];
+    // The cart lives in the PHP session (PHP/shopping_cart/cart.php); cartRequest is in JS/session.js
+    let cart = [];
 
     const addresses = [
         { label: "Home", address: "50 Nanyang Ave, Singapore 639798" },
@@ -16,42 +11,37 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
     let selectedAddress = 0;
 
-    const categoryIcons = {
-        "Components & Storage": "fa-memory",
-        "Computer Systems": "fa-desktop",
-        "Computer Peripherals": "fa-computer-mouse",
-        "Gaming & VR": "fa-gamepad",
-        "Networking": "fa-wifi"
-    };
-
     const money = (n) => `$${n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-    const cartCount = document.querySelector(".cart-count");
+    // Product text comes from the database, so escape it before putting it into HTML
+    const esc = (text) => String(text).replace(/[&<>"']/g, (ch) =>
+        ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[ch]);
+
     const subtotalEl = document.getElementById("summarySubtotal");
     const discountEl = document.getElementById("summaryDiscount");
     const totalEl = document.getElementById("summaryTotal");
     const checkoutBtn = document.getElementById("checkoutBtn");
 
-    const cartItem = (item, index) => `
-        <article class="cart-item" data-index="${index}">
+    const cartItem = (item) => `
+        <article class="cart-item" data-id="${item.id}">
             <div class="cart-item-image">
                 ${item.image
-                    ? `<img src="${item.image}" alt="${item.name}">`
-                    : `<i class="fa-solid ${categoryIcons[item.category] || "fa-box"}"></i>`}
+                    ? `<img src="${esc(item.image)}" alt="${esc(item.name)}">`
+                    : `<i class="fa-solid ${esc(item.icon || "fa-box")}"></i>`}
             </div>
             <div class="cart-item-details">
-                <h3 class="cart-item-name">${item.name}</h3>
-                <p class="cart-item-meta">Variant: <strong>${item.category}</strong></p>
-                <span class="status-badge ${item.status.toLowerCase()}">${item.status}</span>
+                <h3 class="cart-item-name">${esc(item.name)}</h3>
+                <p class="cart-item-meta">Category: <strong>${esc(item.category)}</strong></p>
+                ${item.oldPrice ? `<span class="status-badge sale">Sale</span>` : ""}
             </div>
             <div class="cart-item-unit">
                 ${money(item.price)}
                 ${item.oldPrice ? `<s>${money(item.oldPrice)}</s>` : ""}
             </div>
             <div class="qty-control">
-                <button data-action="decrease" aria-label="Decrease quantity"><i class="fa-solid fa-minus"></i></button>
+                <button data-action="decrease" aria-label="Decrease quantity" ${item.qty <= 1 ? "disabled" : ""}><i class="fa-solid fa-minus"></i></button>
                 <span>${item.qty}</span>
-                <button data-action="increase" aria-label="Increase quantity"><i class="fa-solid fa-plus"></i></button>
+                <button data-action="increase" aria-label="Increase quantity" ${item.qty >= item.stock ? "disabled" : ""}><i class="fa-solid fa-plus"></i></button>
             </div>
             <p class="cart-item-price">${money(item.price * item.qty)}</p>
             <div class="cart-item-actions">
@@ -85,37 +75,50 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!checkoutBtn.classList.contains("done")) {
             checkoutBtn.disabled = cart.length === 0;
         }
-
-        if (cartCount) {
-            cartCount.textContent = cart.reduce((sum, item) => sum + item.qty, 0);
-        }
     };
 
-    itemsBox.addEventListener("click", (e) => {
+    // Every change goes to the session cart; the page then shows the cart the server sends back
+    itemsBox.addEventListener("click", async (e) => {
         const btn = e.target.closest("button[data-action]");
         if (!btn) return;
 
-        const index = Number(btn.closest(".cart-item").dataset.index);
-        const item = cart[index];
+        const id = Number(btn.closest(".cart-item").dataset.id);
+        const item = cart.find((i) => i.id === id);
 
-        switch (btn.dataset.action) {
-            case "increase":
-                item.qty++;
-                break;
-            case "decrease":
-                if (item.qty > 1) item.qty--;
-                break;
-            case "remove":
-                cart.splice(index, 1);
-                break;
-            case "wishlist":
-                btn.classList.toggle("active");
-                btn.querySelector("i").classList.toggle("fa-solid");
-                btn.querySelector("i").classList.toggle("fa-regular");
-                return;
+        if (btn.dataset.action === "wishlist") {
+            btn.classList.toggle("active");
+            btn.querySelector("i").classList.toggle("fa-solid");
+            btn.querySelector("i").classList.toggle("fa-regular");
+            return;
         }
-        renderCart();
+
+        const changes = {
+            increase: { action: "update", product_id: id, qty: item.qty + 1 },
+            decrease: { action: "update", product_id: id, qty: item.qty - 1 },
+            remove: { action: "remove", product_id: id }
+        };
+
+        btn.disabled = true;
+        try {
+            cart = (await cartRequest(changes[btn.dataset.action])).items;
+            renderCart();
+        } catch (err) {
+            alert(err.message);
+            btn.disabled = false;
+        }
     });
+
+    const loadCart = async () => {
+        itemsBox.innerHTML = `<p class="cart-empty">Loading your cart...</p>`;
+        try {
+            cart = (await cartRequest()).items;
+            renderCart();
+        } catch (err) {
+            console.error("Could not load the cart:", err);
+            itemsBox.innerHTML = `<p class="cart-empty">Your cart could not be loaded. Check that Apache and MySQL are running.</p>`;
+            checkoutBtn.disabled = true;
+        }
+    };
 
     // Delivery addresses
     const addressList = document.getElementById("addressList");
@@ -165,6 +168,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    renderCart();
+    loadCart();
     renderAddresses();
 });

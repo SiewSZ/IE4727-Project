@@ -191,14 +191,30 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
 
-    // Cart count and wishlist are visual only for now
-    const cartCount = document.querySelector(".cart-count");
+    // Add to Cart saves the product in the session cart (cartRequest is in JS/session.js)
+    const cartBtnLabel = `<i class="fa-solid fa-cart-shopping"></i> Add to Cart`;
+    const addToCart = async (btn) => {
+        btn.disabled = true;
+        try {
+            await cartRequest({ action: "add", product_id: btn.closest(".product-card").dataset.id });
+            btn.innerHTML = `<i class="fa-solid fa-check"></i> Added`;
+            setTimeout(() => {
+                btn.innerHTML = cartBtnLabel;
+                btn.disabled = false;
+            }, 1200);
+        } catch (err) {
+            alert(err.message);
+            btn.disabled = false;
+        }
+    };
+
+    // The wishlist is visual only for now
     grid.addEventListener("click", (e) => {
         const cartBtn = e.target.closest(".add-cart-btn");
         const heartBtn = e.target.closest(".wishlist-btn");
 
-        if (cartBtn && cartCount) {
-            cartCount.textContent = Number(cartCount.textContent) + 1;
+        if (cartBtn) {
+            addToCart(cartBtn);
         }
 
         if (heartBtn) {

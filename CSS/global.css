@@ -319,6 +319,30 @@ a.btn {
     text-decoration: none;
 }
 
+/* Signed-in header built by JS/session.js: "Hi, name", Admin link and Logout button */
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+}
+
+.user-menu form {
+    margin: 0;
+}
+
+.user-link {
+    color: #38bdf8;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.user-link:hover {
+    text-shadow: 0 0 10px #38bdf8;
+}
+
 /* Navigation Links Style */
 nav {
     width: 100%;

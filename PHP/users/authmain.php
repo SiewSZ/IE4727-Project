@@ -46,5 +46,6 @@ session_regenerate_id(true);
 $_SESSION['user_id'] = $user['id'];
 $_SESSION['username'] = $user['username'];
 $_SESSION['role'] = $user['role'];   // 'customer' or 'admin', checked by requireAdmin() in auth.php
+$_SESSION['last_activity'] = time(); // for the 30-minute auto sign-out in auth.php
 
 backToHome("login=success");
