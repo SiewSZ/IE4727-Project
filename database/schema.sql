@@ -1,4 +1,4 @@
--- Quantum Gear: users, categories and products
+-- Quantum Gear: users, categories, products, orders, reviews and emails
 -- Import in phpMyAdmin from the home page (no database selected): this file creates quantum_gear itself.
 -- Safe to re-run: tables are only created if missing, and seed rows are skipped if they already exist.
 
@@ -86,6 +86,26 @@ CREATE TABLE IF NOT EXISTS order_items (
     CONSTRAINT fk_items_order FOREIGN KEY (order_id) REFERENCES orders (order_id) ON DELETE CASCADE,
     CONSTRAINT fk_items_product FOREIGN KEY (product_id) REFERENCES products (product_id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Upgrade for databases created with the first checkout (an earlier orders table with only
+-- user_id, address and total, and order_items.product_name): adds the columns used now and keeps
+-- the orders already placed. Does nothing on a database created with the tables above.
+ALTER TABLE orders
+    ADD COLUMN IF NOT EXISTS customer_name VARCHAR(50) NOT NULL DEFAULT '' AFTER user_id,
+    ADD COLUMN IF NOT EXISTS email VARCHAR(100) NOT NULL DEFAULT '' AFTER customer_name,
+    ADD COLUMN IF NOT EXISTS address_label VARCHAR(50) NOT NULL DEFAULT 'Delivery' AFTER email,
+    ADD COLUMN IF NOT EXISTS subtotal DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER address,
+    ADD COLUMN IF NOT EXISTS discount DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER subtotal,
+    ADD COLUMN IF NOT EXISTS status ENUM('Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled') NOT NULL DEFAULT 'Pending' AFTER total,
+    ADD INDEX IF NOT EXISTS idx_orders_created (created_at);   -- the sales report searches by date
+ALTER TABLE order_items
+    CHANGE COLUMN IF EXISTS product_name name VARCHAR(150) NOT NULL,
+    ADD COLUMN IF NOT EXISTS regular_price DECIMAL(10,2) NOT NULL DEFAULT 0 AFTER unit_price;
+UPDATE orders o LEFT JOIN users u ON u.id = o.user_id
+    SET o.customer_name = COALESCE(u.username, 'Guest'), o.email = COALESCE(u.email, '')
+    WHERE o.customer_name = '';
+UPDATE orders SET subtotal = total WHERE subtotal = 0;
+UPDATE order_items SET regular_price = unit_price WHERE regular_price = 0;
 
 -- Product reviews (PHP/products/review.php): one per customer per product, only after buying it.
 -- products.rating and products.reviews are kept up to date from this table.

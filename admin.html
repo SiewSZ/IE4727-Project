@@ -12,6 +12,7 @@
     <script src="JS/menu.js" defer></script>
     <script src="JS/session.js" defer></script>
     <script src="JS/admin.js" defer></script>
+    <script src="JS/report.js" defer></script>
     <title>Admin Dashboard | Quantum Gear</title>
 </head>
 <body>
@@ -130,6 +131,9 @@
             </button>
             <button class="admin-tab" role="tab" aria-selected="false" aria-controls="insightsPanel" data-tab="insightsPanel">
                 <i class="fa-solid fa-chart-column"></i> Insights
+            </button>
+            <button class="admin-tab" role="tab" aria-selected="false" aria-controls="reportPanel" data-tab="reportPanel">
+                <i class="fa-solid fa-chart-line"></i> Sales Report
             </button>
         </div>
 
@@ -398,6 +402,25 @@
                         <tr><td colspan="7">Loading orders...</td></tr>
                     </tbody>
                 </table>
+            </div>
+        </section>
+
+        <!-- Sales Report: filled in by JS/report.js from PHP/reports/sales_report.php -->
+        <section class="admin-panel" id="reportPanel" role="tabpanel" hidden>
+            <form class="admin-toolbar report-toolbar" id="reportForm">
+                <label>From
+                    <input type="date" name="from" required>
+                </label>
+                <label>To
+                    <input type="date" name="to" required>
+                </label>
+                <button type="submit" class="admin-primary-btn">
+                    <i class="fa-solid fa-chart-column"></i> Generate Report
+                </button>
+            </form>
+            <p class="admin-form-error" id="reportError" role="alert" hidden></p>
+            <div id="reportOutput" aria-live="polite">
+                <p class="report-empty">Choose the dates, then click Generate Report.</p>
             </div>
         </section>
     </main>

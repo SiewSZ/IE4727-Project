@@ -604,6 +604,57 @@ Dark palette:
     color: #cbd5e1;
 }
 
+/* Admin Sales Report (JS/report.js) */
+.dark-mode .admin-toolbar input[type="date"] {
+    border-color: #24324a;
+    background: #0b1120;
+    color: #e2e8f0;
+}
+
+.dark-mode .report-empty,
+.dark-mode .report-heading small,
+.dark-mode .report-change,
+.dark-mode .report-highlights span,
+.dark-mode .report-axis,
+.dark-mode .report-readout,
+.dark-mode .report-chart-max {
+    color: #94a3b8;
+}
+
+.dark-mode .report-change.up {
+    color: #4ade80;
+}
+
+.dark-mode .report-change.down {
+    color: #f87171;
+}
+
+.dark-mode .report-highlights li > i {
+    color: #38bdf8;
+}
+
+.dark-mode .report-chart {
+    border-color: #24324a;
+    background: #111a2b;
+}
+
+.dark-mode .report-bars {
+    border-color: #24324a;
+}
+
+.dark-mode .report-bar span,
+.dark-mode .share-track span {
+    background: #38bdf8;
+}
+
+.dark-mode .report-bar:hover span {
+    background: #7dd3fc;
+}
+
+.dark-mode .share-track {
+    background: #24324a;
+}
+
 /* Product page */
 .dark-mode .breadcrumb,
 .dark-mode .pd-brand,
