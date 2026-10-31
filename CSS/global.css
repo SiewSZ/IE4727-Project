@@ -13,6 +13,26 @@ Neutral:
 */
 
 
+/* Text colours that change with the theme (JS/theme.js puts dark-mode or light-mode on <html>).
+   Every pair meets WCAG AA contrast on its background: 4.5:1 for text, 3:1 for icons. */
+:root {
+    --accent-text: #0369a1;   /* links and highlighted text, 5.9:1 on white */
+    --muted-text: #64748b;    /* captions and labels, 4.8:1 on white */
+    --success-text: #15803d;  /* in stock, savings */
+    --warning-text: #c2410c;  /* low stock */
+    --danger-text: #dc2626;   /* out of stock, errors */
+    --star: #d97706;          /* rating stars */
+}
+
+html.dark-mode {
+    --accent-text: #38bdf8;   /* 8.1:1 on the dark cards */
+    --muted-text: #94a3b8;
+    --success-text: #4ade80;
+    --warning-text: #fb923c;
+    --danger-text: #f87171;
+    --star: #fbbf24;
+}
+
 /* Main Page Style */
 * {
     margin: 0;
@@ -160,7 +180,7 @@ footer {
 }
 
 .footer-legal a:hover {
-    color: #0aa9f3;
+    color: var(--accent-text);
     text-decoration: underline;
 }
 
@@ -217,7 +237,8 @@ footer {
     justify-content: center;
     margin-left: auto;
     margin-right: 1rem;
-    background: #ffffff;
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 50%;
     box-shadow: 0 0.6em 1.2em rgba(0, 0, 0, 0.3);
     width: 3em;
@@ -240,7 +261,7 @@ footer {
     outline: none;
     background: transparent;
     font-size: 1em;
-    color: #0f172a;
+    color: #e2e8f0;
     transition: width 0.8s ease;
 }
 
@@ -250,7 +271,7 @@ footer {
 }
 
 .search-box i {
-    color: #00c9a7;
+    color: #38bdf8;
     font-size: 1.2em;
     cursor: pointer;
     transition: transform 0.8s ease, color 0.8s ease;
@@ -259,7 +280,177 @@ footer {
 .search-box:hover i,
 .search-box input:focus + i {
     transform: translateX(-0.3em);
-    color: #0aa9f3;
+    color: #7dd3fc;
+}
+
+/* Search suggestions under the header search (JS/menu.js) */
+.search-suggest {
+    position: absolute;
+    z-index: 150;
+    width: min(420px, calc(100vw - 2rem));
+    max-height: 70vh;
+    overflow-y: auto;
+    padding: 0.4rem;
+    border: 1px solid #24324a;
+    border-radius: 12px;
+    background: #111a2b;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    font-family: 'Inter', sans-serif;
+}
+
+.search-suggest[hidden] {
+    display: none;
+}
+
+.suggest-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+    color: #e2e8f0;
+    text-decoration: none;
+}
+
+.suggest-item:hover,
+.suggest-item.active,
+.suggest-all:hover,
+.suggest-all.active {
+    background: #172236;
+}
+
+.suggest-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 3rem;
+    height: 3rem;
+    border-radius: 6px;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.suggest-image img {
+    width: 100%;
+    height: 100%;
+    padding: 0.2rem;
+    object-fit: contain;
+}
+
+.suggest-image i {
+    color: #64748b;
+}
+
+.suggest-text {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+}
+
+.suggest-name {
+    overflow: hidden;
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.suggest-meta {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+.suggest-price {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #38bdf8;
+    white-space: nowrap;
+}
+
+.suggest-all {
+    display: block;
+    margin-top: 0.25rem;
+    padding: 0.65rem 0.5rem;
+    border-top: 1px solid #24324a;
+    border-radius: 0 0 8px 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #38bdf8;
+    text-decoration: none;
+}
+
+.suggest-empty {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+    color: #cbd5e1;
+}
+
+.suggest-empty a {
+    color: #38bdf8;
+}
+
+/* Light / Dark Mode Slider (JS/theme.js; light mode colours in CSS/light.css)
+   Sun on the left, moon on the right; the knob slides under the active one. */
+.theme-toggle {
+    position: relative;
+    flex-shrink: 0;
+    width: 4.6rem;
+    height: 2.4rem;
+    margin-right: 1.25rem;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 999px;
+    background: #1e293b;
+    cursor: pointer;
+    transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+.theme-toggle:hover {
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+}
+
+.theme-toggle:focus-visible {
+    outline: 2px solid #38bdf8;
+    outline-offset: 2px;
+}
+
+.theme-knob {
+    position: absolute;
+    top: 3px;
+    left: calc(100% - 2rem - 3px);
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: #38bdf8;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    transition: left 0.3s ease, background 0.3s;
+}
+
+/* Icons sit above the knob; the one under the knob is the active mode */
+.theme-toggle i {
+    position: absolute;
+    top: 50%;
+    z-index: 1;
+    font-size: 1rem;
+    transform: translateY(-50%);
+    transition: color 0.3s;
+}
+
+.theme-toggle .fa-sun {
+    left: 0.6rem;
+    color: #64748b;
+}
+
+.theme-toggle .fa-moon {
+    right: 0.65rem;
+    color: #0a0e14;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .theme-knob {
+        transition: none;
+    }
 }
 
 /* Cart Icon Style */
@@ -301,7 +492,8 @@ footer {
     font-weight: 600;
     font-size: 1rem;
     background: #38bdf8;
-    color: #ffffff;
+    /* Dark text: white on this light blue is only 2.1:1 */
+    color: #0a0e14;
     box-shadow: 0 0 15px #38bdf8;
     border: none;
     cursor: pointer;
@@ -353,6 +545,8 @@ nav {
 }
 
 .nav-top{
+    /* The search suggestions list is placed against this bar (JS/menu.js) */
+    position: relative;
     padding: 1rem 5%;
     display: flex;
     align-items: center;
@@ -362,14 +556,14 @@ nav {
 
 .nav-links {
     list-style: none;
-    background: rgba(56, 189, 248, 0.5);
+    background: #0f2740;
     gap: 2rem;
     padding: 0.5rem 1.5rem;
     margin-top: 1rem;
     display: flex;
     flex: 1;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 6px 6px rgba(255, 255, 255, 0.5);
+    border: none;
+    border-bottom: 2px solid #38bdf8;
 }
 
 .nav-links li a {
@@ -385,6 +579,15 @@ nav {
 .nav-links li a:hover {
     color: #38bdf8;
     text-shadow: 0 0 10px #38bdf8;
+}
+
+/* The page currently open (set by JS/menu.js) */
+.nav-links li a[aria-current="page"] {
+    color: #ffffff;
+    text-decoration: underline;
+    text-decoration-color: #38bdf8;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 0.4em;
 }
 
 /* Menu Dropdown (Mega Menu) */
@@ -536,7 +739,304 @@ nav {
 }
 
 .icon-btn:hover {
-    color: #0aa9f3;
+    color: var(--accent-text);
+}
+
+/* Banner at the top of the Contact Us and Hot Deals pages */
+.page-hero {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 2.5rem 3rem;
+    border-radius: 12px;
+    background: linear-gradient(90deg, rgba(10, 14, 20, 0.85), rgba(10, 14, 20, 0.35)),
+                url("../Images/Login.png") center / cover;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 0.6em 1.2em rgba(0, 0, 0, 0.3);
+}
+
+.page-hero h1 {
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.page-hero p {
+    max-width: 40rem;
+    color: #e2e8f0;
+    line-height: 1.6;
+}
+
+.page-hero-logo {
+    width: 140px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.7));
+}
+
+@media (max-width: 768px) {
+    .page-hero {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 2rem 1.5rem;
+    }
+}
+
+/* Email Deals sign-up box (Hot Deals and home page), posts to PHP/contact/subscribe.php */
+.email-deals {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem 2.5rem;
+    border-radius: 12px;
+    background: linear-gradient(90deg, rgba(10, 14, 20, 0.9), rgba(10, 14, 20, 0.6)),
+                url("../Images/Login.png") center / cover;
+    color: #ffffff;
+}
+
+.email-deals h2 {
+    margin-bottom: 0.5rem;
+}
+
+.email-deals h2 i {
+    color: #38bdf8;
+}
+
+.email-deals p {
+    color: #e2e8f0;
+    line-height: 1.6;
+}
+
+.subscribe-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.subscribe-form input {
+    flex: 1 1 220px;
+    padding: 0.6rem 1.1rem;
+    border: none;
+    border-radius: 30px;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.subscribe-form input:focus {
+    outline: 3px solid #38bdf8;
+}
+
+.email-deals .subscribe-message {
+    flex-basis: 100%;
+    color: #fca5a5;
+}
+
+.email-deals .subscribe-message.success {
+    color: #4ade80;
+}
+
+@media (max-width: 768px) {
+    .email-deals {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+    }
+}
+
+/* Data insights (Hot Deals page and the admin Insights tab): stat tiles, bar chart and table */
+.insight-tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.insight-tile {
+    padding: 1.25rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+}
+
+.insight-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #555;
+}
+
+.insight-value {
+    margin: 0.35rem 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #0f172a;
+    font-variant-numeric: tabular-nums;
+}
+
+.insight-value small {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #555;
+}
+
+.insight-note {
+    font-size: 0.8rem;
+    color: #555;
+}
+
+.insight-panels {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.insight-chart {
+    margin: 0;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+}
+
+.insight-chart h3 {
+    font-size: 1rem;
+}
+
+.insight-chart figcaption p {
+    margin-top: 0.2rem;
+    font-size: 0.8rem;
+    color: #555;
+}
+
+/* Horizontal bar chart: label above, then the bar and its value on one line.
+   One series, so one colour; the value is written beside every bar. */
+.bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    list-style: none;
+}
+
+.bar-chart li {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.3rem 0.75rem;
+    align-items: center;
+    cursor: default;
+}
+
+.bar-label {
+    grid-column: 1 / -1;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.bar-label small {
+    font-weight: 400;
+    color: #555;
+}
+
+.bar-track {
+    height: 14px;
+    border-radius: 4px;
+    background: #f1f5f9;
+}
+
+.bar {
+    display: block;
+    height: 100%;
+    border-radius: 0 4px 4px 0;
+    background: #0284c7;
+    transition: background 0.2s;
+}
+
+.bar-chart li:hover .bar {
+    background: #0369a1;
+}
+
+.bar-value {
+    min-width: 3.5rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #0f172a;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.insight-table-wrap {
+    overflow-x: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+.insight-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+}
+
+.insight-table caption {
+    padding: 1rem 1.25rem 0.5rem;
+    font-weight: 700;
+    text-align: left;
+}
+
+.insight-table th,
+.insight-table td {
+    padding: 0.7rem 1.25rem;
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.insight-table th:first-child {
+    text-align: left;
+    white-space: normal;
+}
+
+.insight-table thead th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #555;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.insight-table tbody th {
+    font-weight: 600;
+}
+
+.insight-table tbody th small {
+    display: block;
+    font-weight: 400;
+    color: #555;
+}
+
+.insight-table tbody tr + tr > * {
+    border-top: 1px solid #f1f5f9;
+}
+
+.insight-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.insight-table s {
+    color: var(--muted-text);
+}
+
+.insight-table .out {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+@media (max-width: 900px) {
+    .insight-panels {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Hidden on screen but still read by screen readers */

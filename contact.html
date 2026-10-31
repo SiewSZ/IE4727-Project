@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="CSS/global.css">
+    <link rel="stylesheet" href="CSS/contact.css">
+    <link rel="stylesheet" href="CSS/dark.css">
+    <link rel="stylesheet" href="CSS/light.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="JS/theme.js"></script>
+    <script src="JS/menu.js" defer></script>
+    <script src="JS/session.js" defer></script>
+    <script src="JS/contact.js" defer></script>
+    <title>Contact Us | Quantum Gear</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-top">
+                <img src="Images/logo.png" alt="Logo" class="logo">
+                <div class="search-box">
+                    <input type="text" placeholder="Search...">
+                    <i class="fa fa-search"></i>
+                </div>
+                <!-- Light / dark slider: the knob sits under the active mode's icon (JS/theme.js) -->
+                <button type="button" class="theme-toggle" id="themeToggle" role="switch" aria-checked="false" aria-label="Light mode">
+                    <span class="theme-knob"></span>
+                    <i class="fa-solid fa-sun" aria-hidden="true"></i>
+                    <i class="fa-solid fa-moon" aria-hidden="true"></i>
+                </button>
+                <a href="order.html" class="cart-icon" aria-label="Cart">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <a href="login.html" class="btn" id="openLoginBtn">Login/Register</a>
+            </div>
+            <div class="break"></div>
+            <ul class="nav-links">
+                <li class="menu-item">
+                    <button class="menu-toggle" id="menuToggle" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa-solid fa-bars"></i> Menu <i class="fa-solid fa-chevron-down chevron"></i>
+                    </button>
+                    <div class="mega-menu" id="megaMenu">
+                        <div class="mega-menu-col mega-menu-quick">
+                            <ul>
+                                <li><a href="hotdeals.php#shell-shocker"><i class="fa-solid fa-bolt"></i> Shell Shocker</a></li>
+                                <li><a href="hotdeals.php#clearance"><i class="fa-solid fa-tags"></i> Clearance Deals</a></li>
+                                <li><a href="hotdeals.php#email-deals"><i class="fa-regular fa-envelope"></i> Email Deals</a></li>
+                                <li><a href="contact.html?subject=trade-in"><i class="fa-solid fa-rotate"></i> Trade In</a></li>
+                            </ul>
+                            <p class="mega-menu-heading">Help me build&hellip;</p>
+                            <ul class="mega-menu-plain">
+                                <li><a href="shop.html?category=Components%20%26%20Storage">Desktop PC</a></li>
+                                <li><a href="shop.html?category=Computer%20Systems">Workstation</a></li>
+                                <li><a href="shop.html?category=Networking">Home Network</a></li>
+                                <li><a href="shop.html?category=Gaming%20%26%20VR">Game Room</a></li>
+                                <li><a href="contact.html?subject=build">Server / NAS (ask us)</a></li>
+                            </ul>
+                        </div>
+                        <div class="mega-menu-col mega-menu-products">
+                            <p class="mega-menu-heading">All Products</p>
+                            <!-- Same categories as the categories table in database/schema.sql -->
+                            <ul>
+                                <li><a href="shop.html?category=Components%20%26%20Storage"><span><i class="fa-solid fa-memory"></i> Components &amp; Storage</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.html?category=Computer%20Systems"><span><i class="fa-solid fa-desktop"></i> Computer Systems</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.html?category=Computer%20Peripherals"><span><i class="fa-solid fa-computer-mouse"></i> Computer Peripherals</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.html?category=Gaming%20%26%20VR"><span><i class="fa-solid fa-gamepad"></i> Gaming &amp; VR</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.html?category=Networking"><span><i class="fa-solid fa-wifi"></i> Networking</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.html?category=Electronics"><span><i class="fa-solid fa-headphones"></i> Electronics</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.html"><span><i class="fa-solid fa-store"></i> Shop All</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li><a href="index.php">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="hotdeals.php">Hot Deals</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="contact-page">
+        <section class="page-hero">
+            <img src="Images/Logo.png" alt="Quantum Gear logo" class="page-hero-logo">
+            <div>
+                <h1>Contact Us</h1>
+                <p>Questions about an order, a trade-in or a custom build? Send us a message and our team will reply within one working day.</p>
+            </div>
+        </section>
+
+        <div class="contact-layout">
+            <!-- HTML5 checks the basics (required, email format, length); JS/contact.js adds the rest
+                 and PHP/contact/send.php checks everything again before saving to the database -->
+            <form class="contact-form" id="contactForm" action="PHP/contact/send.php" method="post">
+                <h2>Send us a message</h2>
+                <p class="form-status" id="contactStatus" role="alert"></p>
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="contactName">Full name</label>
+                        <input type="text" id="contactName" name="name" maxlength="100" autocomplete="name" required>
+                        <p class="field-error" id="nameError"></p>
+                    </div>
+                    <div class="form-field">
+                        <label for="contactEmail">Email</label>
+                        <input type="email" id="contactEmail" name="email" maxlength="100" autocomplete="email" required>
+                        <p class="field-error" id="emailError"></p>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label for="contactSubject">What is it about?</label>
+                    <select id="contactSubject" name="subject">
+                        <option value="general">General question</option>
+                        <option value="order">An existing order</option>
+                        <option value="trade-in">Trading in a device</option>
+                        <option value="build">Custom PC, server or NAS build</option>
+                        <option value="other">Something else</option>
+                    </select>
+                </div>
+
+                <div class="form-field">
+                    <label for="contactMessage">Message</label>
+                    <textarea id="contactMessage" name="message" rows="6" minlength="10" maxlength="2000" required></textarea>
+                    <p class="field-hint"><span id="messageCount">0</span> / 2000 characters</p>
+                    <p class="field-error" id="messageError"></p>
+                </div>
+
+                <button type="submit" class="btn">Send Message <i class="fa-solid fa-paper-plane"></i></button>
+            </form>
+
+            <aside class="contact-info">
+                <div class="info-card">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <div>
+                        <h3>Visit our store</h3>
+                        <p>50 Nanyang Ave, Singapore</p>
+                        <p>Mon - Sat: 10:00 AM - 7:00 PM</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <i class="fa-solid fa-phone"></i>
+                    <div>
+                        <h3>Call us</h3>
+                        <p>+65 6123 4567</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <i class="fa-regular fa-envelope"></i>
+                    <div>
+                        <h3>Email us</h3>
+                        <p>support@quantumgear.com</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <i class="fa-solid fa-rotate"></i>
+                    <div>
+                        <h3>Trade-ins</h3>
+                        <p>Tell us the model, age and condition of your device and we will reply with a trade-in value you can use towards your next purchase.</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    <div>
+                        <h3>Custom builds</h3>
+                        <p>Planning a gaming PC, workstation, server or NAS? Share your budget and what you will use it for, and we will suggest the parts.</p>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+    <footer>
+        <div class="footer-contact">
+            <div class="footer-contact-item">
+                <i class="fa-solid fa-location-dot"></i>
+                <div>
+                    <h4>Visit Us</h4>
+                    <p>50 Nanyang Ave, Singapore</p>
+                </div>
+            </div>
+            <div class="footer-contact-item">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                    <h4>Call Us</h4>
+                    <p>+65 6123 4567</p>
+                </div>
+            </div>
+            <div class="footer-contact-item">
+                <i class="fa-regular fa-clock"></i>
+                <div>
+                    <h4>Working Hours</h4>
+                    <p>Mon - Sat: 10:00 AM - 7:00 PM</p>
+                </div>
+            </div>
+            <div class="footer-contact-item">
+                <i class="fa-regular fa-envelope"></i>
+                <div>
+                    <h4>Email Us</h4>
+                    <p>support@quantumgear.com</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-top">
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.php">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="hotdeals.php">Hot Deals</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Categories</h3>
+                <ul>
+                    <li><a href="shop.html?category=Components%20%26%20Storage">Components &amp; Storage</a></li>
+                    <li><a href="shop.html?category=Computer%20Systems">Computer Systems</a></li>
+                    <li><a href="shop.html?category=Computer%20Peripherals">Computer Peripherals</a></li>
+                    <li><a href="shop.html?category=Gaming%20%26%20VR">Gaming &amp; VR</a></li>
+                    <li><a href="shop.html?category=Networking">Networking</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Quantum Gear. All rights reserved.</p>
+            <ul class="footer-legal">
+                <li><a href="#">Terms &amp; Conditions</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+            </ul>
+        </div>
+    </footer>
+</body>
+</html>

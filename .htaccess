@@ -1,0 +1,7 @@
+# Make the browser check for a newer copy of pages, CSS and JS on every load, so changes show up
+# after a normal refresh (no Ctrl + F5 needed). Unchanged files are still served from the cache.
+<IfModule mod_headers.c>
+    <FilesMatch "\.(html|php|css|js)$">
+        Header set Cache-Control "no-cache"
+    </FilesMatch>
+</IfModule>

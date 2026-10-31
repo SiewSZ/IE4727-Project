@@ -19,10 +19,35 @@ if (isset($_SESSION['user_id'])) {
     }
 }
 
+// The role can change while someone is signed in (admins manage it on the Users tab), so read
+// it from the database instead of trusting the copy saved at login. An account that has been
+// deleted is signed out. Needs $conn from db_connect.php.
+function refreshSessionUser($conn)
+{
+    if (!isset($_SESSION['user_id'])) {
+        return;
+    }
+    $stmt = mysqli_prepare($conn, "SELECT role FROM users WHERE id = ?");
+    mysqli_stmt_bind_param($stmt, "i", $_SESSION['user_id']);
+    mysqli_stmt_execute($stmt);
+    $row = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
+    mysqli_stmt_close($stmt);
+
+    if ($row) {
+        $_SESSION['role'] = $row['role'];
+    } else {
+        unset($_SESSION['user_id'], $_SESSION['username'], $_SESSION['role'], $_SESSION['last_activity']);
+    }
+}
+
 // Page control: stop the request unless the signed-in user is an admin.
 // 401 = not signed in at all, 403 = signed in but not an admin.
 function requireAdmin()
 {
+    global $conn;
+    if (isset($conn)) {
+        refreshSessionUser($conn);
+    }
     if (($_SESSION['role'] ?? '') !== 'admin') {
         http_response_code(isset($_SESSION['user_id']) ? 403 : 401);
         header("Content-Type: application/json");

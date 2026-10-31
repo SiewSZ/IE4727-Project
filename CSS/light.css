@@ -1,0 +1,333 @@
+/*
+Light Mode Style
+Loaded on every page with the site header. Applies while JS/theme.js has put the "light-mode"
+class on <html> (after the visitor slides the switch to the sun). Page content is already light
+in the main styles; this file lightens the header, footer and the dark feature panels.
+
+Light palette:
+-#e0f2fe -> #e0e7ff Header (soft sky-to-indigo tint)
+-#0369a1 -> #0284c7 Nav bar and buttons (white text at 4.5:1 or better)
+-#eef4fb Footer and soft panels
+-#0f172a Text
+-#475569 Secondary text
+-#0284c7 Links and icons (darker than #38bdf8 so it stays readable on white)
+-#dbe7f3 Borders
+
+Kept dark in both modes: the carousel and the brand logo strip (several logos are white).
+*/
+
+/* Header: soft brand-blue tint (sky to indigo) so it belongs with the blue nav bar below it */
+.light-mode header {
+    background: linear-gradient(120deg, #e0f2fe 0%, #dbeafe 55%, #e0e7ff 100%);
+    border-bottom: 1px solid #bfdbfe;
+}
+
+/* The logo's silver lettering is made for a dark background: darken and deepen it so it reads on white */
+.light-mode .logo {
+    filter: brightness(0.62) contrast(1.35) saturate(1.5)
+            drop-shadow(0 3px 6px rgba(2, 132, 199, 0.3));
+}
+
+.light-mode .search-box {
+    background: #ffffff;
+    border: 1px solid #dbe7f3;
+    box-shadow: 0 0.3em 0.8em rgba(2, 132, 199, 0.15);
+}
+
+.light-mode .search-box input {
+    color: #0f172a;
+}
+
+.light-mode .search-box i,
+.light-mode .search-box:hover i,
+.light-mode .search-box input:focus + i {
+    color: #0284c7;
+}
+
+.light-mode .cart-icon,
+.light-mode .user-menu {
+    color: #0f172a;
+}
+
+.light-mode .cart-icon:hover,
+.light-mode .user-link:hover {
+    color: #0284c7;
+    text-shadow: none;
+}
+
+.light-mode .user-link {
+    color: #0284c7;
+}
+
+/* #0369a1 keeps white text at 5.9:1 (#0284c7 is only 4.1:1) */
+.light-mode .btn {
+    background: #0369a1;
+    color: #ffffff;
+    box-shadow: 0 0.3em 0.8em rgba(2, 132, 199, 0.35);
+}
+
+.light-mode .btn:hover {
+    background: #075985;
+}
+
+/* Search suggestions */
+.light-mode .search-suggest {
+    border-color: #dbe7f3;
+    background: #ffffff;
+    box-shadow: 0 15px 35px rgba(15, 23, 42, 0.15);
+}
+
+.light-mode .suggest-item {
+    color: #0f172a;
+}
+
+.light-mode .suggest-item:hover,
+.light-mode .suggest-item.active,
+.light-mode .suggest-all:hover,
+.light-mode .suggest-all.active {
+    background: #f0f7ff;
+}
+
+.light-mode .suggest-image {
+    border: 1px solid #e2e8f0;
+}
+
+.light-mode .suggest-meta {
+    color: #64748b;
+}
+
+.light-mode .suggest-price,
+.light-mode .suggest-all,
+.light-mode .suggest-empty a {
+    color: #0369a1;
+}
+
+.light-mode .suggest-all {
+    border-top-color: #e2e8f0;
+}
+
+.light-mode .suggest-empty {
+    color: #475569;
+}
+
+/* Slider: knob slides left under the sun */
+/* White track, like the search button, so it stands out on the tinted header */
+.light-mode .theme-toggle {
+    border-color: #bfdbfe;
+    background: #ffffff;
+    box-shadow: 0 0.3em 0.8em rgba(2, 132, 199, 0.15);
+}
+
+.light-mode .theme-toggle:hover {
+    box-shadow: 0 0 10px rgba(2, 132, 199, 0.35);
+}
+
+.light-mode .theme-knob {
+    left: 3px;
+    background: #fbbf24;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.3);
+}
+
+.light-mode .theme-toggle .fa-sun {
+    color: #78350f;
+}
+
+.light-mode .theme-toggle .fa-moon {
+    color: #64748b;
+}
+
+/* Navigation bar: solid brand blue so the header keeps its identity */
+.light-mode .nav-links {
+    /* Stays dark enough on the left, where the links are, for white text */
+    background: linear-gradient(90deg, #0369a1, #0284c7);
+    border-bottom-color: #075985;
+    box-shadow: 0 4px 10px rgba(2, 132, 199, 0.2);
+}
+
+/* "> li > a" so the mega menu's links (also inside .nav-links) keep their own dark text */
+.light-mode .nav-links > li > a,
+.light-mode .menu-toggle {
+    color: #f0f9ff;
+}
+
+.light-mode .nav-links > li > a:hover,
+.light-mode .menu-toggle:hover {
+    color: #ffffff;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+}
+
+.light-mode .nav-links > li > a[aria-current="page"] {
+    color: #ffffff;
+    text-decoration-color: #fbbf24;
+}
+
+/* Mega menu */
+.light-mode .mega-menu {
+    background: #ffffff;
+    border-color: #dbe7f3;
+    box-shadow: 0 15px 35px rgba(15, 23, 42, 0.15);
+}
+
+.light-mode .mega-menu-quick {
+    background: #f0f7ff;
+    border-right-color: #dbe7f3;
+}
+
+.light-mode .mega-menu-heading,
+.light-mode .mega-menu a {
+    color: #0f172a;
+}
+
+.light-mode .mega-menu a i {
+    color: #0284c7;
+}
+
+.light-mode .mega-menu a:hover {
+    color: #0284c7;
+    background: #e0f2fe;
+}
+
+/* Footer */
+.light-mode footer {
+    background-color: #eef4fb;
+    color: #0f172a;
+    border-top: 3px solid #0284c7;
+}
+
+.light-mode .footer-contact {
+    border-bottom-color: #dbe7f3;
+}
+
+.light-mode .footer-contact-item i {
+    color: #0284c7;
+}
+
+.light-mode .footer-contact-item h4,
+.light-mode .footer-col h3 {
+    color: #0f172a;
+}
+
+.light-mode .footer-contact-item p,
+.light-mode .footer-col ul li a {
+    color: #475569;
+}
+
+.light-mode .footer-col ul li a:hover {
+    color: #0284c7;
+    text-shadow: none;
+}
+
+.light-mode .footer-bottom {
+    border-top-color: #dbe7f3;
+}
+
+/* Banners (Contact Us, Hot Deals, email sign-up): brand blue instead of the dark space image */
+.light-mode .page-hero,
+.light-mode .email-deals {
+    background: linear-gradient(120deg, #0369a1, #0284c7 55%, #0ea5e9);
+    box-shadow: 0 0.6em 1.2em rgba(2, 132, 199, 0.25);
+}
+
+.light-mode .page-hero p,
+.light-mode .email-deals p {
+    color: #e0f2fe;
+}
+
+.light-mode .email-deals h2 i,
+.light-mode .page-hero h1 i {
+    color: #fbbf24;
+}
+
+.light-mode .email-deals .btn {
+    background: #0f172a;
+    box-shadow: none;
+}
+
+.light-mode .email-deals .btn:hover {
+    background: #1e293b;
+}
+
+.light-mode .email-deals .subscribe-message.success {
+    color: #bbf7d0;
+}
+
+/* Home page */
+.light-mode .tile-icon {
+    background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+}
+
+.light-mode .tile-icon i {
+    color: #0369a1;
+}
+
+.light-mode .service-card {
+    background: #ffffff;
+    color: #0f172a;
+    border: 1px solid #dbe7f3;
+}
+
+.light-mode .service-card > i,
+.light-mode .service-card span {
+    color: #0284c7;
+}
+
+.light-mode .service-card p {
+    color: #475569;
+}
+
+.light-mode .service-card:hover {
+    border-color: #7dd3fc;
+    box-shadow: 0 0.6em 1.4em rgba(2, 132, 199, 0.15);
+}
+
+/* Contact Us */
+.light-mode .info-card {
+    background: #f0f7ff;
+    color: #0f172a;
+    border: 1px solid #dbe7f3;
+}
+
+.light-mode .info-card > i {
+    color: #0284c7;
+}
+
+.light-mode .info-card p {
+    color: #475569;
+}
+
+/* Hot Deals */
+.light-mode .countdown {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.light-mode .shell-shocker-info {
+    background: #f0f7ff;
+    color: #0f172a;
+}
+
+.light-mode .shell-shocker-desc {
+    color: #475569;
+}
+
+.light-mode .shell-shocker-price {
+    color: #0284c7;
+}
+
+.light-mode .shell-shocker-info .deal-saving {
+    background: rgba(22, 163, 74, 0.12);
+    color: #15803d;
+}
+
+.light-mode .shell-shocker-info h3 a:hover {
+    color: #0284c7;
+}
+
+.light-mode .shell-shocker-info .add-cart-btn {
+    background: #0284c7;
+    color: #ffffff;
+}
+
+.light-mode .shell-shocker-info .add-cart-btn:hover {
+    background: #0369a1;
+}

@@ -2,21 +2,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     const grid = document.getElementById("productGrid");
     if (!grid) return;
 
-    // Load the products from the database
-    let products;
+    // Load the products from the database (loadProducts and the card helpers are in JS/products.js)
+    let products, categories;
     try {
-        const res = await fetch("PHP/products/list.php");
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        products = (await res.json()).products;
+        ({ products, categories } = await loadProducts());
     } catch (err) {
         console.error("Could not load products:", err);
         grid.innerHTML = `<p class="no-products">Sorry, products could not be loaded. Please try again later.</p>`;
         return;
     }
-
-    // Product text comes from the database, so escape it before putting it into HTML
-    const esc = (text) => String(text).replace(/[&<>"']/g, (ch) =>
-        ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[ch]);
 
     const categoryBox = document.getElementById("categoryFilters");
     const brandBox = document.getElementById("brandFilters");
@@ -33,33 +27,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const checkedValues = (name) =>
         [...document.querySelectorAll(`input[name="${name}"]:checked`)].map((input) => input.value);
-
-    const stars = (rating) =>
-        Array.from({ length: 5 }, (_, i) =>
-            `<i class="fa-${i < rating ? "solid" : "regular"} fa-star"></i>`).join("");
-
-    const productCard = (p) => `
-        <article class="product-card" data-id="${p.id}">
-            <div class="product-image${p.image ? "" : " no-image"}">
-                ${p.image
-                    ? `<img src="${esc(p.image)}" alt="${esc(p.name)}">`
-                    : `<i class="fa-solid ${esc(p.icon || "fa-box")}"></i>`}
-                <button class="wishlist-btn" aria-label="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
-            </div>
-            <div class="product-info">
-                <p class="product-category">${esc(p.category)}</p>
-                <h3 class="product-name" title="${esc(p.name)}">${esc(p.name)}</h3>
-                <div class="product-rating">${stars(p.rating)}<span>${p.reviews} Reviews</span></div>
-                <p class="product-stock">${p.stock > 0 ? `In Stock <span>${p.stock}</span>` : `<span class="out">Out of Stock</span>`}</p>
-                <p class="product-price">
-                    $${p.price.toFixed(2)}
-                    ${p.oldPrice ? `<s>$${p.oldPrice.toFixed(2)}</s>` : ""}
-                </p>
-                <button class="add-cart-btn" ${p.stock > 0 ? "" : "disabled"}>
-                    <i class="fa-solid fa-cart-shopping"></i> Add to Cart
-                </button>
-            </div>
-        </article>`;
 
     // Price range: slider max is the most expensive product, rounded up to the next 100
     const PRICE_MAX = Math.ceil(Math.max(0, ...products.map((p) => p.price)) / 100) * 100 || 100;
@@ -133,7 +100,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         render();
     };
 
-    buildCheckboxes(categoryBox, unique("category"), "category");
+    // Every category is listed (not only ones with products) so menu links like
+    // shop.html?category=Networking always have a box to tick
+    buildCheckboxes(categoryBox, categories.map((c) => c.name), "category");
     buildCheckboxes(brandBox, unique("brand"), "brand");
     setPrice(0, PRICE_MAX);
 
@@ -162,7 +131,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     searchInput.addEventListener("input", render);
 
     // Searches typed in the header on any page arrive as shop.html?q=...
-    searchInput.value = new URLSearchParams(window.location.search).get("q") || "";
+    // Category links in the header menu and footer arrive as shop.html?category=...
+    const params = new URLSearchParams(window.location.search);
+    searchInput.value = params.get("q") || "";
+    document.querySelectorAll('input[name="category"]').forEach((input) => {
+        input.checked = input.value === params.get("category");
+    });
 
     document.querySelectorAll(".filter-reset").forEach((btn) => {
         btn.addEventListener("click", () => clearFilter(btn.dataset.reset));
@@ -191,38 +165,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
 
-    // Add to Cart saves the product in the session cart (cartRequest is in JS/session.js)
-    const cartBtnLabel = `<i class="fa-solid fa-cart-shopping"></i> Add to Cart`;
-    const addToCart = async (btn) => {
-        btn.disabled = true;
-        try {
-            await cartRequest({ action: "add", product_id: btn.closest(".product-card").dataset.id });
-            btn.innerHTML = `<i class="fa-solid fa-check"></i> Added`;
-            setTimeout(() => {
-                btn.innerHTML = cartBtnLabel;
-                btn.disabled = false;
-            }, 1200);
-        } catch (err) {
-            alert(err.message);
-            btn.disabled = false;
-        }
-    };
-
-    // The wishlist is visual only for now
-    grid.addEventListener("click", (e) => {
-        const cartBtn = e.target.closest(".add-cart-btn");
-        const heartBtn = e.target.closest(".wishlist-btn");
-
-        if (cartBtn) {
-            addToCart(cartBtn);
-        }
-
-        if (heartBtn) {
-            heartBtn.classList.toggle("active");
-            heartBtn.querySelector("i").classList.toggle("fa-solid");
-            heartBtn.querySelector("i").classList.toggle("fa-regular");
-        }
-    });
+    bindProductButtons(grid);
 
     render();
 });

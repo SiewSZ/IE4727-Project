@@ -4,7 +4,12 @@
 // Replies with JSON: {"loggedIn": true, "username": "...", "role": "admin", "cartCount": 3}
 //                 or {"loggedIn": false, "cartCount": 0}
 
+require_once __DIR__ . "/../db_connect.php";
 require_once __DIR__ . "/auth.php";   // also signs out a user who has been inactive too long
+
+// Pick up role changes (or a deleted account) made on the admin Users tab since they signed in
+refreshSessionUser($conn);
+mysqli_close($conn);
 
 header("Content-Type: application/json");
 

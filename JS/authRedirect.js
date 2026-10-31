@@ -1,4 +1,4 @@
-// The PHP login/register handlers send their result back to index.html in the query string.
+// The PHP login/register handlers send their result back to index.php in the query string.
 // Messages are shown on login.html, so forward anything except a successful login there.
 (() => {
     const params = new URLSearchParams(window.location.search);

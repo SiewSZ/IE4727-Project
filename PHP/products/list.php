@@ -12,7 +12,7 @@ if ($showAll) {
     requireAdmin();
 }
 
-$sql = "SELECT p.product_id, p.name, p.brand, p.description, p.price, p.old_price, p.stock,
+$sql = "SELECT p.product_id, p.name, p.brand, p.description, p.features, p.price, p.old_price, p.stock,
                p.image_path, p.rating, p.reviews, p.is_active,
                c.category_id, c.name AS category, c.icon
         FROM products p
@@ -29,6 +29,7 @@ while ($row = mysqli_fetch_assoc($result)) {
         "name" => $row['name'],
         "brand" => $row['brand'],
         "description" => $row['description'] ?? "",
+        "features" => $row['features'] ?? "",
         "categoryId" => (int) $row['category_id'],
         "category" => $row['category'],
         "icon" => $row['icon'],

@@ -1,20 +1,20 @@
 <?php
-// Handles the "Create Account" form on index.html.
+// Handles the "Create Account" form on index.php.
 // Expects POST fields: username, email, password
-// Success: back to index.html?register=success
-// Failure: back to index.html?register_error=<code>
+// Success: back to index.php?register=success
+// Failure: back to index.php?register_error=<code>
 
 require_once __DIR__ . "/../db_connect.php";
 
 function backToHome($query)
 {
-    header("Location: ../../index.html?" . $query);
+    header("Location: ../../index.php?" . $query);
     exit;
 }
 
 // Page control: only accept the form being submitted, not someone typing the URL directly
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: ../../index.html");
+    header("Location: ../../index.php");
     exit;
 }
 

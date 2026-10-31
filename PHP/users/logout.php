@@ -1,10 +1,10 @@
 <?php
 // Handles the Logout button that JS/session.js puts in the header of every page.
-// Ends the whole session (login and cart), then goes back to index.html.
+// Ends the whole session (login and cart), then goes back to index.php.
 
 // Page control: only accept the button being pressed, not someone typing the URL directly
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: ../../index.html");
+    header("Location: ../../index.php");
     exit;
 }
 
@@ -16,5 +16,5 @@ $cookie = session_get_cookie_params();
 setcookie(session_name(), "", time() - 3600, $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly']);
 session_destroy();
 
-header("Location: ../../index.html");
+header("Location: ../../index.php");
 exit;

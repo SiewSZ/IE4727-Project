@@ -165,3 +165,481 @@
         overflow-x: auto;
     }
 }
+
+/* Shared heading and side gap for the sections below the carousel */
+.home-section-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.perks,
+.product-row,
+.guides,
+.services,
+.home-newsletter {
+    margin-left: clamp(1rem, 8vw, 10rem);
+    margin-right: clamp(1rem, 8vw, 10rem);
+}
+
+/* Perks Strip Style */
+.perks {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-bottom: 2.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+}
+
+.perk {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 1.25rem 1.5rem;
+    color: #0f172a;
+    text-decoration: none;
+}
+
+.perk + .perk {
+    border-left: 1px solid #e2e8f0;
+}
+
+.perk > i {
+    font-size: 1.6rem;
+    color: var(--accent-text);
+}
+
+.perk h3 {
+    font-size: 0.95rem;
+}
+
+.perk p {
+    font-size: 0.8rem;
+    color: #555;
+}
+
+a.perk:hover h3 {
+    color: var(--accent-text);
+}
+
+/* Shop by Category Style: four white panels on a light blue band */
+.category-band {
+    padding: 2.5rem clamp(1rem, 8vw, 10rem);
+    margin-bottom: 2.5rem;
+    background: #eef4fd;
+    font-family: 'Inter', sans-serif;
+}
+
+.category-panels {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+
+.category-panel {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0 0.3em 0.8em rgba(15, 23, 42, 0.06);
+}
+
+.category-panel h3 {
+    font-size: 1.2rem;
+    color: #0f172a;
+    margin-bottom: 1rem;
+}
+
+.tile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    list-style: none;
+}
+
+.tile {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #0f172a;
+    text-decoration: none;
+}
+
+.tile-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 4 / 3;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    /* White, to match the white backgrounds of the product images */
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.tile-image img {
+    width: 100%;
+    height: 100%;
+    padding: 0.6rem;
+    object-fit: contain;
+    transition: transform 0.3s;
+}
+
+/* Categories without a product photo show a large icon instead */
+.tile-icon {
+    background: linear-gradient(135deg, #0a0e14, #17202e);
+}
+
+.tile-icon i {
+    font-size: 2.2rem;
+    color: #38bdf8;
+    transition: transform 0.3s;
+}
+
+.tile:hover {
+    color: var(--accent-text);
+}
+
+.tile:hover .tile-image img,
+.tile:hover .tile-icon i {
+    transform: scale(1.08);
+}
+
+/* The deals panel is one big tile that fills the panel height */
+.tile-feature {
+    flex: 1;
+}
+
+.tile-feature .tile-image {
+    flex: 1;
+    aspect-ratio: auto;
+    min-height: 220px;
+    background: #0a0e14;
+}
+
+/* contain, not cover: the banner has text in it that must not be cut off */
+.tile-feature .tile-image img {
+    padding: 0;
+    object-fit: contain;
+}
+
+/* Product Rows Style (Today's Deals, New Arrivals, Top picks): Amazon-style scrolling rows */
+.product-row {
+    margin-bottom: 2.5rem;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #ffffff;
+    font-family: 'Inter', sans-serif;
+}
+
+.row-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.row-head h2 {
+    font-size: 1.3rem;
+}
+
+.row-head a {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent-text);
+    text-decoration: none;
+}
+
+.row-head a:hover {
+    text-decoration: underline;
+}
+
+.row-scroller {
+    position: relative;
+}
+
+/* One line of cards that scrolls sideways; scroll-snap lines a card up with the left edge */
+.row-track {
+    display: flex;
+    gap: 1rem;
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    padding-bottom: 0.5rem;
+}
+
+.row-track > li {
+    flex: 0 0 180px;
+    scroll-snap-align: start;
+}
+
+.mini-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    color: #0f172a;
+    text-decoration: none;
+}
+
+.mini-image {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.mini-image.no-image {
+    background: #f1f5f9;
+}
+
+.mini-image img {
+    width: 100%;
+    height: 100%;
+    padding: 0.75rem;
+    object-fit: contain;
+    transition: transform 0.3s;
+}
+
+.mini-image > i {
+    font-size: 3rem;
+    color: var(--muted-text);
+}
+
+.mini-card:hover .mini-image img {
+    transform: scale(1.05);
+}
+
+.mini-image .sale-badge {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 30px;
+    background: #dc2626;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.mini-price {
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.mini-price s {
+    margin-left: 0.3rem;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--muted-text);
+}
+
+/* Product names wrap to at most two lines, like Amazon */
+.mini-name {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 0.85rem;
+    line-height: 1.35;
+}
+
+.mini-card:hover .mini-name {
+    color: var(--accent-text);
+    text-decoration: underline;
+}
+
+.mini-stock {
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.mini-stock.low {
+    color: var(--warning-text);
+}
+
+.mini-stock.out {
+    color: var(--danger-text);
+}
+
+/* Round arrow buttons over the ends of the row (JS/home.js hides one at the start or end) */
+.row-btn {
+    position: absolute;
+    top: 35%;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #0f172a;
+    box-shadow: 0 0.3em 0.8em rgba(15, 23, 42, 0.18);
+    cursor: pointer;
+    transform: translateY(-50%);
+    transition: 0.2s;
+}
+
+.row-btn[hidden] {
+    display: none;
+}
+
+.row-btn:hover {
+    color: var(--accent-text);
+    border-color: var(--accent-text);
+}
+
+.row-btn.prev {
+    left: -0.75rem;
+}
+
+.row-btn.next {
+    right: -0.75rem;
+}
+
+/* Buying Guides Style */
+.guides {
+    margin-bottom: 2.5rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.guide-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+}
+
+.guide-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid var(--accent-text);
+    border-radius: 10px;
+}
+
+.guide-card > i {
+    font-size: 1.6rem;
+    color: var(--accent-text);
+}
+
+.guide-card h3 {
+    font-size: 1.05rem;
+}
+
+.guide-card p {
+    flex: 1;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #475569;
+}
+
+.guide-card a {
+    font-weight: 600;
+    color: var(--accent-text);
+    text-decoration: none;
+}
+
+.guide-card a:hover {
+    text-decoration: underline;
+}
+
+/* Services Style */
+.services {
+    margin-bottom: 2.5rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.service-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+}
+
+.service-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.75rem;
+    border-radius: 12px;
+    background: #0a0e14;
+    color: #ffffff;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.service-card > i {
+    font-size: 2rem;
+    color: #38bdf8;
+}
+
+.service-card p {
+    flex: 1;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #e2e8f0;
+}
+
+.service-card span {
+    font-weight: 600;
+    color: #38bdf8;
+}
+
+.service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 18px rgba(56, 189, 248, 0.45);
+}
+
+.home-newsletter {
+    margin-bottom: 2.5rem;
+    font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 1100px) {
+    .guide-cards {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .perks,
+    .category-panels {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    /* In two columns, every perk after the first row needs a top border instead */
+    .perk:nth-child(3) {
+        border-left: none;
+    }
+
+    .perk:nth-child(n + 3) {
+        border-top: 1px solid #e2e8f0;
+    }
+}
+
+@media (max-width: 700px) {
+    .perks,
+    .category-panels,
+    .guide-cards,
+    .service-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .perk + .perk {
+        border-left: none;
+        border-top: 1px solid #e2e8f0;
+    }
+}

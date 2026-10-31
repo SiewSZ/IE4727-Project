@@ -1,11 +1,11 @@
-// Order Button: plays the delivery truck animation (styles in CSS/order-button.css).
-// Based on "Order confirm animation" by Aaron Iker (https://codepen.io/aaroniker/pen/eYOVrNa, MIT licence).
+// Order Button: "Place Order" -> spinner and filling progress bar -> "Order Placed" (styles in CSS/order-button.css).
 //
 // Usage: animateOrderButton(button).then(() => { ...order is placed... });
-// The returned promise resolves once the truck has driven off (about 10 seconds),
+//        resetOrderButton(button) puts it back to "Place Order" (e.g. when the server refuses the order)
+// The returned promise resolves once the progress bar is full (about 2 seconds),
 // and the button is left on "Order Placed" so the order can't be submitted twice.
 
-const ORDER_ANIMATION_MS = 10000;
+const ORDER_ANIMATION_MS = 2000;
 
 function animateOrderButton(button) {
     return new Promise((resolve) => {
@@ -20,14 +20,17 @@ function animateOrderButton(button) {
             return;
         }
 
-        // The truck's path depends on the button's width
-        button.style.setProperty("--w", `${button.offsetWidth}px`);
         button.classList.add("animate");
-
-        setTimeout(() => {
+        button.orderTimer = setTimeout(() => {
             button.classList.remove("animate");
             button.classList.add("done");
             resolve();
         }, ORDER_ANIMATION_MS);
     });
+}
+
+function resetOrderButton(button) {
+    clearTimeout(button.orderTimer);
+    button.classList.remove("animate", "done");
+    button.disabled = false;
 }

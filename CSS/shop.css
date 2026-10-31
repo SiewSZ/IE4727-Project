@@ -37,7 +37,7 @@
 
 .shop-reset:hover,
 .filter-reset:hover {
-    color: #0aa9f3;
+    color: var(--accent-text);
 }
 
 /* Toolbar: Filter toggle | Sort by ... product count */
@@ -67,7 +67,7 @@
 
 .toolbar-filter:hover,
 .toolbar-filter[aria-expanded="false"] {
-    color: #0aa9f3;
+    color: var(--accent-text);
 }
 
 .toolbar-sort {
@@ -115,7 +115,7 @@
 }
 
 .toolbar-search i {
-    color: #94a3b8;
+    color: var(--muted-text);
     font-size: 0.85rem;
 }
 
@@ -310,12 +310,12 @@
 .filter-option input {
     width: 1rem;
     height: 1rem;
-    accent-color: #0aa9f3;
+    accent-color: #0284c7;
     cursor: pointer;
 }
 
 .filter-option input:checked + span {
-    color: #0aa9f3;
+    color: var(--accent-text);
     font-weight: 600;
 }
 
@@ -332,6 +332,8 @@
 }
 
 .product-card {
+    /* The wishlist button is placed against the card, over the top-right of the image */
+    position: relative;
     display: flex;
     flex-direction: column;
     border: 1px solid #e2e8f0;
@@ -376,7 +378,7 @@
 
 .product-image > i {
     font-size: 4rem;
-    color: #94a3b8;
+    color: var(--muted-text);
 }
 
 .wishlist-btn {
@@ -397,7 +399,21 @@
 
 .wishlist-btn:hover,
 .wishlist-btn.active {
-    color: #ef4444;
+    color: var(--danger-text);
+}
+
+/* "-15%" tag on products that have an old price (JS/products.js) */
+.sale-badge {
+    position: absolute;
+    z-index: 1;
+    top: 0.6rem;
+    left: 0.6rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 30px;
+    background: #dc2626;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 700;
 }
 
 .product-info {
@@ -411,7 +427,7 @@
 .product-category {
     font-size: 0.7rem;
     text-transform: uppercase;
-    color: #94a3b8;
+    color: var(--muted-text);
 }
 
 .product-name {
@@ -422,17 +438,27 @@
     text-overflow: ellipsis;
 }
 
+/* The name links to the product page */
+.product-name a {
+    color: #0f172a;
+    text-decoration: none;
+}
+
+.product-name a:hover {
+    color: var(--accent-text);
+}
+
 .product-rating {
     display: flex;
     align-items: center;
     gap: 0.15rem;
     font-size: 0.7rem;
-    color: #0aa9f3;
+    color: var(--accent-text);
 }
 
 .product-rating span {
     margin-left: 0.4rem;
-    color: #94a3b8;
+    color: var(--muted-text);
 }
 
 .product-stock {
@@ -445,7 +471,7 @@
 
 .product-stock .out {
     margin-left: 0;
-    color: #ef4444;
+    color: var(--danger-text);
 }
 
 .product-price {
@@ -457,7 +483,21 @@
 .product-price s {
     margin-left: 0.4rem;
     font-weight: 400;
-    color: #94a3b8;
+    color: var(--muted-text);
+}
+
+/* "You save $30.00" pill on discounted products */
+.deal-saving {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    background: rgba(22, 163, 74, 0.12);
+    color: var(--success-text);
+    font-size: 0.85rem;
+    font-weight: 700;
 }
 
 .add-cart-btn {

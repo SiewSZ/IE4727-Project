@@ -1,8 +1,8 @@
 <?php
 // Adds a new product, or updates one when product_id is sent.
 // Expects POST (multipart form) fields from the admin product form:
-//   product_id (blank = new), name, brand, category_id, price, old_price,
-//   stock, description, is_active (checkbox), image (optional file)
+//   product_id (blank = new), name, brand, category_id, regular_price, sale_price (blank = not on sale),
+//   stock, description, features (one per line), is_active (checkbox), image (optional file)
 // Replies with JSON: {"ok": true, "id": <product_id>} or {"error": "..."}
 
 require_once __DIR__ . "/common.php";
@@ -13,10 +13,13 @@ $productId = (int) ($_POST['product_id'] ?? 0);
 $name = trim($_POST['name'] ?? '');
 $brand = trim($_POST['brand'] ?? '');
 $categoryId = (int) ($_POST['category_id'] ?? 0);
-$price = $_POST['price'] ?? '';
-$oldPrice = trim($_POST['old_price'] ?? '');
+$regularPrice = trim($_POST['regular_price'] ?? '');
+$salePrice = trim($_POST['sale_price'] ?? '');
 $stock = $_POST['stock'] ?? '';
 $description = trim($_POST['description'] ?? '');
+// One key feature per line: drop blank lines and stray spaces so product.php gets a clean list
+$features = implode("
+", array_filter(array_map('trim', preg_split('/R/', $_POST['features'] ?? ''))));
 $isActive = isset($_POST['is_active']) ? 1 : 0;
 
 // Check again on the server: browser validation can be bypassed
@@ -26,11 +29,11 @@ if ($name === '' || strlen($name) > 150) {
 if ($brand === '' || strlen($brand) > 50) {
     respond(400, ["error" => "Brand is required (max 50 characters)."]);
 }
-if (!is_numeric($price) || $price < 0) {
-    respond(400, ["error" => "Price must be 0 or more."]);
+if (!is_numeric($regularPrice) || $regularPrice < 0) {
+    respond(400, ["error" => "Regular price must be 0 or more."]);
 }
-if ($oldPrice !== '' && (!is_numeric($oldPrice) || $oldPrice < 0)) {
-    respond(400, ["error" => "Original price must be 0 or more, or left blank."]);
+if ($salePrice !== '' && (!is_numeric($salePrice) || $salePrice < 0 || $salePrice >= $regularPrice)) {
+    respond(400, ["error" => "Sale price must be lower than the regular price, or left blank."]);
 }
 if (!preg_match('/^\d+$/', (string) $stock)) {
     respond(400, ["error" => "Stock must be a whole number, 0 or more."]);
@@ -46,8 +49,11 @@ if (!$categoryExists) {
     respond(400, ["error" => "Please choose a valid category."]);
 }
 
-$oldPrice = $oldPrice === '' ? null : $oldPrice;
+// The table stores what customers pay (price) and, during a sale, the regular price (old_price)
+$price = $salePrice === '' ? $regularPrice : $salePrice;
+$oldPrice = $salePrice === '' ? null : $regularPrice;
 $description = $description === '' ? null : $description;
+$features = $features === '' ? null : $features;
 
 // When editing, look up the current image so it can be kept or replaced
 $currentImage = null;
@@ -91,16 +97,16 @@ try {
     if ($productId > 0) {
         $stmt = mysqli_prepare($conn,
             "UPDATE products SET name = ?, brand = ?, category_id = ?, price = ?, old_price = ?,
-                    stock = ?, description = ?, image_path = ?, is_active = ?
+                    stock = ?, description = ?, features = ?, image_path = ?, is_active = ?
              WHERE product_id = ?");
-        mysqli_stmt_bind_param($stmt, "ssiddissii",
-            $name, $brand, $categoryId, $price, $oldPrice, $stock, $description, $imagePath, $isActive, $productId);
+        mysqli_stmt_bind_param($stmt, "ssiddisssii",
+            $name, $brand, $categoryId, $price, $oldPrice, $stock, $description, $features, $imagePath, $isActive, $productId);
     } else {
         $stmt = mysqli_prepare($conn,
-            "INSERT INTO products (name, brand, category_id, price, old_price, stock, description, image_path, is_active)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "ssiddissi",
-            $name, $brand, $categoryId, $price, $oldPrice, $stock, $description, $imagePath, $isActive);
+            "INSERT INTO products (name, brand, category_id, price, old_price, stock, description, features, image_path, is_active)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, "ssiddisssi",
+            $name, $brand, $categoryId, $price, $oldPrice, $stock, $description, $features, $imagePath, $isActive);
     }
     mysqli_stmt_execute($stmt);
     $savedId = $productId > 0 ? $productId : mysqli_insert_id($conn);

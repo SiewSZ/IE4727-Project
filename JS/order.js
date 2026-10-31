@@ -159,13 +159,62 @@ document.addEventListener("DOMContentLoaded", () => {
         toggleAddressForm(false);
     });
 
-    // Truck animation from JS/order-button.js, then announce the result for screen readers
+    // Place Order: the server saves the order and empties the session cart (PHP/orders/place.php)
+    // while the button animates (JS/order-button.js). The result is announced for screen readers too.
     const orderStatus = document.getElementById("orderStatus");
-    checkoutBtn.addEventListener("click", () => {
+    const orderError = document.getElementById("orderError");
+
+    const showOrderError = (message) => {
+        orderError.innerHTML = message;
+        orderError.hidden = false;
+    };
+
+    const showConfirmation = (result, address) => {
+        itemsBox.innerHTML = `
+            <div class="order-confirm">
+                <i class="fa-solid fa-circle-check"></i>
+                <h3>Thank you! Order #${result.orderId} is confirmed.</h3>
+                <p>${result.itemCount} item${result.itemCount === 1 ? "" : "s"}, ${money(result.total)} in total, will be delivered to <strong>${esc(address.label)}</strong> (${esc(address.address)}).</p>
+                <a href="shop.html" class="order-confirm-btn">Continue shopping</a>
+            </div>`;
+    };
+
+    checkoutBtn.addEventListener("click", async () => {
+        if (!cart.length) return;
+        orderError.hidden = true;
         orderStatus.textContent = "Placing your order...";
-        animateOrderButton(checkoutBtn).then(() => {
-            orderStatus.textContent = `Order placed! Delivering to ${addresses[selectedAddress].label}.`;
-        });
+
+        const address = addresses[selectedAddress];
+        const body = new FormData();
+        body.append("address_label", address.label);
+        body.append("address", address.address);
+
+        const animation = animateOrderButton(checkoutBtn);
+        try {
+            const res = await fetch("PHP/orders/place.php", { method: "POST", body });
+            let data;
+            try {
+                data = await res.json();
+            } catch {
+                throw new Error("The server sent an unexpected reply. Is MySQL running?");
+            }
+            if (res.status === 401) {
+                throw new Error(`${esc(data.error)} <a href="login.html">Sign in</a>`);
+            }
+            if (!res.ok) throw new Error(esc(data.error || `Request failed (${res.status})`));
+
+            await animation;
+            cart = [];
+            renderCart();               // totals back to $0.00
+            setCartCount(0);            // header cart badge (JS/session.js)
+            showConfirmation(data, address);
+            orderStatus.textContent = `Order ${data.orderId} placed. Delivering to ${address.label}.`;
+        } catch (err) {
+            resetOrderButton(checkoutBtn);
+            showOrderError(err.message);
+            orderStatus.textContent = "Your order was not placed.";
+            loadCart();                 // stock may have changed: show the cart as it is now
+        }
     });
 
     loadCart();

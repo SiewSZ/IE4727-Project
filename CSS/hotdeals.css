@@ -1,0 +1,423 @@
+/* Hot Deals Page Style (product cards come from CSS/shop.css) */
+.deals-page {
+    /* Same side gap as the home page carousel and the shop */
+    margin: 2.5rem clamp(1rem, 8vw, 10rem);
+    font-family: 'Inter', sans-serif;
+}
+
+.deals-page section + section {
+    margin-top: 3rem;
+}
+
+/* Leave a little space above a section when the menu jumps to it (e.g. #clearance) */
+.deals-page section[id] {
+    scroll-margin-top: 1.5rem;
+}
+
+.deals-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.deals-heading h2 {
+    font-size: 1.4rem;
+}
+
+.deals-heading h2 i {
+    color: var(--accent-text);
+}
+
+.deals-heading p {
+    color: #555;
+}
+
+.countdown {
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    background: #0a0e14;
+    color: #38bdf8;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
+}
+
+/* Clearance grid fills the full width (the shop grid leaves room for the filter sidebar) */
+.deals-page .product-grid {
+    padding: 0;
+}
+
+
+.deals-page .no-products a {
+    color: var(--accent-text);
+}
+
+/* Shell Shocker: one large featured deal */
+.shell-shocker-card {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0.6em 1.2em rgba(0, 0, 0, 0.12);
+}
+
+.shell-shocker-image {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 280px;
+    background: #ffffff;
+    border-right: 1px solid #f1f5f9;
+}
+
+.shell-shocker-image.no-image {
+    background: #f1f5f9;
+}
+
+.shell-shocker-image img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 1.5rem;
+    object-fit: contain;
+}
+
+.shell-shocker-image > i {
+    font-size: 6rem;
+    color: var(--muted-text);
+}
+
+.shell-shocker-image .sale-badge {
+    font-size: 1rem;
+}
+
+.shell-shocker-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 2rem;
+    background: #0a0e14;
+    color: #ffffff;
+}
+
+.shell-shocker-info h3 {
+    font-size: 1.6rem;
+}
+
+.shell-shocker-info h3 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.shell-shocker-info h3 a:hover {
+    color: #38bdf8;
+}
+
+.shell-shocker-desc {
+    color: #e2e8f0;
+    line-height: 1.6;
+}
+
+.shell-shocker-price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #38bdf8;
+}
+
+.shell-shocker-price s {
+    margin-left: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--muted-text);
+}
+
+/* Bigger saving pill on the featured deal */
+.shell-shocker-info .deal-saving {
+    padding: 0.45rem 0.9rem;
+    background: rgba(74, 222, 128, 0.15);
+    color: #4ade80;
+    font-size: 1.05rem;
+}
+
+.shell-shocker-info .add-cart-btn {
+    margin-top: 0.5rem;
+    padding: 0.75rem 1.75rem;
+    background: #38bdf8;
+    color: #0a0e14;
+    font-size: 1rem;
+}
+
+.shell-shocker-info .add-cart-btn:hover {
+    background: #ffffff;
+}
+
+/* The scrolling "Almost Gone" row and guide cards come from CSS/home.css;
+   this page already has its own side margins */
+.deals-page .product-row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* Clearance filters: category chips + sort menu */
+.deal-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Undo the site-wide <nav> styles (meant for the header) on the chip list */
+.chip-list {
+    width: auto;
+    background: none;
+    border-bottom: none;
+    backdrop-filter: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #0f172a;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.chip span {
+    min-width: 1.4rem;
+    padding: 0 0.35rem;
+    border-radius: 30px;
+    background: #f1f5f9;
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+.chip:hover {
+    border-color: var(--accent-text);
+    color: var(--accent-text);
+}
+
+.chip.active {
+    border-color: #0369a1;
+    background: #0369a1;
+    color: #ffffff;
+}
+
+.chip.active span {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.sort-form {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.sort-form select,
+.sort-apply {
+    padding: 0.4rem 0.7rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #ffffff;
+    font-family: inherit;
+    font-size: 0.85rem;
+    color: #0f172a;
+}
+
+.sort-apply {
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Bundles */
+.bundle-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.25rem;
+}
+
+.bundle-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+
+.bundle-head {
+    display: flex;
+    gap: 0.9rem;
+}
+
+.bundle-head > i {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    background: rgba(2, 132, 199, 0.12);
+    color: var(--accent-text);
+    font-size: 1.1rem;
+}
+
+.bundle-head h3 {
+    font-size: 1.1rem;
+}
+
+.bundle-head p {
+    margin-top: 0.25rem;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--muted-text);
+}
+
+.bundle-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    list-style: none;
+}
+
+.bundle-items li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.bundle-items a {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 0;
+    color: inherit;
+    text-decoration: none;
+}
+
+.bundle-items a:hover .bundle-name {
+    color: var(--accent-text);
+    text-decoration: underline;
+}
+
+.bundle-thumb {
+    flex: 0 0 2.75rem;
+    height: 2.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.bundle-thumb img {
+    width: 100%;
+    height: 100%;
+    padding: 0.15rem;
+    object-fit: contain;
+}
+
+.bundle-name {
+    font-size: 0.85rem;
+    line-height: 1.35;
+}
+
+.bundle-price {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.bundle-price s {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--muted-text);
+}
+
+.bundle-total {
+    margin-top: auto;
+    padding-top: 0.9rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.bundle-total strong {
+    margin-left: 0.4rem;
+    font-size: 1.4rem;
+}
+
+.add-bundle-btn {
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 8px;
+    background: #0369a1;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.add-bundle-btn:hover {
+    background: #075985;
+}
+
+.add-bundle-btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.bundle-message:empty {
+    display: none;
+}
+
+.bundle-message {
+    font-size: 0.85rem;
+    color: var(--success-text);
+}
+
+.bundle-message.error {
+    color: var(--danger-text);
+}
+
+.bundle-message a {
+    color: var(--accent-text);
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .shell-shocker-card {
+        grid-template-columns: 1fr;
+    }
+
+    .shell-shocker-image {
+        border-right: none;
+        border-bottom: 1px solid #f1f5f9;
+    }
+}
