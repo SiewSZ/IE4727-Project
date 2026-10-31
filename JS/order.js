@@ -157,6 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const orderError = document.getElementById("orderError");
 
     const showOrderError = (message) => {
+        orderError.classList.remove("info");
         orderError.innerHTML = message;
         orderError.hidden = false;
     };
@@ -213,6 +214,16 @@ document.addEventListener("DOMContentLoaded", () => {
             loadCart();                 // stock may have changed: show the cart as it is now
         }
     });
+
+    // PHP/shopping_cart/add_build.php sends people here with ?build_added=<number of parts>
+    const builtParts = new URLSearchParams(window.location.search).get("build_added");
+    if (builtParts !== null) {
+        orderError.hidden = false;
+        orderError.classList.add("info");
+        orderError.textContent = Number(builtParts) > 0
+            ? `Your PC build is in the cart: ${builtParts} part${builtParts === "1" ? "" : "s"} added.`
+            : "Those parts are already in your cart (or just sold out).";
+    }
 
     loadCart();
     renderAddresses();

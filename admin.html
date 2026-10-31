@@ -51,7 +51,7 @@
                             </ul>
                             <p class="mega-menu-heading">Help me build&hellip;</p>
                             <ul class="mega-menu-plain">
-                                <li><a href="shop.html?category=Components%20%26%20Storage">Desktop PC</a></li>
+                                <li><a href="pc-builder.php">Desktop PC (PC Builder)</a></li>
                                 <li><a href="shop.html?category=Computer%20Systems">Workstation</a></li>
                                 <li><a href="shop.html?category=Networking">Home Network</a></li>
                                 <li><a href="shop.html?category=Gaming%20%26%20VR">Game Room</a></li>
@@ -75,6 +75,7 @@
                 </li>
                 <li><a href="index.php">Home</a></li>
                 <li><a href="shop.html">Shop</a></li>
+                <li><a href="pc-builder.php">PC Builder</a></li>
                 <li><a href="contact.html">Contact Us</a></li>
                 <li><a href="hotdeals.php">Hot Deals</a></li>
             </ul>
@@ -206,6 +207,42 @@
                     <label class="span-2">Key Features <small>one per line, shown as bullet points on the product page</small>
                         <textarea name="features" rows="5"></textarea>
                     </label>
+                    <!-- PC Builder (pc-builder.php): leave "Not a PC part" for everything else -->
+                    <fieldset class="span-2 builder-fields">
+                        <legend>PC Builder <small>for parts that can go in a custom PC</small></legend>
+                        <label>Part type
+                            <select name="part_type">
+                                <option value="">Not a PC part</option>
+                                <option value="cpu">Processor (CPU)</option>
+                                <option value="motherboard">Motherboard</option>
+                                <option value="memory">Memory (RAM)</option>
+                                <option value="gpu">Graphics card</option>
+                                <option value="storage">Storage</option>
+                                <option value="psu">Power supply</option>
+                                <option value="cooler">CPU cooler</option>
+                                <option value="case">Case</option>
+                            </select>
+                        </label>
+                        <label>Socket <small>CPUs and motherboards</small>
+                            <select name="socket">
+                                <option value="">None</option>
+                                <option>AM4</option>
+                                <option>AM5</option>
+                                <option>LGA1700</option>
+                                <option>LGA1851</option>
+                            </select>
+                        </label>
+                        <label>Memory type <small>motherboards and RAM</small>
+                            <select name="memory_type">
+                                <option value="">None</option>
+                                <option>DDR4</option>
+                                <option>DDR5</option>
+                            </select>
+                        </label>
+                        <label>Watts <small>CPU/graphics draw, or PSU output</small>
+                            <input type="number" name="wattage" min="1" max="3000" step="1">
+                        </label>
+                    </fieldset>
                     <label class="admin-check span-2">
                         <input type="checkbox" name="is_active" checked>
                         Show this product in the shop
@@ -258,6 +295,7 @@
                                 <th scope="col">Price</th>
                                 <th scope="col">In stock</th>
                                 <th scope="col">Stock value</th>
+                                <th scope="col">Waiting</th>
                             </tr>
                         </thead>
                         <tbody id="restockBody"></tbody>
@@ -400,6 +438,7 @@
                 <ul>
                     <li><a href="index.php">Home</a></li>
                     <li><a href="shop.html">Shop</a></li>
+                    <li><a href="pc-builder.php">PC Builder</a></li>
                     <li><a href="hotdeals.php">Hot Deals</a></li>
                     <li><a href="contact.html">Contact Us</a></li>
                 </ul>

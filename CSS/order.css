@@ -123,6 +123,12 @@
     font-size: 0.85rem;
 }
 
+/* Same box used for a friendly note, e.g. after the PC Builder adds parts */
+.order-error.info {
+    background: rgba(22, 163, 74, 0.12);
+    color: var(--success-text);
+}
+
 .order-error a {
     color: inherit;
     font-weight: 700;

@@ -13,11 +13,15 @@ flowchart TD
     Contact["Contact Us + Terms & Privacy<br/>contact.html"]
     Login["Login / Register<br/>login.html"]
     Admin["Admin<br/>admin.html"]
+    Builder["PC Builder<br/>pc-builder.php"]
 
     Home -->|category tiles, product rows, search| Shop
     Home -->|product rows| Product
     Home -->|deals tile, Today's Deals| Deals
     Home -->|buying guides, services| Contact
+    Home -->|Build a Gaming PC| Builder
+    Builder -->|part picture| Product
+    Builder -->|Add build to cart| Cart
     Shop -->|product card| Product
     Deals -->|deal card, bundle item| Product
     Product -->|related products| Product
@@ -39,5 +43,6 @@ flowchart TD
 |---|---|
 | Shell Shocker, Clearance Deals, Email Deals | Hot Deals sections (`#shell-shocker`, `#clearance`, `#email-deals`) |
 | Trade In, Server / NAS | Contact Us with the subject chosen |
-| Desktop PC, Workstation, Home Network, Game Room | Shop filtered to the matching category |
+| Desktop PC (PC Builder) | PC Builder |
+| Workstation, Home Network, Game Room | Shop filtered to the matching category |
 | Each product category, Shop All | Shop filtered to that category / everything |

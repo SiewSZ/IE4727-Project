@@ -12,9 +12,12 @@ if ($showAll) {
     requireAdmin();
 }
 
-$sql = "SELECT p.product_id, p.name, p.brand, p.description, p.features, p.price, p.old_price, p.stock,
+$sql = "SELECT p.product_id, p.name, p.brand, p.description, p.features, p.part_type, p.socket, p.memory_type, p.wattage, p.price, p.old_price, p.stock,
                p.image_path, p.rating, p.reviews, p.is_active,
-               c.category_id, c.name AS category, c.icon
+               c.category_id, c.name AS category, c.icon,
+               (SELECT COUNT(*) FROM stock_alerts a WHERE a.product_id = p.product_id AND a.notified_at IS NULL) AS waiting,
+               (SELECT COALESCE(SUM(i.qty), 0) FROM order_items i JOIN orders o USING (order_id)
+                WHERE i.product_id = p.product_id AND o.status <> 'Cancelled') AS sold
         FROM products p
         JOIN categories c USING (category_id)"
      . ($showAll ? "" : " WHERE p.is_active = 1")
@@ -30,6 +33,10 @@ while ($row = mysqli_fetch_assoc($result)) {
         "brand" => $row['brand'],
         "description" => $row['description'] ?? "",
         "features" => $row['features'] ?? "",
+        "partType" => $row['part_type'] ?? "",
+        "socket" => $row['socket'] ?? "",
+        "memoryType" => $row['memory_type'] ?? "",
+        "wattage" => $row['wattage'] === null ? "" : (int) $row['wattage'],
         "categoryId" => (int) $row['category_id'],
         "category" => $row['category'],
         "icon" => $row['icon'],
@@ -39,9 +46,21 @@ while ($row = mysqli_fetch_assoc($result)) {
         "image" => $row['image_path'] ?? "",
         "rating" => (int) $row['rating'],
         "reviews" => (int) $row['reviews'],
-        "isActive" => $row['is_active'] === '1'
+        "isActive" => $row['is_active'] === '1',
+        "waiting" => (int) $row['waiting'],  // customers waiting for a back-in-stock email
+        "sold" => (int) $row['sold'],        // units sold in orders that weren't cancelled
+        "bestseller" => false
     ];
 }
+
+// Tag the top 5 sellers (only products that have actually sold)
+$ranked = array_filter($products, fn($p) => $p['sold'] > 0);
+usort($ranked, fn($a, $b) => $b['sold'] <=> $a['sold']);
+$topIds = array_column(array_slice($ranked, 0, 5), 'id');
+foreach ($products as &$p) {
+    $p['bestseller'] = in_array($p['id'], $topIds, true);
+}
+unset($p);
 
 $categories = [];
 $result = mysqli_query($conn, "SELECT category_id, name, icon FROM categories ORDER BY name");

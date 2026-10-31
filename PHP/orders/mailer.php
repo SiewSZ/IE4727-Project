@@ -31,6 +31,32 @@ function sendOrderEmail($conn, $customerEmail, $subject, $body)
     return (bool) $sent;
 }
 
+// Back-in-stock alerts (stock_alerts table, filled from the form on a sold-out product page):
+// if the product is in stock again, email everyone still waiting and mark them as notified.
+// Called after an admin saves a product (save.php) and after a cancelled order restocks (status.php).
+function notifyBackInStock($conn, $productId)
+{
+    $stmt = mysqli_prepare($conn,
+        "SELECT a.alert_id, a.email, p.name, p.price, p.stock
+         FROM stock_alerts a JOIN products p USING (product_id)
+         WHERE a.product_id = ? AND a.notified_at IS NULL AND p.stock > 0 AND p.is_active = 1");
+    mysqli_stmt_bind_param($stmt, "i", $productId);
+    mysqli_stmt_execute($stmt);
+    $waiting = mysqli_fetch_all(mysqli_stmt_get_result($stmt), MYSQLI_ASSOC);
+    mysqli_stmt_close($stmt);
+
+    $done = mysqli_prepare($conn, "UPDATE stock_alerts SET notified_at = NOW() WHERE alert_id = ?");
+    foreach ($waiting as $alert) {
+        sendOrderEmail($conn, $alert['email'], "Back in stock: {$alert['name']}",
+            "Good news! The {$alert['name']} you asked about is back in stock at $" . number_format($alert['price'], 2) . "."
+            . "\r\n\r\nOnly {$alert['stock']} available, so order soon:\r\nproduct.php?id=$productId");
+        mysqli_stmt_bind_param($done, "i", $alert['alert_id']);
+        mysqli_stmt_execute($done);
+    }
+    mysqli_stmt_close($done);
+    return count($waiting);
+}
+
 // One line per item, for the email body
 function orderLinesText($items)
 {

@@ -24,9 +24,10 @@ Database settings are in `PHP/db_connect.php` (default XAMPP: user `root`, no pa
 
 | Page | File | What it does |
 |---|---|---|
-| Home | `index.php` | Carousel, category tiles, live product rows (Today's Deals, New Arrivals, Top picks per category), buying guides |
+| Home | `index.php` | Carousel, category tiles, live product rows (Today's Deals, Best Sellers, New Arrivals, Top picks per category), buying guides |
 | Shop | `shop.html` | Every product with price, category and brand filters, sorting and search |
-| Product details | `product.php?id=…` | Key features, price and stock, add to cart / buy now, specs table, customer reviews, related products |
+| Product details | `product.php?id=…` | Key features, price and stock, add to cart / buy now, bestseller rank, "email me when it's back" on sold-out items, specs table, customer reviews, related products |
+| PC Builder | `pc-builder.php` | Choose a part for each slot; PHP checks socket, memory type and power, then adds the whole build to the cart |
 | Hot Deals | `hotdeals.php` | Daily Shell Shocker with countdown, Almost Gone, Clearance with filters, Bundles, email sign-up |
 | Cart | `order.html` | Quantities, totals with discounts, delivery address, Place Order |
 | My Orders | `my-orders.php` | A customer's orders with a status tracker, items table and totals |
@@ -34,7 +35,7 @@ Database settings are in `PHP/db_connect.php` (default XAMPP: user `root`, no pa
 | Login / Register | `login.html` | Sign in and create an account |
 | Admin | `admin.html` | Inventory, sales, Orders, Users and Insights (admins only) |
 
-That is the home page plus 8 content pages (the guidelines allow 4 to 10).
+That is the home page plus 9 content pages (the guidelines allow 4 to 10). `PHP/cookies/cookiecounter.php` is a separate cookie demo from development and is not linked from the site.
 
 ## How the project meets the Base Version requirements
 
@@ -42,9 +43,9 @@ That is the home page plus 8 content pages (the guidelines allow 4 to 10).
 |---|---|
 | Home page + 4 to 10 content pages, each with text, images and a title | See the table above; every page has its own title that includes "Quantum Gear" |
 | A table that displays content | Items table on **My Orders**, product details table on the **product page**, admin tables |
-| A form with 4+ fields, processed on the server with the database | **Contact Us** (name, email, subject, message) → `PHP/contact/send.php` → `INSERT` into `contact_messages`. Also: register, sign in, product reviews |
-| SQL SELECT, INSERT and UPDATE | SELECT on every page; INSERT for accounts, messages, orders, reviews; UPDATE for stock, order status, prices and roles |
-| A page generated on the server | `index.php`, `hotdeals.php`, `product.php`, `my-orders.php` are built by PHP from the database |
+| A form with 4+ fields, processed on the server with the database | **Contact Us** (name, email, subject, message) → `PHP/contact/send.php` → `INSERT` into `contact_messages`. Also: the **PC Builder** (8 drop-downs, checked by PHP), register, sign in, product reviews, back-in-stock alerts |
+| SQL SELECT, INSERT and UPDATE | SELECT on every page (including `SUM`/`GROUP BY` for best sellers); INSERT for accounts, messages, orders, reviews, stock alerts; UPDATE for stock, order status, prices, roles and alerts |
+| A page generated on the server | `index.php`, `hotdeals.php`, `product.php`, `my-orders.php`, `pc-builder.php` are built by PHP from the database |
 | HTML5 validation, JavaScript for what HTML5 can't check, PHP for everything | e.g. the contact form: HTML5 (`required`, `type=email`, lengths) → `JS/contact.js` (name pattern, full email domain, message not just spaces) → `PHP/contact/send.php` checks all of it again |
 | External style sheet | `CSS/global.css` (shared) plus one file per page |
 | Form actions run PHP (no `mailto:`), no frames or iframes, no templates, no external links to social sites | All forms post to PHP scripts; layout and styles are our own |
@@ -79,9 +80,9 @@ JS/         one file per page, plus session.js, menu.js, theme.js, products.js (
 PHP/
   db_connect.php       database connection
   users/               sign in, register, sign out, session, admin user management
-  products/            product list, save, delete, sale, reviews, shared HTML helpers (render.php)
-  shopping_cart/       session cart
-  orders/              place order, admin order list and status, emails
+  products/            product list, save, delete, sale, reviews, back-in-stock alerts, shared HTML helpers (render.php)
+  shopping_cart/       session cart, add a whole PC build (add_build.php)
+  orders/              place order, admin order list and status, emails (order and back-in-stock)
   contact/             contact form and email sign-up
 database/schema.sql    every table and the starting products
 docs/                  test cases and site map for the report

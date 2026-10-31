@@ -68,6 +68,28 @@ All tests passed. Test accounts and orders were deleted afterwards.
 | R2 | Post a review | 4 stars and a full sentence, after buying the product | "Thank you! Your review has been saved."; average 4.0 (1 review); Verified purchase | Browser + Database | Pass |
 | R3 | Product card stars follow the reviews | After R2 | products.rating = 4, products.reviews = 1 | Database | Pass |
 
+## PC Builder
+
+| # | Test | Input data | Expected output | Method | Result |
+|---|---|---|---|---|---|
+| B1 | Ready-made build passes | "AM5 gaming PC" preset (8 parts) | "Every part is compatible"; socket, memory and power checks all green; total $2,982.00 | HTTP + Browser | Pass |
+| B2 | Wrong socket and memory caught | Ryzen 9 9950X3D (AM5) + B550 Gaming X V2 (AM4) + DDR5 kit | "2 problems to fix": needs an AM5 board; board takes DDR4; drop-downs mark "doesn't fit"; Add to cart blocked | HTTP + Browser | Pass |
+| B3 | Power check | 9950X3D (170W) + RTX 5080 (360W) + 850W supply | Estimated 630W; "covers the estimated 630W with room to spare" | HTTP | Pass |
+| B4 | Missing cooler warning | Any build with a CPU but no cooler | "doesn't include a cooler. Add a CPU cooler." | HTTP | Pass |
+| B5 | Add whole build to cart | Post the 8 preset part ids | Redirect to the cart with "8 parts added"; cart count 8 | HTTP | Pass |
+| B6 | Admin sets PC Builder specs | New product with part type "storage"; then part type "toaster" | Saved and offered in the builder's Storage slot; invalid type refused | HTTP | Pass |
+
+## Best sellers and back-in-stock alerts
+
+| # | Test | Input data | Expected output | Method | Result |
+|---|---|---|---|---|---|
+| S1 | Best Sellers row | 3 orders: 4 × MX Keys, 2 × C922n, others × 1 | Home row in order of units sold, MX Keys first | HTTP | Pass |
+| S2 | Bestseller tags | Same orders | MX Keys page shows "#1 Bestseller"; top 5 tagged in the shop | HTTP | Pass |
+| S3 | Cancelled orders don't count | Cancel an order | Its units leave the ranking | Database (query uses status <> 'Cancelled') | Pass |
+| S4 | Alert sign-up on a sold-out product | Valid email, then "nope" | "Done! We'll email you…"; then "Please enter a valid email address." | HTTP | Pass |
+| S5 | Admin sees who is waiting | Admin restock list | "1" waiting on that product | HTTP | Pass |
+| S6 | Restock sends the alert | Admin changes stock 0 → 5 | "Back in stock" email logged for the customer; alert marked notified (not sent twice) | HTTP + Database | Pass |
+
 ## Contact and email sign-up
 
 | # | Test | Input data | Expected output | Method | Result |

@@ -168,7 +168,7 @@ $subscribeError = isset($_GET['subscribe_error']);
                             </ul>
                             <p class="mega-menu-heading">Help me build&hellip;</p>
                             <ul class="mega-menu-plain">
-                                <li><a href="shop.html?category=Components%20%26%20Storage">Desktop PC</a></li>
+                                <li><a href="pc-builder.php">Desktop PC (PC Builder)</a></li>
                                 <li><a href="shop.html?category=Computer%20Systems">Workstation</a></li>
                                 <li><a href="shop.html?category=Networking">Home Network</a></li>
                                 <li><a href="shop.html?category=Gaming%20%26%20VR">Game Room</a></li>
@@ -192,6 +192,7 @@ $subscribeError = isset($_GET['subscribe_error']);
                 </li>
                 <li><a href="index.php">Home</a></li>
                 <li><a href="shop.html">Shop</a></li>
+                <li><a href="pc-builder.php">PC Builder</a></li>
                 <li><a href="contact.html">Contact Us</a></li>
                 <li><a href="hotdeals.php">Hot Deals</a></li>
             </ul>
@@ -398,6 +399,7 @@ if ($clearance) {
                 <ul>
                     <li><a href="index.php">Home</a></li>
                     <li><a href="shop.html">Shop</a></li>
+                    <li><a href="pc-builder.php">PC Builder</a></li>
                     <li><a href="hotdeals.php">Hot Deals</a></li>
                     <li><a href="contact.html">Contact Us</a></li>
                 </ul>

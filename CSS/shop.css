@@ -463,6 +463,23 @@
     color: var(--muted-text);
 }
 
+/* "Bestseller" tag on the top-selling products (shop cards and product page) */
+.bestseller-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-left: 0.35rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: 4px;
+    background: rgba(234, 88, 12, 0.12);
+    color: var(--warning-text);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: 0;
+    vertical-align: middle;
+}
+
 /* "You save $30.00" pill on discounted products */
 .deal-saving {
     align-self: flex-start;

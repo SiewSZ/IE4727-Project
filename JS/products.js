@@ -23,7 +23,7 @@ const productCard = (p) => `
             ${discountPercent(p) ? `<span class="sale-badge">-${discountPercent(p)}%</span>` : ""}
         </a>
         <div class="product-info">
-            <p class="product-category">${esc(p.category)}</p>
+            <p class="product-category">${esc(p.category)}${p.bestseller ? ` <span class="bestseller-tag"><i class="fa-solid fa-fire"></i> Bestseller</span>` : ""}</p>
             <h3 class="product-name" title="${esc(p.name)}"><a href="product.php?id=${p.id}">${esc(p.name)}</a></h3>
             <div class="product-rating">${stars(p.rating)}<span>${p.reviews} Reviews</span></div>
             <p class="product-stock">${p.stock > 0 ? `In Stock <span>${p.stock}</span>` : `<span class="out">Out of Stock</span>`}</p>

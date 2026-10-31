@@ -320,6 +320,42 @@
     cursor: wait;
 }
 
+/* "Email me when it's back" on sold-out products */
+.stock-alert {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.stock-alert label {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.stock-alert input {
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+
+.stock-alert-error {
+    font-size: 0.85rem;
+    color: var(--danger-text);
+}
+
+.stock-alert-done {
+    padding: 0.7rem 0.9rem;
+    border-radius: 8px;
+    background: rgba(22, 163, 74, 0.12);
+    color: var(--success-text);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
 .pd-help {
     display: flex;
     align-items: center;

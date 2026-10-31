@@ -181,8 +181,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     <td>${money(p.price)}</td>
                     <td>${p.stock === 0 ? `<span class="out">Out of stock</span>` : p.stock}</td>
                     <td>${money(stockValue(p))}</td>
+                    <td title="Customers who asked to be emailed when it's back">${p.waiting ? `<strong>${p.waiting}</strong> <i class="fa-regular fa-bell"></i>` : "–"}</td>
                 </tr>`).join("")
-            : `<tr><td colspan="4">Every product has more than ${LOW_STOCK} in stock.</td></tr>`;
+            : `<tr><td colspan="5">Every product has more than ${LOW_STOCK} in stock.</td></tr>`;
     };
 
     const fillCategoryOptions = (categories) => {
@@ -357,6 +358,10 @@ document.addEventListener("DOMContentLoaded", () => {
             form.elements.stock.value = p.stock;
             form.elements.description.value = p.description;
             form.elements.features.value = p.features;
+            form.elements.part_type.value = p.partType;
+            form.elements.socket.value = p.socket;
+            form.elements.memory_type.value = p.memoryType;
+            form.elements.wattage.value = p.wattage;
             form.elements.is_active.checked = p.isActive;
             openForm("Edit Product");
             return;

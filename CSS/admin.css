@@ -482,6 +482,36 @@
     font-style: italic;
 }
 
+/* PC Builder fields in the product form */
+.builder-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.75rem 1rem;
+    padding: 0.9rem 1rem 1rem;
+    border: 1px dashed #cbd5e1;
+    border-radius: 8px;
+}
+
+.builder-fields legend {
+    padding: 0 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.builder-fields legend small,
+.builder-fields label small {
+    font-weight: 400;
+    color: var(--muted-text);
+}
+
+.builder-fields label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
 /* Price preview under the price fields in the product form */
 .price-preview {
     align-self: end;

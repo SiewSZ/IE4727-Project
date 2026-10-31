@@ -12,6 +12,12 @@ $fetch = fn($sql) => mysqli_fetch_all(mysqli_query($conn, $sql), MYSQLI_ASSOC);
 $deals = $fetch("$select AND p.stock > 0 AND p.old_price > p.price
                  ORDER BY (p.old_price - p.price) / p.old_price DESC LIMIT 10");
 
+// Best Sellers: most units sold (shown once at least 3 different products have sold)
+$bestSellers = bestSellers($conn, 10);
+if (count($bestSellers) < 3) {
+    $bestSellers = [];
+}
+
 // New Arrivals: most recently added products
 $newArrivals = $fetch("$select ORDER BY p.created_at DESC, p.product_id DESC LIMIT 10");
 
@@ -80,7 +86,7 @@ mysqli_close($conn);
                             </ul>
                             <p class="mega-menu-heading">Help me build&hellip;</p>
                             <ul class="mega-menu-plain">
-                                <li><a href="shop.html?category=Components%20%26%20Storage">Desktop PC</a></li>
+                                <li><a href="pc-builder.php">Desktop PC (PC Builder)</a></li>
                                 <li><a href="shop.html?category=Computer%20Systems">Workstation</a></li>
                                 <li><a href="shop.html?category=Networking">Home Network</a></li>
                                 <li><a href="shop.html?category=Gaming%20%26%20VR">Game Room</a></li>
@@ -104,6 +110,7 @@ mysqli_close($conn);
                 </li>
                 <li><a href="index.php">Home</a></li>
                 <li><a href="shop.html">Shop</a></li>
+                <li><a href="pc-builder.php">PC Builder</a></li>
                 <li><a href="contact.html">Contact Us</a></li>
                 <li><a href="hotdeals.php">Hot Deals</a></li>
             </ul>
@@ -254,6 +261,8 @@ mysqli_close($conn);
             </div>
         </section>
 
+<?php productRow("bestRowTitle", "Best Sellers", "Shop all", "shop.html", $bestSellers); ?>
+
 <?php productRow("newRowTitle", "New Arrivals", "Shop all", "shop.html", $newArrivals); ?>
 
 <?php foreach ($picksByCategory as $category => $items): ?>
@@ -287,11 +296,11 @@ mysqli_close($conn);
         <section class="services" aria-labelledby="servicesTitle">
             <h2 id="servicesTitle" class="home-section-title">Not sure where to start? We'll help you build it.</h2>
             <div class="service-cards">
-                <a class="service-card" href="shop.html?category=Components%20%26%20Storage">
+                <a class="service-card" href="pc-builder.php">
                     <i class="fa-solid fa-computer"></i>
                     <h3>Build a Gaming PC</h3>
-                    <p>Pick a graphics card and processor that suit your games and budget, then add the parts around them.</p>
-                    <span>Shop components <i class="fa-solid fa-arrow-right"></i></span>
+                    <p>Pick a processor, motherboard, memory and graphics card, and our PC Builder checks that every part fits together.</p>
+                    <span>Open the PC Builder <i class="fa-solid fa-arrow-right"></i></span>
                 </a>
                 <a class="service-card" href="contact.html?subject=trade-in">
                     <i class="fa-solid fa-rotate"></i>
@@ -357,6 +366,7 @@ mysqli_close($conn);
                 <ul>
                     <li><a href="index.php">Home</a></li>
                     <li><a href="shop.html">Shop</a></li>
+                    <li><a href="pc-builder.php">PC Builder</a></li>
                     <li><a href="hotdeals.php">Hot Deals</a></li>
                     <li><a href="contact.html">Contact Us</a></li>
                 </ul>

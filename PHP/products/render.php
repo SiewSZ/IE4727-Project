@@ -34,6 +34,29 @@ function stars($rating)
     return $html;
 }
 
+// Best sellers: products ranked by units sold in orders that weren't cancelled.
+// Returns up to $limit product rows (with category, icon and a "sold" count), best first.
+const BESTSELLER_TOP = 5;   // the top 5 get a "Bestseller" tag
+
+function bestSellers($conn, $limit = BESTSELLER_TOP)
+{
+    $stmt = mysqli_prepare($conn,
+        "SELECT p.*, c.name AS category, c.icon, SUM(i.qty) AS sold
+         FROM order_items i
+         JOIN orders o USING (order_id)
+         JOIN products p ON p.product_id = i.product_id
+         JOIN categories c ON c.category_id = p.category_id
+         WHERE o.status <> 'Cancelled' AND p.is_active = 1
+         GROUP BY p.product_id
+         ORDER BY sold DESC, p.name
+         LIMIT ?");
+    mysqli_stmt_bind_param($stmt, "i", $limit);
+    mysqli_stmt_execute($stmt);
+    $rows = mysqli_fetch_all(mysqli_stmt_get_result($stmt), MYSQLI_ASSOC);
+    mysqli_stmt_close($stmt);
+    return $rows;
+}
+
 function productUrl($p)
 {
     return "product.php?id=" . (int) $p['product_id'];

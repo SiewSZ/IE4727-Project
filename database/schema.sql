@@ -104,6 +104,18 @@ CREATE TABLE IF NOT EXISTS reviews (
     UNIQUE KEY one_review_per_customer (product_id, user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- "Email me when it's back" requests on sold-out products (PHP/products/notify.php).
+-- When the product is restocked, everyone waiting is emailed and notified_at is filled in.
+CREATE TABLE IF NOT EXISTS stock_alerts (
+    alert_id    INT AUTO_INCREMENT PRIMARY KEY,
+    product_id  INT NOT NULL,
+    email       VARCHAR(100) NOT NULL,
+    created_at  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    notified_at DATETIME NULL,                      -- NULL = still waiting
+    CONSTRAINT fk_alerts_product FOREIGN KEY (product_id) REFERENCES products (product_id) ON DELETE CASCADE,
+    UNIQUE KEY one_alert_per_email (product_id, email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- Every order email (PHP/orders/mailer.php). Project rule: emails only go to our own local
 -- mailbox, so intended_for records which customer each one was really for.
 CREATE TABLE IF NOT EXISTS email_log (
@@ -118,6 +130,15 @@ CREATE TABLE IF NOT EXISTS email_log (
 
 -- Key features shown as bullet points on product.php: one feature per line
 ALTER TABLE products ADD COLUMN IF NOT EXISTS features TEXT NULL AFTER description;
+
+-- PC Builder (pc-builder.php): which slot a part fills and what it needs to be compatible.
+--   socket      CPU and motherboard socket (AM4, AM5)
+--   memory_type motherboard and memory generation (DDR4, DDR5)
+--   wattage     power a CPU or graphics card draws, or what a power supply delivers
+ALTER TABLE products ADD COLUMN IF NOT EXISTS part_type ENUM('cpu', 'motherboard', 'memory', 'gpu', 'psu', 'cooler', 'case', 'storage') NULL AFTER features;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS socket VARCHAR(10) NULL AFTER part_type;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS memory_type VARCHAR(10) NULL AFTER socket;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS wattage SMALLINT UNSIGNED NULL AFTER memory_type;
 
 -- Messages sent from the form on contact.html
 CREATE TABLE IF NOT EXISTS contact_messages (
@@ -429,6 +450,24 @@ UPDATE products SET features = '4K HDR with Dolby Vision and Dolby Atmos\nGoogle
 UPDATE products SET features = 'Adaptive noise cancellation\nUp to 60 hours of battery life\n42mm drivers tuned by Sennheiser\nCustomisable sound in the Smart Control app\nComfortable, foldable design' WHERE name = 'Sennheiser MOMENTUM 4 Wireless Special Edition' AND features IS NULL;
 UPDATE products SET features = 'Pack of 3 adapters\nType G plug, used in Singapore and the UK\nAccepts plugs from many other countries\nCompact for travel\nAdapter only: does not convert voltage' WHERE name = 'Ceptics UK Travel Plug Adapter (Type G) 3-Pack' AND features IS NULL;
 UPDATE products SET features = '20 AAA alkaline batteries\nLong-lasting power for everyday devices\nUp to 10 years in storage\nIdeal for remotes, mice and controllers\nRecyclable packaging' WHERE name = 'Duracell AAA Alkaline Batteries (20-Pack)' AND features IS NULL;
+
+-- PC Builder specs for the parts above (only filled in when still empty, so admin edits are kept)
+UPDATE products SET part_type = 'cpu', socket = 'AM5', memory_type = NULL, wattage = 120 WHERE name = 'AMD Ryzen 7 9800X3D Processor' AND part_type IS NULL;
+UPDATE products SET part_type = 'cpu', socket = 'AM5', memory_type = NULL, wattage = 170 WHERE name = 'AMD Ryzen 9 9950X3D Processor' AND part_type IS NULL;
+UPDATE products SET part_type = 'motherboard', socket = 'AM5', memory_type = 'DDR5', wattage = NULL WHERE name = 'ASUS TUF Gaming B650-PLUS Motherboard' AND part_type IS NULL;
+UPDATE products SET part_type = 'motherboard', socket = 'AM4', memory_type = 'DDR4', wattage = NULL WHERE name = 'Gigabyte B550 Eagle WIFI6 Motherboard' AND part_type IS NULL;
+UPDATE products SET part_type = 'motherboard', socket = 'AM4', memory_type = 'DDR4', wattage = NULL WHERE name = 'Gigabyte B550 Gaming X V2 Motherboard' AND part_type IS NULL;
+UPDATE products SET part_type = 'memory', socket = NULL, memory_type = 'DDR4', wattage = NULL WHERE name = 'Corsair Vengeance LPX 32GB (2x16GB) DDR4-3200' AND part_type IS NULL;
+UPDATE products SET part_type = 'memory', socket = NULL, memory_type = 'DDR5', wattage = NULL WHERE name = 'Crucial Pro 64GB (2x32GB) DDR5-6400 Kit' AND part_type IS NULL;
+UPDATE products SET part_type = 'memory', socket = NULL, memory_type = 'DDR5', wattage = NULL WHERE name = 'Lexar 16GB DDR5-5600 Desktop Memory' AND part_type IS NULL;
+UPDATE products SET part_type = 'gpu', socket = NULL, memory_type = NULL, wattage = 180 WHERE name = 'AMD Radeon RX 9060 XT' AND part_type IS NULL;
+UPDATE products SET part_type = 'gpu', socket = NULL, memory_type = NULL, wattage = 304 WHERE name = 'AMD Radeon RX 9070 XT' AND part_type IS NULL;
+UPDATE products SET part_type = 'gpu', socket = NULL, memory_type = NULL, wattage = 360 WHERE name = 'NVIDIA GeForce RTX 5080 Founders Edition' AND part_type IS NULL;
+UPDATE products SET part_type = 'psu', socket = NULL, memory_type = NULL, wattage = 850 WHERE name = 'Corsair RM850x Shift 850W Power Supply' AND part_type IS NULL;
+UPDATE products SET part_type = 'cooler', socket = NULL, memory_type = NULL, wattage = NULL WHERE name = 'ARCTIC Liquid Freezer III Pro 360 CPU Cooler' AND part_type IS NULL;
+UPDATE products SET part_type = 'case', socket = NULL, memory_type = NULL, wattage = NULL WHERE name = 'NZXT H5 Flow Mid-Tower Case' AND part_type IS NULL;
+UPDATE products SET part_type = 'storage', socket = NULL, memory_type = NULL, wattage = NULL WHERE name = 'WD Blue 1TB SATA SSD' AND part_type IS NULL;
+UPDATE products SET part_type = 'storage', socket = NULL, memory_type = NULL, wattage = NULL WHERE name = 'WD Blue 1TB 3.5" Hard Drive' AND part_type IS NULL;
 
 -- Make your own account an admin: register on login.html first, then run this in phpMyAdmin
 -- with your username. No page on the website can do this, so customers can never become admins.

@@ -56,6 +56,17 @@ try {
     respond(400, ["error" => $e->getMessage()]);
 }
 
+// Cancelling restocked these products: tell anyone waiting for them
+if ($status === 'Cancelled' && $order['status'] !== 'Cancelled') {
+    $stmt = mysqli_prepare($conn, "SELECT product_id FROM order_items WHERE order_id = ? AND product_id IS NOT NULL");
+    mysqli_stmt_bind_param($stmt, "i", $orderId);
+    mysqli_stmt_execute($stmt);
+    foreach (mysqli_fetch_all(mysqli_stmt_get_result($stmt)) as [$restockedId]) {
+        notifyBackInStock($conn, (int) $restockedId);
+    }
+    mysqli_stmt_close($stmt);
+}
+
 // Tell the customer, but only when the status really changed
 if ($status !== $order['status']) {
     $messages = [

@@ -460,6 +460,38 @@ Dark palette:
     color: #ffffff;
 }
 
+/* PC Builder */
+.dark-mode .slot,
+.dark-mode .builder-summary,
+.dark-mode .preset {
+    border-color: #24324a;
+    background: #111a2b;
+}
+
+.dark-mode .slot.filled {
+    border-color: #38bdf8;
+}
+
+.dark-mode .slot-body select {
+    border-color: #24324a;
+    background: #0b1120;
+    color: #e2e8f0;
+}
+
+.dark-mode .slot-thumb a,
+.dark-mode .build-numbers {
+    border-color: #24324a;
+}
+
+.dark-mode .add-build-btn {
+    background: #38bdf8;
+    color: #0a0e14;
+}
+
+.dark-mode .add-build-btn:hover {
+    background: #7dd3fc;
+}
+
 /* My Orders */
 .dark-mode .my-order,
 .dark-mode .orders-empty {
@@ -599,6 +631,16 @@ Dark palette:
 
 .dark-mode .pd-features h2 {
     border-bottom-color: #24324a;
+}
+
+.dark-mode .stock-alert input {
+    border-color: #24324a;
+    background: #0b1120;
+    color: #e2e8f0;
+}
+
+.dark-mode .stock-alert {
+    border-top-color: #24324a;
 }
 
 .dark-mode .pd-qty input {

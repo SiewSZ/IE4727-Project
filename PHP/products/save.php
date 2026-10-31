@@ -2,10 +2,12 @@
 // Adds a new product, or updates one when product_id is sent.
 // Expects POST (multipart form) fields from the admin product form:
 //   product_id (blank = new), name, brand, category_id, regular_price, sale_price (blank = not on sale),
-//   stock, description, features (one per line), is_active (checkbox), image (optional file)
+//   stock, description, features (one per line), part_type, socket, memory_type, wattage (PC Builder),
+//   is_active (checkbox), image (optional file)
 // Replies with JSON: {"ok": true, "id": <product_id>} or {"error": "..."}
 
 require_once __DIR__ . "/common.php";
+require_once __DIR__ . "/../orders/mailer.php";   // notifyBackInStock()
 requirePost();
 requireAdmin();
 
@@ -21,6 +23,11 @@ $description = trim($_POST['description'] ?? '');
 $features = implode("
 ", array_filter(array_map('trim', preg_split('/R/', $_POST['features'] ?? ''))));
 $isActive = isset($_POST['is_active']) ? 1 : 0;
+// PC Builder specs: all optional, blank means "doesn't apply"
+$partType = $_POST['part_type'] ?? '';
+$socket = $_POST['socket'] ?? '';
+$memoryType = $_POST['memory_type'] ?? '';
+$wattage = trim($_POST['wattage'] ?? '');
 
 // Check again on the server: browser validation can be bypassed
 if ($name === '' || strlen($name) > 150) {
@@ -34,6 +41,14 @@ if (!is_numeric($regularPrice) || $regularPrice < 0) {
 }
 if ($salePrice !== '' && (!is_numeric($salePrice) || $salePrice < 0 || $salePrice >= $regularPrice)) {
     respond(400, ["error" => "Sale price must be lower than the regular price, or left blank."]);
+}
+if (!in_array($partType, ['', 'cpu', 'motherboard', 'memory', 'gpu', 'psu', 'cooler', 'case', 'storage'], true)
+    || !in_array($socket, ['', 'AM4', 'AM5', 'LGA1700', 'LGA1851'], true)
+    || !in_array($memoryType, ['', 'DDR4', 'DDR5'], true)) {
+    respond(400, ["error" => "Please choose the PC Builder options from the lists."]);
+}
+if ($wattage !== '' && (!preg_match('/^\d+$/', $wattage) || $wattage < 1 || $wattage > 3000)) {
+    respond(400, ["error" => "Watts must be a whole number from 1 to 3000, or left blank."]);
 }
 if (!preg_match('/^\d+$/', (string) $stock)) {
     respond(400, ["error" => "Stock must be a whole number, 0 or more."]);
@@ -54,11 +69,15 @@ $price = $salePrice === '' ? $regularPrice : $salePrice;
 $oldPrice = $salePrice === '' ? null : $regularPrice;
 $description = $description === '' ? null : $description;
 $features = $features === '' ? null : $features;
+$partType = $partType === '' ? null : $partType;
+$socket = $socket === '' ? null : $socket;
+$memoryType = $memoryType === '' ? null : $memoryType;
+$wattage = $wattage === '' ? null : (int) $wattage;
 
 // When editing, look up the current image so it can be kept or replaced
 $currentImage = null;
 if ($productId > 0) {
-    $stmt = mysqli_prepare($conn, "SELECT image_path FROM products WHERE product_id = ?");
+    $stmt = mysqli_prepare($conn, "SELECT image_path, stock FROM products WHERE product_id = ?");
     mysqli_stmt_bind_param($stmt, "i", $productId);
     mysqli_stmt_execute($stmt);
     $row = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
@@ -67,6 +86,7 @@ if ($productId > 0) {
         respond(404, ["error" => "That product no longer exists."]);
     }
     $currentImage = $row['image_path'];
+    $oldStock = (int) $row['stock'];
 }
 
 // Optional image upload: only real images up to 2 MB, saved under a random name
@@ -97,16 +117,20 @@ try {
     if ($productId > 0) {
         $stmt = mysqli_prepare($conn,
             "UPDATE products SET name = ?, brand = ?, category_id = ?, price = ?, old_price = ?,
-                    stock = ?, description = ?, features = ?, image_path = ?, is_active = ?
+                    stock = ?, description = ?, features = ?, part_type = ?, socket = ?, memory_type = ?, wattage = ?,
+                    image_path = ?, is_active = ?
              WHERE product_id = ?");
-        mysqli_stmt_bind_param($stmt, "ssiddisssii",
-            $name, $brand, $categoryId, $price, $oldPrice, $stock, $description, $features, $imagePath, $isActive, $productId);
+        mysqli_stmt_bind_param($stmt, "ssiddisssssisii",
+            $name, $brand, $categoryId, $price, $oldPrice, $stock, $description, $features,
+            $partType, $socket, $memoryType, $wattage, $imagePath, $isActive, $productId);
     } else {
         $stmt = mysqli_prepare($conn,
-            "INSERT INTO products (name, brand, category_id, price, old_price, stock, description, features, image_path, is_active)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "ssiddisssi",
-            $name, $brand, $categoryId, $price, $oldPrice, $stock, $description, $features, $imagePath, $isActive);
+            "INSERT INTO products (name, brand, category_id, price, old_price, stock, description, features,
+                                   part_type, socket, memory_type, wattage, image_path, is_active)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, "ssiddisssssisi",
+            $name, $brand, $categoryId, $price, $oldPrice, $stock, $description, $features,
+            $partType, $socket, $memoryType, $wattage, $imagePath, $isActive);
     }
     mysqli_stmt_execute($stmt);
     $savedId = $productId > 0 ? $productId : mysqli_insert_id($conn);
@@ -125,6 +149,11 @@ try {
 // The new image replaced an old uploaded one, so the old file is no longer needed
 if ($imagePath !== $currentImage) {
     deleteUploadedImage($currentImage);
+}
+
+// Restocked from 0: email the customers who asked to be told
+if ($productId > 0 && $oldStock === 0 && (int) $stock > 0) {
+    notifyBackInStock($conn, $productId);
 }
 
 mysqli_close($conn);

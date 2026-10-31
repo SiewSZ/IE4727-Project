@@ -12,6 +12,16 @@ const LOW_STOCK = 5;   // same "low stock" level as the admin page
 refreshSessionUser($conn);
 $userId = (int) ($_SESSION['user_id'] ?? 0);
 
+// Signed-in customers get their email filled in on the "Email me when it's back" form
+$userEmail = "";
+if ($userId) {
+    $stmt = mysqli_prepare($conn, "SELECT email FROM users WHERE id = ?");
+    mysqli_stmt_bind_param($stmt, "i", $userId);
+    mysqli_stmt_execute($stmt);
+    $userEmail = mysqli_fetch_row(mysqli_stmt_get_result($stmt))[0] ?? "";
+    mysqli_stmt_close($stmt);
+}
+
 $id = (int) ($_GET['id'] ?? 0);
 
 // Hidden products (is_active = 0) are treated as not found, like in the shop
@@ -39,6 +49,14 @@ if ($product) {
     mysqli_stmt_execute($stmt);
     $related = mysqli_fetch_all(mysqli_stmt_get_result($stmt), MYSQLI_ASSOC);
     mysqli_stmt_close($stmt);
+
+    // Is it one of the top sellers? (rank 1 = best)
+    $bestsellerRank = 0;
+    foreach (bestSellers($conn) as $i => $seller) {
+        if ((int) $seller['product_id'] === $id) {
+            $bestsellerRank = $i + 1;
+        }
+    }
 
     // Customer reviews, newest first
     $stmt = mysqli_prepare($conn,
@@ -159,7 +177,7 @@ if ($product) {
                             </ul>
                             <p class="mega-menu-heading">Help me build&hellip;</p>
                             <ul class="mega-menu-plain">
-                                <li><a href="shop.html?category=Components%20%26%20Storage">Desktop PC</a></li>
+                                <li><a href="pc-builder.php">Desktop PC (PC Builder)</a></li>
                                 <li><a href="shop.html?category=Computer%20Systems">Workstation</a></li>
                                 <li><a href="shop.html?category=Networking">Home Network</a></li>
                                 <li><a href="shop.html?category=Gaming%20%26%20VR">Game Room</a></li>
@@ -183,6 +201,7 @@ if ($product) {
                 </li>
                 <li><a href="index.php">Home</a></li>
                 <li><a href="shop.html">Shop</a></li>
+                <li><a href="pc-builder.php">PC Builder</a></li>
                 <li><a href="contact.html">Contact Us</a></li>
                 <li><a href="hotdeals.php">Hot Deals</a></li>
             </ul>
@@ -205,7 +224,11 @@ if ($product) {
         </nav>
 
         <div class="pd-title">
-            <p class="pd-brand"><?= h($product['brand']) ?></p>
+            <p class="pd-brand"><?= h($product['brand']) ?>
+<?php if ($bestsellerRank): ?>
+                <span class="bestseller-tag"><i class="fa-solid fa-fire"></i> #<?= $bestsellerRank ?> Bestseller</span>
+<?php endif; ?>
+            </p>
             <h1><?= h($product['name']) ?></h1>
             <a class="pd-rating" href="#reviews">
                 <?= stars(round($averageRating)) ?>
@@ -235,7 +258,7 @@ if ($product) {
                 <p class="pd-category">Category: <a href="<?= h($categoryUrl) ?>"><?= h($product['category']) ?></a></p>
             </section>
 
-            <aside class="pd-buy" aria-label="Price and purchase">
+            <aside class="pd-buy" id="buy" aria-label="Price and purchase">
 <?php if ($onSale): ?>
                 <p class="pd-was"><s><?= money($product['old_price']) ?></s> <span><i class="fa-solid fa-tag"></i> You save <?= money($product['old_price'] - $product['price']) ?> (<?= percentOff($product) ?>%)</span></p>
 <?php endif; ?>
@@ -263,7 +286,20 @@ if ($product) {
                     </div>
                 </form>
 <?php else: ?>
-                <a href="contact.html" class="pd-secondary-btn">Ask when it's back in stock</a>
+                <!-- Back-in-stock alert (PHP/products/notify.php); the email goes out when an admin restocks -->
+<?php if (($_GET['alert'] ?? '') === 'saved'): ?>
+                <p class="stock-alert-done" role="status"><i class="fa-solid fa-bell"></i> Done! We'll email you as soon as it's back in stock.</p>
+<?php else: ?>
+                <form class="stock-alert" method="post" action="PHP/products/notify.php">
+                    <label for="alertEmail"><i class="fa-regular fa-bell"></i> Email me when it's back</label>
+                    <input type="hidden" name="product_id" value="<?= (int) $product['product_id'] ?>">
+                    <input type="email" id="alertEmail" name="email" value="<?= h($userEmail) ?>" placeholder="you@example.com" maxlength="100" required>
+<?php if (isset($_GET['alert_error'])): ?>
+                    <p class="stock-alert-error" role="alert">Please enter a valid email address.</p>
+<?php endif; ?>
+                    <button type="submit" class="pd-secondary-btn">Notify me</button>
+                </form>
+<?php endif; ?>
 <?php endif; ?>
 
                 <div class="pd-help">
@@ -406,6 +442,7 @@ if ($product) {
                 <ul>
                     <li><a href="index.php">Home</a></li>
                     <li><a href="shop.html">Shop</a></li>
+                    <li><a href="pc-builder.php">PC Builder</a></li>
                     <li><a href="hotdeals.php">Hot Deals</a></li>
                     <li><a href="contact.html">Contact Us</a></li>
                 </ul>
