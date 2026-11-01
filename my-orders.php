@@ -108,9 +108,9 @@ function formatDate($timestamp)
                             <p class="mega-menu-heading">Help me build&hellip;</p>
                             <ul class="mega-menu-plain">
                                 <li><a href="pc-builder.php">Desktop PC (PC Builder)</a></li>
-                                <li><a href="shop.html?category=Computer%20Systems">Workstation</a></li>
-                                <li><a href="shop.html?category=Networking">Home Network</a></li>
-                                <li><a href="shop.html?category=Gaming%20%26%20VR">Game Room</a></li>
+                                <li><a href="shop.php?category=Computer%20Systems">Workstation</a></li>
+                                <li><a href="shop.php?category=Networking">Home Network</a></li>
+                                <li><a href="shop.php?category=Gaming%20%26%20VR">Game Room</a></li>
                                 <li><a href="contact.html?subject=build">Server / NAS (ask us)</a></li>
                             </ul>
                         </div>
@@ -118,19 +118,19 @@ function formatDate($timestamp)
                             <p class="mega-menu-heading">All Products</p>
                             <!-- Same categories as the categories table in database/schema.sql -->
                             <ul>
-                                <li><a href="shop.html?category=Components%20%26%20Storage"><span><i class="fa-solid fa-memory"></i> Components &amp; Storage</span><i class="fa-solid fa-chevron-right"></i></a></li>
-                                <li><a href="shop.html?category=Computer%20Systems"><span><i class="fa-solid fa-desktop"></i> Computer Systems</span><i class="fa-solid fa-chevron-right"></i></a></li>
-                                <li><a href="shop.html?category=Computer%20Peripherals"><span><i class="fa-solid fa-computer-mouse"></i> Computer Peripherals</span><i class="fa-solid fa-chevron-right"></i></a></li>
-                                <li><a href="shop.html?category=Gaming%20%26%20VR"><span><i class="fa-solid fa-gamepad"></i> Gaming &amp; VR</span><i class="fa-solid fa-chevron-right"></i></a></li>
-                                <li><a href="shop.html?category=Networking"><span><i class="fa-solid fa-wifi"></i> Networking</span><i class="fa-solid fa-chevron-right"></i></a></li>
-                                <li><a href="shop.html?category=Electronics"><span><i class="fa-solid fa-headphones"></i> Electronics</span><i class="fa-solid fa-chevron-right"></i></a></li>
-                                <li><a href="shop.html"><span><i class="fa-solid fa-store"></i> Shop All</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.php?category=Components%20%26%20Storage"><span><i class="fa-solid fa-memory"></i> Components &amp; Storage</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.php?category=Computer%20Systems"><span><i class="fa-solid fa-desktop"></i> Computer Systems</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.php?category=Computer%20Peripherals"><span><i class="fa-solid fa-computer-mouse"></i> Computer Peripherals</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.php?category=Gaming%20%26%20VR"><span><i class="fa-solid fa-gamepad"></i> Gaming &amp; VR</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.php?category=Networking"><span><i class="fa-solid fa-wifi"></i> Networking</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.php?category=Electronics"><span><i class="fa-solid fa-headphones"></i> Electronics</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.php"><span><i class="fa-solid fa-store"></i> Shop All</span><i class="fa-solid fa-chevron-right"></i></a></li>
                             </ul>
                         </div>
                     </div>
                 </li>
                 <li><a href="index.php">Home</a></li>
-                <li><a href="shop.html">Shop</a></li>
+                <li><a href="shop.php">Shop</a></li>
                 <li><a href="hotdeals.php">Hot Deals</a></li>
                 <li><a href="pc-builder.php">PC Builder</a></li>
                 <li><a href="contact.html">Contact Us</a></li>
@@ -154,7 +154,7 @@ function formatDate($timestamp)
             <i class="fa-solid fa-cart-shopping"></i>
             <h2>No orders yet</h2>
             <p>When you place an order it will appear here, with its status and delivery details.</p>
-            <a href="shop.html" class="btn">Start shopping</a>
+            <a href="shop.php" class="btn">Start shopping</a>
         </section>
 <?php else: ?>
         <div class="orders-summary">
@@ -268,7 +268,7 @@ function formatDate($timestamp)
                 <h3>Quick Links</h3>
                 <ul>
                     <li><a href="index.php">Home</a></li>
-                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="shop.php">Shop</a></li>
                     <li><a href="hotdeals.php">Hot Deals</a></li>
                     <li><a href="pc-builder.php">PC Builder</a></li>
                     <li><a href="contact.html">Contact Us</a></li>
@@ -277,11 +277,11 @@ function formatDate($timestamp)
             <div class="footer-col">
                 <h3>Categories</h3>
                 <ul>
-                    <li><a href="shop.html?category=Components%20%26%20Storage">Components &amp; Storage</a></li>
-                    <li><a href="shop.html?category=Computer%20Systems">Computer Systems</a></li>
-                    <li><a href="shop.html?category=Computer%20Peripherals">Computer Peripherals</a></li>
-                    <li><a href="shop.html?category=Gaming%20%26%20VR">Gaming &amp; VR</a></li>
-                    <li><a href="shop.html?category=Networking">Networking</a></li>
+                    <li><a href="shop.php?category=Components%20%26%20Storage">Components &amp; Storage</a></li>
+                    <li><a href="shop.php?category=Computer%20Systems">Computer Systems</a></li>
+                    <li><a href="shop.php?category=Computer%20Peripherals">Computer Peripherals</a></li>
+                    <li><a href="shop.php?category=Gaming%20%26%20VR">Gaming &amp; VR</a></li>
+                    <li><a href="shop.php?category=Networking">Networking</a></li>
                 </ul>
             </div>
         </div>

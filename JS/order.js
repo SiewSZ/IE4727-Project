@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const renderCart = () => {
         itemsBox.innerHTML = cart.length
             ? cartHead + cart.map(cartItem).join("")
-            : `<p class="cart-empty">Your cart is empty. <a href="shop.html">Continue shopping</a></p>`;
+            : `<p class="cart-empty">Your cart is empty. <a href="shop.php">Continue shopping</a></p>`;
 
         // SubTotal uses the original price, Discount is the amount saved
         const subtotal = cart.reduce((sum, item) => sum + (item.oldPrice || item.price) * item.qty, 0);
@@ -170,7 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p>${result.itemCount} item${result.itemCount === 1 ? "" : "s"}, ${money(result.total)} in total, will be delivered to <strong>${esc(address.label)}</strong> (${esc(address.address)}).</p>
                 <div class="order-confirm-actions">
                     <a href="my-orders.php#order-${result.orderId}" class="order-confirm-btn">Track this order</a>
-                    <a href="shop.html" class="order-confirm-link">Continue shopping</a>
+                    <a href="shop.php" class="order-confirm-link">Continue shopping</a>
                 </div>
                 <p class="order-confirm-note">A confirmation email is on its way.</p>
             </div>`;

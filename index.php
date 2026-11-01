@@ -87,9 +87,9 @@ mysqli_close($conn);
                             <p class="mega-menu-heading">Help me build&hellip;</p>
                             <ul class="mega-menu-plain">
                                 <li><a href="pc-builder.php">Desktop PC (PC Builder)</a></li>
-                                <li><a href="shop.html?category=Computer%20Systems">Workstation</a></li>
-                                <li><a href="shop.html?category=Networking">Home Network</a></li>
-                                <li><a href="shop.html?category=Gaming%20%26%20VR">Game Room</a></li>
+                                <li><a href="shop.php?category=Computer%20Systems">Workstation</a></li>
+                                <li><a href="shop.php?category=Networking">Home Network</a></li>
+                                <li><a href="shop.php?category=Gaming%20%26%20VR">Game Room</a></li>
                                 <li><a href="contact.html?subject=build">Server / NAS (ask us)</a></li>
                             </ul>
                         </div>
@@ -97,19 +97,19 @@ mysqli_close($conn);
                             <p class="mega-menu-heading">All Products</p>
                             <!-- Same categories as the categories table in database/schema.sql -->
                             <ul>
-                                <li><a href="shop.html?category=Components%20%26%20Storage"><span><i class="fa-solid fa-memory"></i> Components &amp; Storage</span><i class="fa-solid fa-chevron-right"></i></a></li>
-                                <li><a href="shop.html?category=Computer%20Systems"><span><i class="fa-solid fa-desktop"></i> Computer Systems</span><i class="fa-solid fa-chevron-right"></i></a></li>
-                                <li><a href="shop.html?category=Computer%20Peripherals"><span><i class="fa-solid fa-computer-mouse"></i> Computer Peripherals</span><i class="fa-solid fa-chevron-right"></i></a></li>
-                                <li><a href="shop.html?category=Gaming%20%26%20VR"><span><i class="fa-solid fa-gamepad"></i> Gaming &amp; VR</span><i class="fa-solid fa-chevron-right"></i></a></li>
-                                <li><a href="shop.html?category=Networking"><span><i class="fa-solid fa-wifi"></i> Networking</span><i class="fa-solid fa-chevron-right"></i></a></li>
-                                <li><a href="shop.html?category=Electronics"><span><i class="fa-solid fa-headphones"></i> Electronics</span><i class="fa-solid fa-chevron-right"></i></a></li>
-                                <li><a href="shop.html"><span><i class="fa-solid fa-store"></i> Shop All</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.php?category=Components%20%26%20Storage"><span><i class="fa-solid fa-memory"></i> Components &amp; Storage</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.php?category=Computer%20Systems"><span><i class="fa-solid fa-desktop"></i> Computer Systems</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.php?category=Computer%20Peripherals"><span><i class="fa-solid fa-computer-mouse"></i> Computer Peripherals</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.php?category=Gaming%20%26%20VR"><span><i class="fa-solid fa-gamepad"></i> Gaming &amp; VR</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.php?category=Networking"><span><i class="fa-solid fa-wifi"></i> Networking</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.php?category=Electronics"><span><i class="fa-solid fa-headphones"></i> Electronics</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.php"><span><i class="fa-solid fa-store"></i> Shop All</span><i class="fa-solid fa-chevron-right"></i></a></li>
                             </ul>
                         </div>
                     </div>
                 </li>
                 <li><a href="index.php">Home</a></li>
-                <li><a href="shop.html">Shop</a></li>
+                <li><a href="shop.php">Shop</a></li>
                 <li><a href="hotdeals.php">Hot Deals</a></li>
                 <li><a href="pc-builder.php">PC Builder</a></li>
                 <li><a href="contact.html">Contact Us</a></li>
@@ -167,19 +167,19 @@ mysqli_close($conn);
                 <div class="category-panel">
                     <h3>Build Your Rig</h3>
                     <ul class="tile-grid">
-                        <li><a class="tile" href="shop.html?q=graphics%20card">
+                        <li><a class="tile" href="shop.php?q=graphics%20card">
                             <span class="tile-image"><img src="Images/products/Nvidia_RTX5080.svg" alt=""></span>
                             Graphics Cards
                         </a></li>
-                        <li><a class="tile" href="shop.html?q=processor">
+                        <li><a class="tile" href="shop.php?q=processor">
                             <span class="tile-image"><img src="Images/products/AMD_Ryzen-9-9950X3D.svg" alt=""></span>
                             Processors
                         </a></li>
-                        <li><a class="tile" href="shop.html?q=monitor">
+                        <li><a class="tile" href="shop.php?q=monitor">
                             <span class="tile-image"><img src="Images/products/Lenovo_24''-100hz-Monitor.svg" alt=""></span>
                             Monitors
                         </a></li>
-                        <li><a class="tile" href="shop.html?category=Components%20%26%20Storage">
+                        <li><a class="tile" href="shop.php?category=Components%20%26%20Storage">
                             <span class="tile-image tile-icon"><i class="fa-solid fa-memory"></i></span>
                             All Components
                         </a></li>
@@ -197,19 +197,19 @@ mysqli_close($conn);
                 <div class="category-panel">
                     <h3>Mobile &amp; Entertainment</h3>
                     <ul class="tile-grid">
-                        <li><a class="tile" href="shop.html?q=iphone">
+                        <li><a class="tile" href="shop.php?q=iphone">
                             <span class="tile-image"><img src="Images/products/Apple_iPhone-18-Pro.svg" alt=""></span>
                             Phones
                         </a></li>
-                        <li><a class="tile" href="shop.html?q=ipad">
+                        <li><a class="tile" href="shop.php?q=ipad">
                             <span class="tile-image"><img src="Images/products/Apple_iPad-11''.svg" alt=""></span>
                             Tablets
                         </a></li>
-                        <li><a class="tile" href="shop.html?q=tv">
+                        <li><a class="tile" href="shop.php?q=tv">
                             <span class="tile-image"><img src="Images/products/Sharp_55''-4K-TV.svg" alt=""></span>
                             TVs
                         </a></li>
-                        <li><a class="tile" href="shop.html?category=Electronics">
+                        <li><a class="tile" href="shop.php?category=Electronics">
                             <span class="tile-image tile-icon"><i class="fa-solid fa-headphones"></i></span>
                             All Electronics
                         </a></li>
@@ -219,19 +219,19 @@ mysqli_close($conn);
                 <div class="category-panel">
                     <h3>More to Explore</h3>
                     <ul class="tile-grid">
-                        <li><a class="tile" href="shop.html?category=Gaming%20%26%20VR">
+                        <li><a class="tile" href="shop.php?category=Gaming%20%26%20VR">
                             <span class="tile-image tile-icon"><i class="fa-solid fa-gamepad"></i></span>
                             Gaming &amp; VR
                         </a></li>
-                        <li><a class="tile" href="shop.html?category=Networking">
+                        <li><a class="tile" href="shop.php?category=Networking">
                             <span class="tile-image tile-icon"><i class="fa-solid fa-wifi"></i></span>
                             Networking
                         </a></li>
-                        <li><a class="tile" href="shop.html?category=Computer%20Systems">
+                        <li><a class="tile" href="shop.php?category=Computer%20Systems">
                             <span class="tile-image tile-icon"><i class="fa-solid fa-desktop"></i></span>
                             Computer Systems
                         </a></li>
-                        <li><a class="tile" href="shop.html?category=Computer%20Peripherals">
+                        <li><a class="tile" href="shop.php?category=Computer%20Peripherals">
                             <span class="tile-image tile-icon"><i class="fa-solid fa-keyboard"></i></span>
                             Peripherals
                         </a></li>
@@ -261,12 +261,12 @@ mysqli_close($conn);
             </div>
         </section>
 
-<?php productRow("bestRowTitle", "Best Sellers", "Shop all", "shop.html", $bestSellers); ?>
+<?php productRow("bestRowTitle", "Best Sellers", "Shop all", "shop.php", $bestSellers); ?>
 
-<?php productRow("newRowTitle", "New Arrivals", "Shop all", "shop.html", $newArrivals); ?>
+<?php productRow("newRowTitle", "New Arrivals", "Shop all", "shop.php", $newArrivals); ?>
 
 <?php foreach ($picksByCategory as $category => $items): ?>
-<?php productRow("picks-" . preg_replace('/[^a-z]+/', '-', strtolower($category)), "Top picks in $category", "See more", "shop.html?category=" . rawurlencode($category), array_slice($items, 0, 10)); ?>
+<?php productRow("picks-" . preg_replace('/[^a-z]+/', '-', strtolower($category)), "Top picks in $category", "See more", "shop.php?category=" . rawurlencode($category), array_slice($items, 0, 10)); ?>
 <?php endforeach; ?>
 
         <section class="guides" aria-labelledby="guidesTitle">
@@ -276,19 +276,19 @@ mysqli_close($conn);
                     <i class="fa-solid fa-microchip"></i>
                     <h3>Which graphics card do I need?</h3>
                     <p>For smooth 1080p gaming, a mainstream card like the RX 9060 XT is plenty. For high-refresh 1440p or 4K, step up to an RX 9070 XT or RTX 5080, and check that your power supply can handle it.</p>
-                    <a href="shop.html?q=graphics%20card">Compare graphics cards <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="shop.php?q=graphics%20card">Compare graphics cards <i class="fa-solid fa-arrow-right"></i></a>
                 </article>
                 <article class="guide-card">
                     <i class="fa-solid fa-memory"></i>
                     <h3>DDR4 or DDR5 memory?</h3>
                     <p>Your motherboard decides: AM4 boards (B550) take DDR4, while AM5 boards (B650) need DDR5. 32GB is the sweet spot for gaming today; go for 64GB if you edit video or run many apps at once.</p>
-                    <a href="shop.html?q=ddr">Shop memory <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="shop.php?q=ddr">Shop memory <i class="fa-solid fa-arrow-right"></i></a>
                 </article>
                 <article class="guide-card">
                     <i class="fa-solid fa-hard-drive"></i>
                     <h3>Do I need a NAS?</h3>
                     <p>A NAS keeps photos, files and backups in one place that every device at home can reach. A 2-bay model suits most homes; 4 bays give room to grow and protect against a drive failing.</p>
-                    <a href="shop.html?category=Computer%20Systems">See NAS options <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="shop.php?category=Computer%20Systems">See NAS options <i class="fa-solid fa-arrow-right"></i></a>
                 </article>
             </div>
         </section>
@@ -365,7 +365,7 @@ mysqli_close($conn);
                 <h3>Quick Links</h3>
                 <ul>
                     <li><a href="index.php">Home</a></li>
-                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="shop.php">Shop</a></li>
                     <li><a href="hotdeals.php">Hot Deals</a></li>
                     <li><a href="pc-builder.php">PC Builder</a></li>
                     <li><a href="contact.html">Contact Us</a></li>
@@ -374,11 +374,11 @@ mysqli_close($conn);
             <div class="footer-col">
                 <h3>Categories</h3>
                 <ul>
-                    <li><a href="shop.html?category=Components%20%26%20Storage">Components &amp; Storage</a></li>
-                    <li><a href="shop.html?category=Computer%20Systems">Computer Systems</a></li>
-                    <li><a href="shop.html?category=Computer%20Peripherals">Computer Peripherals</a></li>
-                    <li><a href="shop.html?category=Gaming%20%26%20VR">Gaming &amp; VR</a></li>
-                    <li><a href="shop.html?category=Networking">Networking</a></li>
+                    <li><a href="shop.php?category=Components%20%26%20Storage">Components &amp; Storage</a></li>
+                    <li><a href="shop.php?category=Computer%20Systems">Computer Systems</a></li>
+                    <li><a href="shop.php?category=Computer%20Peripherals">Computer Peripherals</a></li>
+                    <li><a href="shop.php?category=Gaming%20%26%20VR">Gaming &amp; VR</a></li>
+                    <li><a href="shop.php?category=Networking">Networking</a></li>
                 </ul>
             </div>
         </div>

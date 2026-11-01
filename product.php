@@ -93,7 +93,7 @@ if ($product) {
     $features = array_filter(array_map('trim', preg_split('/\R/', (string) $product['features'])));
     // Price split into dollars and cents so the cents can be drawn smaller
     [$dollars, $cents] = explode(".", number_format((float) $product['price'], 2, ".", ","));
-    $categoryUrl = "shop.html?category=" . rawurlencode($product['category']);
+    $categoryUrl = "shop.php?category=" . rawurlencode($product['category']);
 
     // Review summary: average and how many reviews gave each number of stars
     $reviewCount = count($reviews);
@@ -178,9 +178,9 @@ if ($product) {
                             <p class="mega-menu-heading">Help me build&hellip;</p>
                             <ul class="mega-menu-plain">
                                 <li><a href="pc-builder.php">Desktop PC (PC Builder)</a></li>
-                                <li><a href="shop.html?category=Computer%20Systems">Workstation</a></li>
-                                <li><a href="shop.html?category=Networking">Home Network</a></li>
-                                <li><a href="shop.html?category=Gaming%20%26%20VR">Game Room</a></li>
+                                <li><a href="shop.php?category=Computer%20Systems">Workstation</a></li>
+                                <li><a href="shop.php?category=Networking">Home Network</a></li>
+                                <li><a href="shop.php?category=Gaming%20%26%20VR">Game Room</a></li>
                                 <li><a href="contact.html?subject=build">Server / NAS (ask us)</a></li>
                             </ul>
                         </div>
@@ -188,19 +188,19 @@ if ($product) {
                             <p class="mega-menu-heading">All Products</p>
                             <!-- Same categories as the categories table in database/schema.sql -->
                             <ul>
-                                <li><a href="shop.html?category=Components%20%26%20Storage"><span><i class="fa-solid fa-memory"></i> Components &amp; Storage</span><i class="fa-solid fa-chevron-right"></i></a></li>
-                                <li><a href="shop.html?category=Computer%20Systems"><span><i class="fa-solid fa-desktop"></i> Computer Systems</span><i class="fa-solid fa-chevron-right"></i></a></li>
-                                <li><a href="shop.html?category=Computer%20Peripherals"><span><i class="fa-solid fa-computer-mouse"></i> Computer Peripherals</span><i class="fa-solid fa-chevron-right"></i></a></li>
-                                <li><a href="shop.html?category=Gaming%20%26%20VR"><span><i class="fa-solid fa-gamepad"></i> Gaming &amp; VR</span><i class="fa-solid fa-chevron-right"></i></a></li>
-                                <li><a href="shop.html?category=Networking"><span><i class="fa-solid fa-wifi"></i> Networking</span><i class="fa-solid fa-chevron-right"></i></a></li>
-                                <li><a href="shop.html?category=Electronics"><span><i class="fa-solid fa-headphones"></i> Electronics</span><i class="fa-solid fa-chevron-right"></i></a></li>
-                                <li><a href="shop.html"><span><i class="fa-solid fa-store"></i> Shop All</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.php?category=Components%20%26%20Storage"><span><i class="fa-solid fa-memory"></i> Components &amp; Storage</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.php?category=Computer%20Systems"><span><i class="fa-solid fa-desktop"></i> Computer Systems</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.php?category=Computer%20Peripherals"><span><i class="fa-solid fa-computer-mouse"></i> Computer Peripherals</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.php?category=Gaming%20%26%20VR"><span><i class="fa-solid fa-gamepad"></i> Gaming &amp; VR</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.php?category=Networking"><span><i class="fa-solid fa-wifi"></i> Networking</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.php?category=Electronics"><span><i class="fa-solid fa-headphones"></i> Electronics</span><i class="fa-solid fa-chevron-right"></i></a></li>
+                                <li><a href="shop.php"><span><i class="fa-solid fa-store"></i> Shop All</span><i class="fa-solid fa-chevron-right"></i></a></li>
                             </ul>
                         </div>
                     </div>
                 </li>
                 <li><a href="index.php">Home</a></li>
-                <li><a href="shop.html">Shop</a></li>
+                <li><a href="shop.php">Shop</a></li>
                 <li><a href="hotdeals.php">Hot Deals</a></li>
                 <li><a href="pc-builder.php">PC Builder</a></li>
                 <li><a href="contact.html">Contact Us</a></li>
@@ -213,12 +213,12 @@ if ($product) {
             <i class="fa-solid fa-box-open"></i>
             <h1>Product not found</h1>
             <p>This product may have been removed or is no longer sold. Have a look at what else is in stock.</p>
-            <a href="shop.html" class="btn">Browse the shop</a>
+            <a href="shop.php" class="btn">Browse the shop</a>
         </section>
 <?php else: ?>
         <nav class="breadcrumb" aria-label="Breadcrumb">
             <a href="index.php">Home</a> <i class="fa-solid fa-chevron-right"></i>
-            <a href="shop.html">Shop</a> <i class="fa-solid fa-chevron-right"></i>
+            <a href="shop.php">Shop</a> <i class="fa-solid fa-chevron-right"></i>
             <a href="<?= h($categoryUrl) ?>"><?= h($product['category']) ?></a> <i class="fa-solid fa-chevron-right"></i>
             <span aria-current="page"><?= h($product['name']) ?></span>
         </nav>
@@ -441,7 +441,7 @@ if ($product) {
                 <h3>Quick Links</h3>
                 <ul>
                     <li><a href="index.php">Home</a></li>
-                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="shop.php">Shop</a></li>
                     <li><a href="hotdeals.php">Hot Deals</a></li>
                     <li><a href="pc-builder.php">PC Builder</a></li>
                     <li><a href="contact.html">Contact Us</a></li>
@@ -450,11 +450,11 @@ if ($product) {
             <div class="footer-col">
                 <h3>Categories</h3>
                 <ul>
-                    <li><a href="shop.html?category=Components%20%26%20Storage">Components &amp; Storage</a></li>
-                    <li><a href="shop.html?category=Computer%20Systems">Computer Systems</a></li>
-                    <li><a href="shop.html?category=Computer%20Peripherals">Computer Peripherals</a></li>
-                    <li><a href="shop.html?category=Gaming%20%26%20VR">Gaming &amp; VR</a></li>
-                    <li><a href="shop.html?category=Networking">Networking</a></li>
+                    <li><a href="shop.php?category=Components%20%26%20Storage">Components &amp; Storage</a></li>
+                    <li><a href="shop.php?category=Computer%20Systems">Computer Systems</a></li>
+                    <li><a href="shop.php?category=Computer%20Peripherals">Computer Peripherals</a></li>
+                    <li><a href="shop.php?category=Gaming%20%26%20VR">Gaming &amp; VR</a></li>
+                    <li><a href="shop.php?category=Networking">Networking</a></li>
                 </ul>
             </div>
         </div>

@@ -25,7 +25,7 @@ Database settings are in `PHP/db_connect.php` (default XAMPP: user `root`, no pa
 | Page | File | What it does |
 |---|---|---|
 | Home | `index.php` | Carousel, category tiles, live product rows (Today's Deals, Best Sellers, New Arrivals, Top picks per category), buying guides |
-| Shop | `shop.html` | Every product with price, category and brand filters, sorting and search |
+| Shop | `shop.php` | Every product with price, category and brand filters, sorting and search |
 | Product details | `product.php?id=…` | Key features, price and stock, add to cart / buy now, bestseller rank, "email me when it's back" on sold-out items, specs table, customer reviews, related products |
 | PC Builder | `pc-builder.php` | Choose a part for each slot; PHP checks socket, memory type and power, then adds the whole build to the cart |
 | Hot Deals | `hotdeals.php` | Daily Shell Shocker with countdown, Almost Gone, Clearance with filters, Bundles, email sign-up |
@@ -74,7 +74,7 @@ These parts use JavaScript `fetch` with JSON replies, which goes beyond the Base
 ## Project structure
 
 ```
-index.php, shop.html, product.php, ...   pages
+index.php, shop.php, product.php, ...   pages
 CSS/        global.css (shared), one file per page, light.css / dark.css (themes)
 JS/         one file per page, plus session.js, menu.js, theme.js, products.js (shared)
 PHP/

@@ -1,8 +1,8 @@
 <?php
-// HTML helpers for pages built on the server (hotdeals.php, product.php).
-// The product card matches the one JS/products.js draws on shop.html, and both use CSS/shop.css.
+// HTML helpers for pages built on the server (shop.php, hotdeals.php, product.php, index.php).
+// The product cards use CSS/shop.css.
 // $p is a products row joined with its category: name, brand, price, old_price, stock,
-// image_path, rating, reviews, category, icon, product_id.
+// image_path, rating, reviews, category, icon, product_id (and optionally bestseller => true).
 
 // Database text goes into HTML, so escape it first
 function h($text)
@@ -81,7 +81,7 @@ function productCard($p)
 <?php endif; ?>
                     </a>
                     <div class="product-info">
-                        <p class="product-category"><?= h($p['category']) ?></p>
+                        <p class="product-category"><?= h($p['category']) ?><?= empty($p['bestseller']) ? "" : ' <span class="bestseller-tag"><i class="fa-solid fa-fire"></i> Bestseller</span>' ?></p>
                         <h3 class="product-name" title="<?= h($p['name']) ?>"><a href="<?= productUrl($p) ?>"><?= h($p['name']) ?></a></h3>
                         <div class="product-rating"><?= stars($p['rating']) ?><span><?= (int) $p['reviews'] ?> Reviews</span></div>
                         <p class="product-stock"><?= $inStock ? "In Stock <span>" . (int) $p['stock'] . "</span>" : '<span class="out">Out of Stock</span>' ?></p>

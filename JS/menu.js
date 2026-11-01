@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const goSearch = () => {
             const q = headerSearch.value.trim();
-            if (q) window.location.href = `shop.html?q=${encodeURIComponent(q)}`;
+            if (q) window.location.href = `shop.php?q=${encodeURIComponent(q)}`;
         };
 
         // Product text comes from the database, so escape it before putting it into HTML
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const matches = findMatches(await getProducts(), q);
             if (headerSearch.value.trim() !== q) return;   // the visitor kept typing while products loaded
 
-            const shopUrl = `shop.html?q=${encodeURIComponent(q)}`;
+            const shopUrl = `shop.php?q=${encodeURIComponent(q)}`;
             list.innerHTML = matches.length
                 ? matches.slice(0, MAX_SUGGESTIONS).map((p) => `
                     <a class="suggest-item" role="option" href="product.php?id=${p.id}">
@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <a class="suggest-all" role="option" href="${shopUrl}">
                         See all ${matches.length} result${matches.length === 1 ? "" : "s"} for "${esc(q)}" <i class="fa-solid fa-arrow-right"></i>
                     </a>`
-                : `<p class="suggest-empty">No products match "${esc(q)}". <a href="shop.html">Browse the shop</a></p>`;
+                : `<p class="suggest-empty">No products match "${esc(q)}". <a href="shop.php">Browse the shop</a></p>`;
             active = -1;
             placeList();
             list.hidden = false;

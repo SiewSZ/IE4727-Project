@@ -104,7 +104,7 @@ All tests passed. Test accounts and orders were deleted afterwards.
 | # | Test | Input data | Expected output | Method | Result |
 |---|---|---|---|---|---|
 | G1 | Search suggestions | Type "AMD" in the header search | 4 AMD products with pictures and prices, "See all 4 results" | Browser | Pass |
-| G2 | Menu category links | Open `shop.html?category=Gaming & VR` | That category ticked; 3 products shown | Browser | Pass |
+| G2 | Menu category links | Open `shop.php?category=Gaming & VR` | That category ticked; 3 products shown | Browser | Pass |
 | G3 | Missing product | `product.php?id=9999` | "Product not found" page with HTTP 404 | HTTP | Pass |
 | G4 | Hot Deals filters | `hotdeals.php?category=Components & Storage&sort=price-asc` | Only that category, cheapest first | HTTP | Pass |
 | G5 | Light / dark switch | Click the switch twice | Theme flips each time and is remembered on the next page | Browser | Pass |

@@ -17,7 +17,7 @@ function backToProduct($productId, $query)
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || $productId <= 0) {
-    header("Location: ../../shop.html");
+    header("Location: ../../shop.php");
     exit;
 }
 if (!csrfValid()) {

@@ -5,7 +5,7 @@ How the pages link together. The header (logo, search, Menu, Home, Shop, Contact
 ```mermaid
 flowchart TD
     Home["Home<br/>index.php"]
-    Shop["Shop<br/>shop.html"]
+    Shop["Shop<br/>shop.php"]
     Product["Product details<br/>product.php?id="]
     Deals["Hot Deals<br/>hotdeals.php"]
     Cart["Cart<br/>order.html"]
