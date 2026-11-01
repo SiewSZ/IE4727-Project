@@ -18,7 +18,7 @@ function sendOrderEmail($conn, $customerEmail, $subject, $body)
              . "\r\n\r\nQuantum Gear\r\n50 Nanyang Ave, Singapore | +65 6123 4567";
     $headers = "From: " . SHOP_FROM . "\r\nContent-Type: text/plain; charset=UTF-8";
 
-    // @ hides PHP's warning when no mail server is running, so the page's JSON reply stays valid
+    // @ hides PHP's warning when no mail server is running, so the redirect back to the page still works
     $sent = @mail(LOCAL_MAILBOX, $subject, $message, $headers) ? 1 : 0;
 
     $stmt = mysqli_prepare($conn,

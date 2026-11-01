@@ -385,7 +385,7 @@
     color: var(--muted-text);
 }
 
-/* "-15%" tag on products that have an old price (JS/products.js) */
+/* "-15%" tag on products that have an old price (PHP/products/render.php) */
 .sale-badge {
     position: absolute;
     z-index: 1;
@@ -500,10 +500,12 @@
     font-weight: 700;
 }
 
-.add-cart-btn {
-    align-self: flex-start;
-    /* Push the button to the bottom so buttons line up across a row */
+/* Push the Add to Cart form to the bottom so buttons line up across a row */
+.add-cart-form {
     margin-top: auto;
+}
+
+.add-cart-btn {
     padding: 0.5rem 1.1rem;
     border: none;
     border-radius: 30px;

@@ -1,27 +1,44 @@
 <?php
-// Shared helpers for the product endpoints.
-// Every endpoint answers with JSON so shop.js and admin.js can read the result.
+// Shared helpers for the form handlers in PHP/products, PHP/orders, PHP/users and PHP/shopping_cart.
+// Every handler is the action of a normal HTML form: it does its work, saves a message for the
+// page (setFlash in PHP/page.php) and redirects back, so the page shows the result after reloading.
 
 require_once __DIR__ . "/../db_connect.php";
-require_once __DIR__ . "/../users/auth.php";   // requireAdmin() for the endpoints that change products
+require_once __DIR__ . "/../users/auth.php";   // the session, csrfValid() and requireAdmin()
+require_once __DIR__ . "/../page.php";         // setFlash()
 
-// Send a JSON reply and stop
-function respond($status, $data)
+// Where to go back to: the page named in the form's "return" field, if it is one of this site's
+// pages (e.g. "shop.php?q=ssd#product-4"), otherwise $default. Never an address on another site.
+function returnPage($default)
 {
-    http_response_code($status);
-    header("Content-Type: application/json");
-    echo json_encode($data);
+    $page = $_POST['return'] ?? '';
+    return is_string($page) && preg_match('/^[a-z0-9-]+\.php([?#][^\s<>"]*)?$/i', $page) ? $page : $default;
+}
+
+// Show $message on the page (an error unless $type is "success") and stop.
+// Handlers live two folders down (PHP/<folder>/), so the pages are at ../../
+function goBack($page, $message = "", $type = "error", $linkUrl = "", $linkText = "")
+{
+    global $conn;
+    if ($message !== "") {
+        setFlash($message, $type, $linkUrl, $linkText);
+    }
+    if ($conn) {
+        mysqli_close($conn);
+        $conn = null;
+    }
+    header("Location: ../../" . $page);
     exit;
 }
 
 // Only accept POST for anything that changes the database, and only with the session's CSRF token
-function requirePost()
+function requirePost($page)
 {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        respond(405, ["error" => "Use POST for this request."]);
+        goBack($page);
     }
     if (!csrfValid()) {
-        respond(403, ["error" => "Your session has expired. Please refresh the page and try again."]);
+        goBack($page, "Your session has expired. Please try again.");
     }
 }
 

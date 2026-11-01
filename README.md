@@ -29,11 +29,11 @@ Database settings are in `PHP/db_connect.php` (default XAMPP: user `root`, no pa
 | Product details | `product.php?id=…` | Key features, price and stock, add to cart / buy now, bestseller rank, "email me when it's back" on sold-out items, specs table, customer reviews, related products |
 | PC Builder | `pc-builder.php` | Choose a part for each slot; PHP checks socket, memory type and power, then adds the whole build to the cart |
 | Hot Deals | `hotdeals.php` | Daily Shell Shocker with countdown, Almost Gone, Clearance with filters, Bundles, email sign-up |
-| Cart | `order.html` | Quantities, totals with discounts, delivery address, Place Order |
+| Cart | `order.php` | Quantities, totals with discounts, delivery address, Place Order |
 | My Orders | `my-orders.php` | A customer's orders with a status tracker, items table and totals |
-| Contact Us | `contact.html` | Contact form, store details, Terms & Conditions and Privacy Policy |
+| Contact Us | `contact.php` | Contact form, store details, Terms & Conditions and Privacy Policy |
 | Login / Register | `login.html` | Sign in and create an account |
-| Admin | `admin.html` | Inventory, sales, Orders, Users and Insights (admins only) |
+| Admin | `admin.php` | Inventory, sales, Orders, Users and Insights (admins only) |
 
 That is the home page plus 9 content pages (the guidelines allow 4 to 10). `PHP/cookies/cookiecounter.php` is a separate cookie demo from development and is not linked from the site.
 
@@ -50,21 +50,20 @@ That is the home page plus 9 content pages (the guidelines allow 4 to 10). `PHP/
 | External style sheet | `CSS/global.css` (shared) plus one file per page |
 | Form actions run PHP (no `mailto:`), no frames or iframes, no templates, no external links to social sites | All forms post to PHP scripts; layout and styles are our own |
 
-### Additional Version (modern enhancements)
+### No JSON or AJAX
 
-These parts use JavaScript `fetch` with JSON replies, which goes beyond the Base Version stack, and are presented as our enhancements:
+The Base Version uses no jQuery, JSON or AJAX. Every page is built by PHP, and every change is a normal HTML form posted to a PHP script, which redirects back with a message (`setFlash()` / `flashMessage()` in `PHP/page.php`):
 
-- **Shop filtering and search** (`JS/shop.js` → `PHP/products/list.php`): filters update instantly without reloading.
-- **Session cart** (`JS/session.js`, `JS/order.js` → `PHP/shopping_cart/cart.php`) and **Place Order** (`PHP/orders/place.php`).
-- **Header**: shows who is signed in and the cart count (`PHP/users/me.php`), and **live search suggestions** as you type (`JS/menu.js`).
-- **Admin dashboard** (`JS/admin.js`): products, sales, orders, users and insights charts without page reloads.
-- **Light / dark mode** switch (`JS/theme.js`, `CSS/light.css`, `CSS/dark.css`), remembered in the browser.
+- **Header** on every page: who is signed in, the cart count and the search box are drawn by PHP (`PHP/page.php`). Search suggestions come from a `<datalist>` of product names.
+- **Add to Cart**, cart quantities and **Buy Now** are forms posted to `PHP/shopping_cart/cart.php`; **Place Order** posts to `PHP/orders/place.php`.
+- **Admin dashboard** (`admin.php`): every tab, chart and the sales report is built by PHP; each button is a form posted to a handler in `PHP/products`, `PHP/orders` or `PHP/users`.
+- JavaScript only works inside the page: form validation, tabs, table filters, the carousel, the countdown and the **light / dark mode** switch (`JS/theme.js`, `CSS/light.css`, `CSS/dark.css`).
 
 ## Security
 
 - Passwords are stored with `password_hash()` and checked with `password_verify()`.
 - Every database query uses prepared statements (no SQL built from user input).
-- Everything shown from the database is escaped (`htmlspecialchars` in PHP, `esc()` in JS), so no HTML or script can be injected.
+- Everything shown from the database is escaped (`htmlspecialchars` in PHP), so no HTML or script can be injected.
 - Admin endpoints check the role **in the database** on every request (`requireAdmin()` in `PHP/users/auth.php`), so a demoted or deleted account loses access straight away.
 - Every change (admin actions, placing an order, reviews) needs the session's **CSRF token**, so other websites can't trigger them.
 - 5 wrong passwords in a row lock an account for 5 minutes.
@@ -76,14 +75,16 @@ These parts use JavaScript `fetch` with JSON replies, which goes beyond the Base
 ```
 index.php, shop.php, product.php, ...   pages
 CSS/        global.css (shared), one file per page, light.css / dark.css (themes)
-JS/         one file per page, plus session.js, menu.js, theme.js, products.js (shared)
+JS/         one file per page, plus menu.js and theme.js (shared)
 PHP/
   db_connect.php       database connection
+  page.php             the header on every page (sign-in, cart count, search) and messages after a form
   users/               sign in, register, sign out, session, admin user management
-  products/            product list, save, delete, sale, reviews, back-in-stock alerts, shared HTML helpers (render.php)
-  shopping_cart/       session cart, add a whole PC build (add_build.php)
-  orders/              place order, admin order list and status, emails (order and back-in-stock)
+  products/            save, delete, show/hide, sale, reviews, back-in-stock alerts, shared HTML helpers (render.php)
+  shopping_cart/       session cart (cart_items.php), cart changes (cart.php), add a whole PC build (add_build.php)
+  orders/              place order, order status, emails (order and back-in-stock)
   contact/             contact form and email sign-up
+  reports/             sales report for the admin page
 database/schema.sql    every table and the starting products
 docs/                  test cases and site map for the report
 ```

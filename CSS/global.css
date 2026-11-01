@@ -270,6 +270,13 @@ footer {
     width: 100%;
 }
 
+.search-box button {
+    display: flex;
+    padding: 0;
+    border: none;
+    background: none;
+}
+
 .search-box i {
     color: #38bdf8;
     font-size: 1.2em;
@@ -278,116 +285,67 @@ footer {
 }
 
 .search-box:hover i,
-.search-box input:focus + i {
+.search-box input:focus + button i {
     transform: translateX(-0.3em);
     color: #7dd3fc;
 }
 
-/* Search suggestions under the header search (JS/menu.js) */
-.search-suggest {
-    position: absolute;
-    z-index: 150;
-    width: min(420px, calc(100vw - 2rem));
-    max-height: 70vh;
-    overflow-y: auto;
-    padding: 0.4rem;
-    border: 1px solid #24324a;
-    border-radius: 12px;
-    background: #111a2b;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-    font-family: 'Inter', sans-serif;
-}
-
-.search-suggest[hidden] {
-    display: none;
-}
-
-.suggest-item {
+/* Message after a form is sent, e.g. "Added to your cart" (flashMessage() in PHP/page.php).
+   Fixed in the corner so it is seen wherever the page was scrolled to. */
+.flash {
+    position: fixed;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    z-index: 300;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.75rem;
-    padding: 0.5rem;
-    border-radius: 8px;
+    max-width: min(420px, calc(100vw - 2rem));
+    padding: 0.9rem 1rem;
+    border-left: 4px solid #4ade80;
+    border-radius: 10px;
+    background: #111a2b;
     color: #e2e8f0;
-    text-decoration: none;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    font-family: "Inter", sans-serif;
+    font-size: 0.9rem;
+    animation: flash-in 0.3s ease;
 }
 
-.suggest-item:hover,
-.suggest-item.active,
-.suggest-all:hover,
-.suggest-all.active {
-    background: #172236;
+.flash > i {
+    margin-top: 0.15rem;
+    color: #4ade80;
 }
 
-.suggest-image {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 3rem;
-    height: 3rem;
-    border-radius: 6px;
-    background: #ffffff;
-    overflow: hidden;
+.flash.error {
+    border-left-color: #f87171;
 }
 
-.suggest-image img {
-    width: 100%;
-    height: 100%;
-    padding: 0.2rem;
-    object-fit: contain;
+.flash.error > i {
+    color: #f87171;
 }
 
-.suggest-image i {
-    color: #64748b;
-}
-
-.suggest-text {
-    display: flex;
-    flex-direction: column;
+.flash p {
     flex: 1;
-    min-width: 0;
 }
 
-.suggest-name {
-    overflow: hidden;
-    font-size: 0.9rem;
+.flash a {
+    color: #38bdf8;
     font-weight: 600;
-    white-space: nowrap;
-    text-overflow: ellipsis;
 }
 
-.suggest-meta {
-    font-size: 0.75rem;
-    color: #94a3b8;
+.flash-close {
+    border: none;
+    background: none;
+    color: inherit;
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
 }
 
-.suggest-price {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #38bdf8;
-    white-space: nowrap;
-}
-
-.suggest-all {
-    display: block;
-    margin-top: 0.25rem;
-    padding: 0.65rem 0.5rem;
-    border-top: 1px solid #24324a;
-    border-radius: 0 0 8px 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #38bdf8;
-    text-decoration: none;
-}
-
-.suggest-empty {
-    padding: 0.75rem;
-    font-size: 0.9rem;
-    color: #cbd5e1;
-}
-
-.suggest-empty a {
-    color: #38bdf8;
+@keyframes flash-in {
+    from { opacity: 0; transform: translateY(1rem); }
+    to { opacity: 1; transform: none; }
 }
 
 /* Light / Dark Mode Slider (JS/theme.js; light mode colours in CSS/light.css)
@@ -511,7 +469,7 @@ a.btn {
     text-decoration: none;
 }
 
-/* Signed-in header built by JS/session.js: "Hi, name", Admin link and Logout button */
+/* Signed-in header built by userMenu() in PHP/page.php: "Hi, name", Admin link and Logout button */
 .user-menu {
     display: flex;
     align-items: center;
@@ -545,8 +503,6 @@ nav {
 }
 
 .nav-top{
-    /* The search suggestions list is placed against this bar (JS/menu.js) */
-    position: relative;
     padding: 1rem 5%;
     display: flex;
     align-items: center;

@@ -19,8 +19,8 @@ if (isset($_SESSION['user_id'])) {
     }
 }
 
-// CSRF protection: a random secret kept in the session. Pages get it from me.php (or PHP writes it
-// into a form) and send it back with every change. Another website can't read it, so it can't
+// CSRF protection: a random secret kept in the session. PHP writes it into each form that changes
+// something (csrfField() in PHP/page.php) and the form sends it back. Another website can't read it, so it can't
 // trick a signed-in admin's browser into deleting products or placing orders.
 function csrfToken()
 {
@@ -58,18 +58,17 @@ function refreshSessionUser($conn)
     }
 }
 
-// Page control: stop the request unless the signed-in user is an admin.
-// 401 = not signed in at all, 403 = signed in but not an admin.
-function requireAdmin()
+// Page control: unless the signed-in user is an admin, send them to the sign-in page instead.
+// $toRoot is the way from the running script up to the project folder: "" for admin.php,
+// "../../" (the default) for the form handlers in PHP/<folder>/.
+function requireAdmin($toRoot = "../../")
 {
     global $conn;
     if (isset($conn)) {
         refreshSessionUser($conn);
     }
     if (($_SESSION['role'] ?? '') !== 'admin') {
-        http_response_code(isset($_SESSION['user_id']) ? 403 : 401);
-        header("Content-Type: application/json");
-        echo json_encode(["error" => "Only admins can do this. Please sign in with an admin account."]);
+        header("Location: {$toRoot}login.html?login_error=admin");
         exit;
     }
 }

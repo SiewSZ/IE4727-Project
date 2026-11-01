@@ -2,17 +2,17 @@
 // Bulk sale from the admin page: puts every product in a category (or the whole shop) on sale
 // at the same percentage, or ends the sale when the percentage is 0.
 // Expects POST fields: category_id (0 = all products), percent (0 to 90)
-// Replies with JSON: {"ok": true, "updated": <number of products changed>} or {"error": "..."}
+// Then back to admin.php (Inventory tab) with the number of products changed
 
 require_once __DIR__ . "/common.php";
-requirePost();
+requirePost("admin.php?tab=inventory");
 requireAdmin();
 
 $categoryId = (int) ($_POST['category_id'] ?? 0);
 $percent = $_POST['percent'] ?? '';
 
 if (!preg_match('/^\d{1,2}$/', (string) $percent) || $percent > 90) {
-    respond(400, ["error" => "Discount must be a whole number from 0 to 90."]);
+    goBack("admin.php?tab=inventory", "Discount must be a whole number from 0 to 90.");
 }
 $percent = (int) $percent;
 
@@ -37,7 +37,6 @@ if ($percent === 0) {
 mysqli_stmt_execute($stmt);
 $updated = mysqli_stmt_affected_rows($stmt);
 mysqli_stmt_close($stmt);
-mysqli_close($conn);
 
-respond(200, ["ok" => true, "updated" => $updated]);
+goBack("admin.php?tab=inventory", "Done: $updated product" . ($updated === 1 ? "" : "s") . " updated.", "success");
 ?>

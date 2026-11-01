@@ -1,30 +1,41 @@
 <?php
-// Places an order from the session cart (the "Place Order" button on order.html).
-// Expects POST fields: address_label, address
+// Places an order from the session cart (the checkout form on order.php).
+// Expects POST fields: address (0 or 1 = a saved address in ADDRESSES, "new" = the typed one),
+//                      new_label, new_address (only for "new")
 // Everything happens in one transaction: check stock, save the order and its items, take the
 // items out of stock. If anything fails, nothing is saved and the cart is left as it was.
-// Replies with JSON: {"ok": true, "orderId": 12, "total": 996.00, "itemCount": 4} or {"error": "..."}
+// Success: back to order.php?placed=<order id>, which shows the confirmation
+// Failure: back to order.php with the reason (the cart is kept)
 
-require_once __DIR__ . "/../products/common.php";   // $conn, respond(), requirePost() and the session
+require_once __DIR__ . "/../products/common.php";   // $conn, goBack(), requirePost() and the session
 require_once __DIR__ . "/mailer.php";               // sendOrderEmail()
-requirePost();
+require_once __DIR__ . "/../shopping_cart/cart_items.php";   // ADDRESSES
+requirePost("order.php");
 
 if (empty($_SESSION['user_id'])) {
-    respond(401, ["error" => "Please sign in to place your order."]);
+    goBack("order.php", "Please sign in to place your order.", "error", "login.html", "Sign in");
 }
 
-$label = trim($_POST['address_label'] ?? '');
-$address = trim($_POST['address'] ?? '');
+// The two saved addresses, or one typed into the "New address" fields
+$choice = $_POST['address'] ?? '';
+if ($choice === 'new') {
+    $label = trim($_POST['new_label'] ?? '');
+    $address = trim($_POST['new_address'] ?? '');
+} elseif (is_string($choice) && isset(ADDRESSES[$choice])) {
+    [$label, $address] = ADDRESSES[$choice];
+} else {
+    $label = $address = '';
+}
 if ($label === '' || $address === '') {
-    respond(400, ["error" => "Please choose a delivery address."]);
+    goBack("order.php", "Please choose a delivery address, or fill in both new address fields.");
 }
 if (strlen($label) > 50 || strlen($address) > 255) {
-    respond(400, ["error" => "The delivery address is too long."]);
+    goBack("order.php", "The delivery address is too long.");
 }
 
 $cart = $_SESSION['cart'] ?? [];   // [product_id => quantity]
 if (!$cart) {
-    respond(400, ["error" => "Your cart is empty."]);
+    goBack("order.php", "Your cart is empty.");
 }
 
 // Name and email are copied onto the order
@@ -34,7 +45,7 @@ mysqli_stmt_execute($stmt);
 $customer = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
 mysqli_stmt_close($stmt);
 if (!$customer) {
-    respond(401, ["error" => "Please sign in again to place your order."]);
+    goBack("order.php", "Please sign in again to place your order.", "error", "login.html", "Sign in");
 }
 
 mysqli_begin_transaction($conn);
@@ -94,10 +105,10 @@ try {
     mysqli_commit($conn);
 } catch (RuntimeException $e) {
     mysqli_rollback($conn);
-    respond(409, ["error" => $e->getMessage()]);
+    goBack("order.php", $e->getMessage());
 } catch (mysqli_sql_exception $e) {
     mysqli_rollback($conn);
-    respond(500, ["error" => "Your order could not be placed. Please try again."]);
+    goBack("order.php", "Your order could not be placed. Please try again.");
 }
 
 // Only now that the order is saved is the cart emptied
@@ -113,7 +124,5 @@ sendOrderEmail($conn, $customer['email'], "Quantum Gear order #$orderId confirme
     . "\r\nTotal paid: $" . number_format($total, 2)
     . "\r\n\r\nDelivering to $label: $address"
     . "\r\n\r\nWe will email you whenever the status of your order changes. You can also follow it on the My Orders page.");
-mysqli_close($conn);
-
-respond(200, ["ok" => true, "orderId" => $orderId, "total" => round($total, 2), "itemCount" => array_sum($cart)]);
+goBack("order.php?placed=$orderId");
 ?>

@@ -1,19 +1,19 @@
 <?php
-// Handles the form on contact.html.
+// Handles the form on contact.php.
 // Expects POST fields: name, email, subject, message
-// Success: back to contact.html?sent=1
-// Failure: back to contact.html?error=<code>
+// Success: back to contact.php?sent=1
+// Failure: back to contact.php?error=<code>
 
 require_once __DIR__ . "/../db_connect.php";
 
 function backToContact($query)
 {
-    header("Location: ../../contact.html?" . $query);
+    header("Location: ../../contact.php?" . $query);
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: ../../contact.html");
+    header("Location: ../../contact.php");
     exit;
 }
 

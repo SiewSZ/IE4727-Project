@@ -1,15 +1,14 @@
 <?php
 // Product details page, built on the server: product.php?id=<product_id>
 // Every product card (shop, Hot Deals, related products below) links here.
-// Add to Cart / Buy Now use the same session cart as the shop (JS/product.js -> PHP/shopping_cart/cart.php).
+// Add to Cart / Buy Now is a form sent to PHP/shopping_cart/cart.php (the same session cart as the shop).
 
 require_once __DIR__ . "/PHP/db_connect.php";
-require_once __DIR__ . "/PHP/users/auth.php";        // the session, csrfToken() for the review form
+require_once __DIR__ . "/PHP/page.php";              // the session, header (cart, sign-in, search) and messages
 require_once __DIR__ . "/PHP/products/render.php";   // h(), money(), productCard() ...
 
 const LOW_STOCK = 5;   // same "low stock" level as the admin page
 
-refreshSessionUser($conn);
 $userId = (int) ($_SESSION['user_id'] ?? 0);
 
 // Signed-in customers get their email filled in on the "Email me when it's back" form
@@ -135,8 +134,6 @@ if ($product) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="JS/theme.js"></script>
     <script src="JS/menu.js" defer></script>
-    <script src="JS/session.js" defer></script>
-    <script src="JS/products.js" defer></script>
     <script src="JS/product.js" defer></script>
     <title><?= h($pageTitle) ?> | Quantum Gear</title>
 </head>
@@ -145,21 +142,18 @@ if ($product) {
         <nav>
             <div class="nav-top">
                 <img src="Images/logo.png" alt="Logo" class="logo">
-                <div class="search-box">
-                    <input type="text" placeholder="Search...">
-                    <i class="fa fa-search"></i>
-                </div>
+<?php searchBox(); ?>
                 <!-- Light / dark slider: the knob sits under the active mode's icon (JS/theme.js) -->
                 <button type="button" class="theme-toggle" id="themeToggle" role="switch" aria-checked="false" aria-label="Light mode">
                     <span class="theme-knob"></span>
                     <i class="fa-solid fa-sun" aria-hidden="true"></i>
                     <i class="fa-solid fa-moon" aria-hidden="true"></i>
                 </button>
-                <a href="order.html" class="cart-icon" aria-label="Cart">
+                <a href="order.php" class="cart-icon" aria-label="Cart">
                     <i class="fa-solid fa-cart-shopping"></i>
-                    <span class="cart-count">0</span>
+                    <span class="cart-count"><?= cartCount() ?></span>
                 </a>
-                <a href="login.html" class="btn" id="openLoginBtn">Login/Register</a>
+                <?php userMenu(); ?>
             </div>
             <div class="break"></div>
             <ul class="nav-links">
@@ -173,7 +167,7 @@ if ($product) {
                                 <li><a href="hotdeals.php#shell-shocker"><i class="fa-solid fa-bolt"></i> Shell Shocker</a></li>
                                 <li><a href="hotdeals.php#clearance"><i class="fa-solid fa-tags"></i> Clearance Deals</a></li>
                                 <li><a href="hotdeals.php#email-deals"><i class="fa-regular fa-envelope"></i> Email Deals</a></li>
-                                <li><a href="contact.html?subject=trade-in"><i class="fa-solid fa-rotate"></i> Trade In</a></li>
+                                <li><a href="contact.php?subject=trade-in"><i class="fa-solid fa-rotate"></i> Trade In</a></li>
                             </ul>
                             <p class="mega-menu-heading">Help me build&hellip;</p>
                             <ul class="mega-menu-plain">
@@ -181,7 +175,7 @@ if ($product) {
                                 <li><a href="shop.php?category=Computer%20Systems">Workstation</a></li>
                                 <li><a href="shop.php?category=Networking">Home Network</a></li>
                                 <li><a href="shop.php?category=Gaming%20%26%20VR">Game Room</a></li>
-                                <li><a href="contact.html?subject=build">Server / NAS (ask us)</a></li>
+                                <li><a href="contact.php?subject=build">Server / NAS (ask us)</a></li>
                             </ul>
                         </div>
                         <div class="mega-menu-col mega-menu-products">
@@ -203,10 +197,11 @@ if ($product) {
                 <li><a href="shop.php">Shop</a></li>
                 <li><a href="hotdeals.php">Hot Deals</a></li>
                 <li><a href="pc-builder.php">PC Builder</a></li>
-                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="contact.php">Contact Us</a></li>
             </ul>
         </nav>
     </header>
+<?php flashMessage(); ?>
     <main class="product-page">
 <?php if (!$product): ?>
         <section class="pd-missing">
@@ -274,15 +269,20 @@ if ($product) {
                 <p class="pd-note"><i class="fa-solid fa-truck-fast"></i> Delivered to any of your saved addresses</p>
 
 <?php if ($stock > 0): ?>
-                <form class="pd-cart-form" id="cartForm" novalidate>
+                <!-- Add to Cart comes back here; Buy Now (then=checkout) goes on to the cart -->
+                <form class="pd-cart-form" id="cartForm" method="post" action="PHP/shopping_cart/cart.php" novalidate>
+                    <input type="hidden" name="action" value="add">
+                    <input type="hidden" name="product_id" value="<?= (int) $product['product_id'] ?>">
+                    <?= returnField("product.php?id=" . (int) $product['product_id'] . "#buy") ?>
+
                     <div class="pd-qty">
                         <label for="qtyInput">Quantity</label>
                         <input type="number" id="qtyInput" name="qty" value="1" min="1" max="<?= $stock ?>" step="1" required>
                     </div>
                     <p class="pd-message" id="cartMessage" role="status"></p>
                     <div class="pd-actions">
-                        <button type="submit" class="pd-primary-btn" data-action="add"><i class="fa-solid fa-cart-shopping"></i> Add to Cart</button>
-                        <button type="submit" class="pd-secondary-btn" data-action="buy">Buy Now</button>
+                        <button type="submit" class="pd-primary-btn" name="then" value="stay"><i class="fa-solid fa-cart-shopping"></i> Add to Cart</button>
+                        <button type="submit" class="pd-secondary-btn" name="then" value="checkout">Buy Now</button>
                     </div>
                 </form>
 <?php else: ?>
@@ -304,7 +304,7 @@ if ($product) {
 
                 <div class="pd-help">
                     <i class="fa-solid fa-headset"></i>
-                    <p>Questions about this product? <a href="contact.html">Ask our team</a></p>
+                    <p>Questions about this product? <a href="contact.php">Ask our team</a></p>
                 </div>
             </aside>
         </div>
@@ -444,7 +444,7 @@ if ($product) {
                     <li><a href="shop.php">Shop</a></li>
                     <li><a href="hotdeals.php">Hot Deals</a></li>
                     <li><a href="pc-builder.php">PC Builder</a></li>
-                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="contact.php">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -461,8 +461,8 @@ if ($product) {
         <div class="footer-bottom">
             <p>&copy; 2026 Quantum Gear. All rights reserved.</p>
             <ul class="footer-legal">
-                <li><a href="contact.html#terms">Terms &amp; Conditions</a></li>
-                <li><a href="contact.html#privacy">Privacy Policy</a></li>
+                <li><a href="contact.php#terms">Terms &amp; Conditions</a></li>
+                <li><a href="contact.php#privacy">Privacy Policy</a></li>
             </ul>
         </div>
     </footer>

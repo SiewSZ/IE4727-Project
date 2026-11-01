@@ -1,98 +1,103 @@
 <?php
-// The shopping cart, kept in the PHP session so it follows the visitor from page to page
-// (guests too). Stored as $_SESSION['cart'] = [product_id => quantity].
-//   GET  cart.php                                -> the cart, with product details from the database
-//   POST cart.php action=add    product_id [qty] -> add to the cart (qty defaults to 1)
-//   POST cart.php action=update product_id qty   -> set the quantity
-//   POST cart.php action=remove product_id       -> take the product out
-// Every reply is JSON: {"items": [...], "count": <total quantity>} or {"error": "..."}
+// Changes the session cart (cart_items.php). The action of the Add to Cart forms on the product
+// cards, product page and Hot Deals bundles, and of the quantity / remove buttons on order.php.
+//   action=add    product_id [qty] -> add to the cart (qty defaults to 1)
+//   action=update product_id qty   -> set the quantity
+//   action=remove product_id       -> take the product out
+//   action=bundle product_ids[]    -> add one of each product
+// Then goes back to the page in the "return" field with a message, or to the cart
+// when then=checkout (the Buy Now button on product.php).
 
-require_once __DIR__ . "/../products/common.php";   // $conn, respond() and the session
+require_once __DIR__ . "/../products/common.php";   // $conn, goBack(), returnPage() and the session
+require_once __DIR__ . "/cart_items.php";           // loadCartProducts()
 
-// The active products with these ids, keyed by product_id
-function loadCartProducts($conn, array $ids)
-{
-    if (!$ids) {
-        return [];
-    }
-
-    $placeholders = implode(",", array_fill(0, count($ids), "?"));
-    $stmt = mysqli_prepare($conn,
-        "SELECT p.product_id, p.name, p.price, p.old_price, p.stock, p.image_path, c.name AS category, c.icon
-         FROM products p
-         JOIN categories c USING (category_id)
-         WHERE p.is_active = 1 AND p.product_id IN ($placeholders)");
-    mysqli_stmt_bind_param($stmt, str_repeat("i", count($ids)), ...$ids);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-
-    $products = [];
-    while ($row = mysqli_fetch_assoc($result)) {
-        $products[(int) $row['product_id']] = $row;
-    }
-    mysqli_stmt_close($stmt);
-    return $products;
+$back = returnPage("order.php");
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    goBack($back);
 }
 
 $cart = $_SESSION['cart'] ?? [];
+$action = $_POST['action'] ?? '';
+$productId = (int) ($_POST['product_id'] ?? 0);
+$qty = $_POST['qty'] ?? '1';
+$viewCart = ["order.php", "View cart"];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = $_POST['action'] ?? '';
-    $productId = (int) ($_POST['product_id'] ?? 0);
-    $qty = (int) ($_POST['qty'] ?? 1);
-
-    if ($action === 'remove') {
-        unset($cart[$productId]);
-    } elseif ($action === 'add' || $action === 'update') {
-        $product = loadCartProducts($conn, [$productId])[$productId] ?? null;
-        if (!$product) {
-            respond(404, ["error" => "Sorry, that product is no longer available."]);
-        }
-
-        // Check again on the server: never let the cart hold more than is in stock
-        $newQty = $action === 'add' ? ($cart[$productId] ?? 0) + max(1, $qty) : $qty;
-        $stock = (int) $product['stock'];
-        if ($newQty < 1) {
-            respond(400, ["error" => "Quantity must be at least 1."]);
-        }
-        if ($stock === 0) {
-            respond(409, ["error" => "Sorry, {$product['name']} is out of stock."]);
-        }
-        if ($newQty > $stock) {
-            respond(409, ["error" => "Sorry, only $stock of {$product['name']} left in stock."]);
-        }
-        $cart[$productId] = $newQty;
-    } else {
-        respond(400, ["error" => "Unknown cart action."]);
+// Check again on the server: never let the cart hold more than is in stock.
+// Returns an error message, or "" when the quantity is fine.
+function checkQuantity($product, $newQty)
+{
+    $stock = (int) $product['stock'];
+    if ($newQty < 1) {
+        return "Quantity must be at least 1.";
     }
+    if ($stock === 0) {
+        return "Sorry, {$product['name']} is out of stock.";
+    }
+    if ($newQty > $stock) {
+        return "Sorry, only $stock of {$product['name']} left in stock.";
+    }
+    return "";
 }
 
-// Build the reply from the database so names and prices are always current. Products deleted,
-// hidden or sold out since they were added are dropped, and quantities are capped at the stock left.
-$products = loadCartProducts($conn, array_keys($cart));
-$items = [];
-foreach ($cart as $id => $qty) {
-    $p = $products[$id] ?? null;
-    if (!$p || (int) $p['stock'] === 0) {
-        unset($cart[$id]);
-        continue;
-    }
-
-    $cart[$id] = min($qty, (int) $p['stock']);
-    $items[] = [
-        "id" => $id,
-        "name" => $p['name'],
-        "category" => $p['category'],
-        "icon" => $p['icon'],
-        "price" => (float) $p['price'],
-        "oldPrice" => $p['old_price'] === null ? 0 : (float) $p['old_price'],
-        "stock" => (int) $p['stock'],
-        "image" => $p['image_path'] ?? "",
-        "qty" => $cart[$id]
-    ];
+if ($action === 'remove') {
+    unset($cart[$productId]);
+    $_SESSION['cart'] = $cart;
+    goBack($back, "Item removed from your cart.", "success");
 }
 
-$_SESSION['cart'] = $cart;
-mysqli_close($conn);
-respond(200, ["items" => $items, "count" => array_sum($cart)]);
+if ($action === 'add' || $action === 'update') {
+    // A whole number of at least 1 (the quantity box on product.php can be typed into)
+    if (!preg_match('/^\d+$/', (string) $qty) || (int) $qty < 1) {
+        goBack($back, "Please enter a quantity of at least 1.");
+    }
+    $qty = (int) $qty;
+
+    $product = loadCartProducts($conn, [$productId])[$productId] ?? null;
+    if (!$product) {
+        goBack($back, "Sorry, that product is no longer available.");
+    }
+
+    $newQty = $action === 'add' ? ($cart[$productId] ?? 0) + $qty : $qty;
+    $error = checkQuantity($product, $newQty);
+    if ($error !== "") {
+        goBack($back, $error);
+    }
+
+    $cart[$productId] = $newQty;
+    $_SESSION['cart'] = $cart;
+
+    if ($action === 'update') {
+        goBack($back);   // the cart page itself shows the new quantity and totals
+    }
+    if (($_POST['then'] ?? '') === 'checkout') {
+        goBack("order.php");
+    }
+    goBack($back, "Added $qty × {$product['name']} to your cart.", "success", ...$viewCart);
+}
+
+if ($action === 'bundle') {
+    $ids = array_values(array_unique(array_filter(array_map('intval', (array) ($_POST['product_ids'] ?? [])))));
+    $products = loadCartProducts($conn, $ids);
+    $added = 0;
+    $problems = [];
+    foreach ($ids as $id) {
+        $product = $products[$id] ?? null;
+        $error = $product ? checkQuantity($product, ($cart[$id] ?? 0) + 1) : "One of the products is no longer available.";
+        if ($error !== "") {
+            $problems[] = $error;
+            continue;
+        }
+        $cart[$id] = ($cart[$id] ?? 0) + 1;
+        $added++;
+    }
+    $_SESSION['cart'] = $cart;
+
+    if (!$problems) {
+        goBack($back, "Added all $added items to your cart.", "success", ...$viewCart);
+    }
+    goBack($back, ($added ? "Added $added of " . count($ids) . " items. " : "") . implode(" ", $problems),
+        "error", ...$viewCart);
+}
+
+goBack($back, "Unknown cart action.");
 ?>

@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Menu links like contact.html?subject=trade-in pick the subject; PHP/contact/send.php
+    // Menu links like contact.php?subject=trade-in pick the subject; PHP/contact/send.php
     // redirects back here with ?sent=1 or ?error=<code>
     const params = new URLSearchParams(window.location.search);
 

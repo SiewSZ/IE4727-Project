@@ -160,7 +160,7 @@ ALTER TABLE products ADD COLUMN IF NOT EXISTS socket VARCHAR(10) NULL AFTER part
 ALTER TABLE products ADD COLUMN IF NOT EXISTS memory_type VARCHAR(10) NULL AFTER socket;
 ALTER TABLE products ADD COLUMN IF NOT EXISTS wattage SMALLINT UNSIGNED NULL AFTER memory_type;
 
--- Messages sent from the form on contact.html
+-- Messages sent from the form on contact.php
 CREATE TABLE IF NOT EXISTS contact_messages (
     message_id INT AUTO_INCREMENT PRIMARY KEY,
     name       VARCHAR(100) NOT NULL,

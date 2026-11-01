@@ -1,4 +1,6 @@
-document.addEventListener("DOMContentLoaded", async () => {
+// Home page carousel: PHP (index.php) draws one slide per image in Images/carousel/;
+// this file moves between them.
+document.addEventListener("DOMContentLoaded", () => {
     // Brand marquee: duplicate the logo list so the CSS animation loops seamlessly
     const brandTrack = document.querySelector("#brandMarquee .brand-track");
     if (brandTrack) {
@@ -12,27 +14,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!carousel) return;
 
     const track = carousel.querySelector(".carousel-track");
-
-    // Build one slide per image found in Images/carousel/ (listed by PHP/carousel.php)
-    try {
-        const res = await fetch("PHP/carousel.php");
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const { images } = await res.json();
-        images.forEach(({ src, alt }) => {
-            // The slide shows the whole image; a blurred copy (--bg) fills any empty space around it
-            const slide = document.createElement("div");
-            slide.className = "carousel-slide";
-            // Full URL: a relative url() inside a CSS variable would resolve from the CSS folder instead
-            slide.style.setProperty("--bg", `url("${new URL(src, document.baseURI).href}")`);
-            const img = document.createElement("img");
-            img.src = src;
-            img.alt = alt;
-            slide.appendChild(img);
-            track.appendChild(slide);
-        });
-    } catch (err) {
-        console.error("Could not load carousel images:", err);
-    }
 
     const slides = track.querySelectorAll(".carousel-slide");
     const controls = carousel.querySelector(".carousel-controls");

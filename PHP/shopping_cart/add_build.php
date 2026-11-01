@@ -5,6 +5,7 @@
 
 require_once __DIR__ . "/../db_connect.php";
 require_once __DIR__ . "/../users/auth.php";   // starts the session the cart lives in
+require_once __DIR__ . "/../page.php";         // setFlash()
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: ../../pc-builder.php");
@@ -34,5 +35,8 @@ if ($ids) {
 mysqli_close($conn);
 
 $_SESSION['cart'] = $cart;
-header("Location: ../../order.html?build_added=$added");
+setFlash($added > 0
+    ? "Your PC build is in the cart: $added part" . ($added === 1 ? "" : "s") . " added."
+    : "Those parts are already in your cart (or just sold out).", $added > 0 ? "success" : "error");
+header("Location: ../../order.php");
 exit;

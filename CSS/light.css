@@ -40,7 +40,7 @@ Kept dark in both modes: the carousel and the brand logo strip (several logos ar
 
 .light-mode .search-box i,
 .light-mode .search-box:hover i,
-.light-mode .search-box input:focus + i {
+.light-mode .search-box input:focus + button i {
     color: #0284c7;
 }
 
@@ -70,44 +70,11 @@ Kept dark in both modes: the carousel and the brand logo strip (several logos ar
     background: #075985;
 }
 
-/* Search suggestions */
-.light-mode .search-suggest {
-    border-color: #dbe7f3;
+/* Messages after a form is sent (PHP/page.php) */
+.light-mode .flash {
     background: #ffffff;
-    box-shadow: 0 15px 35px rgba(15, 23, 42, 0.15);
-}
-
-.light-mode .suggest-item {
     color: #0f172a;
-}
-
-.light-mode .suggest-item:hover,
-.light-mode .suggest-item.active,
-.light-mode .suggest-all:hover,
-.light-mode .suggest-all.active {
-    background: #f0f7ff;
-}
-
-.light-mode .suggest-image {
-    border: 1px solid #e2e8f0;
-}
-
-.light-mode .suggest-meta {
-    color: #64748b;
-}
-
-.light-mode .suggest-price,
-.light-mode .suggest-all,
-.light-mode .suggest-empty a {
-    color: #0369a1;
-}
-
-.light-mode .suggest-all {
-    border-top-color: #e2e8f0;
-}
-
-.light-mode .suggest-empty {
-    color: #475569;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
 }
 
 /* Slider: knob slides left under the sun */

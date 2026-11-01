@@ -4,9 +4,10 @@
 //   shop.php?q=<words>&category[]=<name>&brand[]=<name>&min=<price>&max=<price>&sort=<order>
 // The header search on every page and the category links in the menu arrive the same way
 // (shop.php?q=... and shop.php?category=...). JS/shop.js only applies a change straight away.
-// Add to Cart still goes through JS/products.js -> PHP/shopping_cart/cart.php.
+// Add to Cart is a form sent to PHP/shopping_cart/cart.php (addToCartForm() in PHP/products/render.php).
 
 require_once __DIR__ . "/PHP/db_connect.php";
+require_once __DIR__ . "/PHP/page.php";              // the session, header (cart, sign-in, search) and messages
 require_once __DIR__ . "/PHP/products/render.php";   // h(), productCard(), bestSellers()
 
 // Sort menu: value in the URL => [label, ORDER BY]. Only these strings ever reach the SQL.
@@ -123,8 +124,6 @@ $count = count($products);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="JS/theme.js"></script>
     <script src="JS/menu.js" defer></script>
-    <script src="JS/session.js" defer></script>
-    <script src="JS/products.js" defer></script>
     <script src="JS/shop.js" defer></script>
     <title>Shop | Quantum Gear</title>
 </head>
@@ -133,21 +132,18 @@ $count = count($products);
         <nav>
             <div class="nav-top">
                 <img src="Images/logo.png" alt="Logo" class="logo">
-                <div class="search-box">
-                    <input type="text" placeholder="Search...">
-                    <i class="fa fa-search"></i>
-                </div>
+<?php searchBox(); ?>
                 <!-- Light / dark slider: the knob sits under the active mode's icon (JS/theme.js) -->
                 <button type="button" class="theme-toggle" id="themeToggle" role="switch" aria-checked="false" aria-label="Light mode">
                     <span class="theme-knob"></span>
                     <i class="fa-solid fa-sun" aria-hidden="true"></i>
                     <i class="fa-solid fa-moon" aria-hidden="true"></i>
                 </button>
-                <a href="order.html" class="cart-icon" aria-label="Cart">
+                <a href="order.php" class="cart-icon" aria-label="Cart">
                     <i class="fa-solid fa-cart-shopping"></i>
-                    <span class="cart-count">0</span>
+                    <span class="cart-count"><?= cartCount() ?></span>
                 </a>
-                <a href="login.html" class="btn" id="openLoginBtn">Login/Register</a>
+                <?php userMenu(); ?>
             </div>
             <div class="break"></div>
             <ul class="nav-links">
@@ -161,7 +157,7 @@ $count = count($products);
                                 <li><a href="hotdeals.php#shell-shocker"><i class="fa-solid fa-bolt"></i> Shell Shocker</a></li>
                                 <li><a href="hotdeals.php#clearance"><i class="fa-solid fa-tags"></i> Clearance Deals</a></li>
                                 <li><a href="hotdeals.php#email-deals"><i class="fa-regular fa-envelope"></i> Email Deals</a></li>
-                                <li><a href="contact.html?subject=trade-in"><i class="fa-solid fa-rotate"></i> Trade In</a></li>
+                                <li><a href="contact.php?subject=trade-in"><i class="fa-solid fa-rotate"></i> Trade In</a></li>
                             </ul>
                             <p class="mega-menu-heading">Help me build&hellip;</p>
                             <ul class="mega-menu-plain">
@@ -169,7 +165,7 @@ $count = count($products);
                                 <li><a href="shop.php?category=Computer%20Systems">Workstation</a></li>
                                 <li><a href="shop.php?category=Networking">Home Network</a></li>
                                 <li><a href="shop.php?category=Gaming%20%26%20VR">Game Room</a></li>
-                                <li><a href="contact.html?subject=build">Server / NAS (ask us)</a></li>
+                                <li><a href="contact.php?subject=build">Server / NAS (ask us)</a></li>
                             </ul>
                         </div>
                         <div class="mega-menu-col mega-menu-products">
@@ -191,10 +187,11 @@ $count = count($products);
                 <li><a href="shop.php">Shop</a></li>
                 <li><a href="hotdeals.php">Hot Deals</a></li>
                 <li><a href="pc-builder.php">PC Builder</a></li>
-                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="contact.php">Contact Us</a></li>
             </ul>
         </nav>
     </header>
+<?php flashMessage(); ?>
     <main class="shop">
         <!-- The search box, sort menu and filters are spread over the page, so they join this
              form with form="shopForm" instead of sitting inside it -->
@@ -325,7 +322,7 @@ $count = count($products);
                     <li><a href="shop.php">Shop</a></li>
                     <li><a href="hotdeals.php">Hot Deals</a></li>
                     <li><a href="pc-builder.php">PC Builder</a></li>
-                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="contact.php">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -342,8 +339,8 @@ $count = count($products);
         <div class="footer-bottom">
             <p>&copy; 2026 Quantum Gear. All rights reserved.</p>
             <ul class="footer-legal">
-                <li><a href="contact.html#terms">Terms &amp; Conditions</a></li>
-                <li><a href="contact.html#privacy">Privacy Policy</a></li>
+                <li><a href="contact.php#terms">Terms &amp; Conditions</a></li>
+                <li><a href="contact.php#privacy">Privacy Policy</a></li>
             </ul>
         </div>
     </footer>

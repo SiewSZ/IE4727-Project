@@ -73,8 +73,10 @@
     margin-bottom: 1.25rem;
 }
 
+/* The tabs are links (admin.php?tab=...) */
 .admin-tab {
     display: flex;
+    text-decoration: none;
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.25rem;
@@ -153,9 +155,11 @@
     border-color: #38bdf8;
 }
 
+/* Also used on links: Add Product and Cancel */
 .admin-primary-btn,
 .admin-secondary-btn {
     display: inline-flex;
+    text-decoration: none;
     align-items: center;
     gap: 0.4rem;
     padding: 0.6rem 1.1rem;
@@ -370,9 +374,15 @@
 
 .admin-actions {
     text-align: right;
+    white-space: nowrap;
 }
 
-.admin-actions .icon-btn[data-action="delete"]:hover {
+/* Show/hide and delete are each a small form; keep them on one line with the edit link */
+.admin-actions form {
+    display: inline;
+}
+
+.admin-actions .delete-btn:hover {
     color: #b91c1c;
 }
 
@@ -398,7 +408,7 @@
     padding: 0.45rem 0.8rem;
 }
 
-/* Sales Report tab (built by JS/report.js) */
+/* Sales Report tab (built by admin.php) */
 .report-toolbar {
     align-items: flex-end;
 }
@@ -491,6 +501,36 @@
 
 .report-highlights span {
     color: #555;
+}
+
+/* "Show all" under a long highlight, e.g. every product with no sales */
+.highlight-more summary {
+    margin-top: 0.3rem;
+    font-weight: 600;
+    color: var(--accent-text);
+    cursor: pointer;
+}
+
+.highlight-more ul {
+    max-height: 12rem;
+    overflow-y: auto;
+    margin-top: 0.4rem;
+    padding-left: 1.1rem;
+    columns: 2;
+    column-gap: 1.5rem;
+}
+
+.report-highlights .highlight-more li {
+    display: list-item;
+    margin-bottom: 0.2rem;
+    font-size: 0.8rem;
+    break-inside: avoid;
+}
+
+@media (max-width: 600px) {
+    .highlight-more ul {
+        columns: 1;
+    }
 }
 
 .report-chart {

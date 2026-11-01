@@ -3,7 +3,9 @@
 // Each row is a horizontally scrolling list of small product cards (helpers in PHP/products/render.php).
 
 require_once __DIR__ . "/PHP/db_connect.php";
+require_once __DIR__ . "/PHP/page.php";              // the session, header (cart, sign-in, search) and messages
 require_once __DIR__ . "/PHP/products/render.php";   // productRow(), miniCard() ...
+require_once __DIR__ . "/PHP/carousel.php";          // carouselImages()
 
 $select = "SELECT p.*, c.name AS category, c.icon FROM products p JOIN categories c USING (category_id) WHERE p.is_active = 1";
 $fetch = fn($sql) => mysqli_fetch_all(mysqli_query($conn, $sql), MYSQLI_ASSOC);
@@ -29,6 +31,12 @@ foreach ($fetch("$select ORDER BY c.name, p.stock > 0 DESC, p.rating DESC, p.rev
 $picksByCategory = array_filter($picksByCategory, fn($items) => count($items) >= 3);
 
 mysqli_close($conn);
+
+// Carousel slides: every image in Images/carousel/. Each slide also shows a blurred copy of its image
+// (CSS --bg). A relative url() in a CSS variable would be read from the CSS folder, so give it the
+// image's full path on this server, e.g. /IE4727%20Project/Images/carousel/1_RTX5090.svg
+$slides = carouselImages();
+$siteFolder = implode("/", array_map("rawurlencode", explode("/", rtrim(dirname($_SERVER['SCRIPT_NAME']), "/\\"))));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,10 +51,8 @@ mysqli_close($conn);
     <script src="JS/theme.js"></script>
     <script src="JS/authRedirect.js"></script>
     <script src="JS/menu.js" defer></script>
-    <script src="JS/session.js" defer></script>
     <script src="JS/carousel.js" defer></script>
     <script src="JS/home.js" defer></script>
-    <script src="JS/backend.js" defer></script>
     <title>Quantum Gear | PC Parts &amp; Electronics</title>
 </head>
 <body>
@@ -54,21 +60,18 @@ mysqli_close($conn);
         <nav>
             <div class="nav-top">
                 <img src="Images/logo.png" alt="Logo" class="logo">
-                <div class="search-box">
-                    <input type="text" placeholder="Search...">
-                    <i class="fa fa-search"></i>
-                </div>
+<?php searchBox(); ?>
                 <!-- Light / dark slider: the knob sits under the active mode's icon (JS/theme.js) -->
                 <button type="button" class="theme-toggle" id="themeToggle" role="switch" aria-checked="false" aria-label="Light mode">
                     <span class="theme-knob"></span>
                     <i class="fa-solid fa-sun" aria-hidden="true"></i>
                     <i class="fa-solid fa-moon" aria-hidden="true"></i>
                 </button>
-                <a href="order.html" class="cart-icon" aria-label="Cart">
+                <a href="order.php" class="cart-icon" aria-label="Cart">
                     <i class="fa-solid fa-cart-shopping"></i>
-                    <span class="cart-count">0</span>
+                    <span class="cart-count"><?= cartCount() ?></span>
                 </a>
-                <a href="login.html" class="btn" id="openLoginBtn">Login/Register</a>
+                <?php userMenu(); ?>
             </div>
             <div class="break"></div>
             <ul class="nav-links">
@@ -82,7 +85,7 @@ mysqli_close($conn);
                                 <li><a href="hotdeals.php#shell-shocker"><i class="fa-solid fa-bolt"></i> Shell Shocker</a></li>
                                 <li><a href="hotdeals.php#clearance"><i class="fa-solid fa-tags"></i> Clearance Deals</a></li>
                                 <li><a href="hotdeals.php#email-deals"><i class="fa-regular fa-envelope"></i> Email Deals</a></li>
-                                <li><a href="contact.html?subject=trade-in"><i class="fa-solid fa-rotate"></i> Trade In</a></li>
+                                <li><a href="contact.php?subject=trade-in"><i class="fa-solid fa-rotate"></i> Trade In</a></li>
                             </ul>
                             <p class="mega-menu-heading">Help me build&hellip;</p>
                             <ul class="mega-menu-plain">
@@ -90,7 +93,7 @@ mysqli_close($conn);
                                 <li><a href="shop.php?category=Computer%20Systems">Workstation</a></li>
                                 <li><a href="shop.php?category=Networking">Home Network</a></li>
                                 <li><a href="shop.php?category=Gaming%20%26%20VR">Game Room</a></li>
-                                <li><a href="contact.html?subject=build">Server / NAS (ask us)</a></li>
+                                <li><a href="contact.php?subject=build">Server / NAS (ask us)</a></li>
                             </ul>
                         </div>
                         <div class="mega-menu-col mega-menu-products">
@@ -112,14 +115,20 @@ mysqli_close($conn);
                 <li><a href="shop.php">Shop</a></li>
                 <li><a href="hotdeals.php">Hot Deals</a></li>
                 <li><a href="pc-builder.php">PC Builder</a></li>
-                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="contact.php">Contact Us</a></li>
             </ul>
         </nav>
     </header>
+<?php flashMessage(); ?>
     <main>
         <section class="carousel" id="heroCarousel" aria-roledescription="carousel">
-            <!-- Slides are filled in by JS/carousel.js from the images in Images/carousel/ -->
+            <!-- One slide per image in Images/carousel/ (JS/carousel.js moves between them) -->
             <div class="carousel-track">
+<?php foreach ($slides as $slide): ?>
+                <div class="carousel-slide" style="--bg: url('<?= h("$siteFolder/{$slide['src']}") ?>')">
+                    <img src="<?= h($slide['src']) ?>" alt="<?= h($slide['alt']) ?>">
+                </div>
+<?php endforeach; ?>
             </div>
             <div class="carousel-controls">
                 <button class="carousel-btn" id="carouselPrev" aria-label="Previous slide"><i class="fa-solid fa-chevron-left"></i></button>
@@ -143,14 +152,14 @@ mysqli_close($conn);
                     <p>Official stock from the brands you trust</p>
                 </div>
             </div>
-            <a class="perk" href="contact.html?subject=trade-in">
+            <a class="perk" href="contact.php?subject=trade-in">
                 <i class="fa-solid fa-rotate"></i>
                 <div>
                     <h3>Trade in old tech</h3>
                     <p>Get a quote towards your next upgrade</p>
                 </div>
             </a>
-            <a class="perk" href="contact.html">
+            <a class="perk" href="contact.php">
                 <i class="fa-solid fa-headset"></i>
                 <div>
                     <h3>Real people, real help</h3>
@@ -302,13 +311,13 @@ mysqli_close($conn);
                     <p>Pick a processor, motherboard, memory and graphics card, and our PC Builder checks that every part fits together.</p>
                     <span>Open the PC Builder <i class="fa-solid fa-arrow-right"></i></span>
                 </a>
-                <a class="service-card" href="contact.html?subject=trade-in">
+                <a class="service-card" href="contact.php?subject=trade-in">
                     <i class="fa-solid fa-rotate"></i>
                     <h3>Trade In Your Old Tech</h3>
                     <p>Tell us the model and condition of your old device and we'll quote a value towards your upgrade.</p>
                     <span>Get a quote <i class="fa-solid fa-arrow-right"></i></span>
                 </a>
-                <a class="service-card" href="contact.html?subject=build">
+                <a class="service-card" href="contact.php?subject=build">
                     <i class="fa-solid fa-server"></i>
                     <h3>Servers &amp; NAS</h3>
                     <p>Need storage for a home lab or small office? Share what you need and we'll suggest a setup.</p>
@@ -368,7 +377,7 @@ mysqli_close($conn);
                     <li><a href="shop.php">Shop</a></li>
                     <li><a href="hotdeals.php">Hot Deals</a></li>
                     <li><a href="pc-builder.php">PC Builder</a></li>
-                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="contact.php">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -385,8 +394,8 @@ mysqli_close($conn);
         <div class="footer-bottom">
             <p>&copy; 2026 Quantum Gear. All rights reserved.</p>
             <ul class="footer-legal">
-                <li><a href="contact.html#terms">Terms &amp; Conditions</a></li>
-                <li><a href="contact.html#privacy">Privacy Policy</a></li>
+                <li><a href="contact.php#terms">Terms &amp; Conditions</a></li>
+                <li><a href="contact.php#privacy">Privacy Policy</a></li>
             </ul>
         </div>
     </footer>

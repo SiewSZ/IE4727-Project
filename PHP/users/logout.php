@@ -1,5 +1,5 @@
 <?php
-// Handles the Logout button that JS/session.js puts in the header of every page.
+// Handles the Logout button in the header of every page (userMenu() in PHP/page.php).
 // Ends the whole session (login and cart), then goes back to index.php.
 
 // Page control: only accept the button being pressed, not someone typing the URL directly

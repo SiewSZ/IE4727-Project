@@ -84,7 +84,4 @@ document.addEventListener("DOMContentLoaded", () => {
             remember(key, collapsed);
         });
     });
-
-    // Add to Cart on the product cards (bindProductButtons is in JS/products.js)
-    bindProductButtons(document.getElementById("productGrid"));
 });

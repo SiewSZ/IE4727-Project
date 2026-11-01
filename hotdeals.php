@@ -8,6 +8,7 @@
 // The Email Deals form posts to PHP/contact/subscribe.php, which redirects back with ?subscribed=1.
 
 require_once __DIR__ . "/PHP/db_connect.php";
+require_once __DIR__ . "/PHP/page.php";              // the session, header (cart, sign-in, search) and messages
 require_once __DIR__ . "/PHP/products/render.php";   // h(), money(), productCard(), productRow() ...
 
 const LOW_STOCK = 5;
@@ -125,8 +126,6 @@ $subscribeError = isset($_GET['subscribe_error']);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="JS/theme.js"></script>
     <script src="JS/menu.js" defer></script>
-    <script src="JS/session.js" defer></script>
-    <script src="JS/products.js" defer></script>
     <script src="JS/home.js" defer></script>
     <script src="JS/hotdeals.js" defer></script>
     <title>Hot Deals | Quantum Gear</title>
@@ -136,21 +135,18 @@ $subscribeError = isset($_GET['subscribe_error']);
         <nav>
             <div class="nav-top">
                 <img src="Images/logo.png" alt="Logo" class="logo">
-                <div class="search-box">
-                    <input type="text" placeholder="Search...">
-                    <i class="fa fa-search"></i>
-                </div>
+<?php searchBox(); ?>
                 <!-- Light / dark slider: the knob sits under the active mode's icon (JS/theme.js) -->
                 <button type="button" class="theme-toggle" id="themeToggle" role="switch" aria-checked="false" aria-label="Light mode">
                     <span class="theme-knob"></span>
                     <i class="fa-solid fa-sun" aria-hidden="true"></i>
                     <i class="fa-solid fa-moon" aria-hidden="true"></i>
                 </button>
-                <a href="order.html" class="cart-icon" aria-label="Cart">
+                <a href="order.php" class="cart-icon" aria-label="Cart">
                     <i class="fa-solid fa-cart-shopping"></i>
-                    <span class="cart-count">0</span>
+                    <span class="cart-count"><?= cartCount() ?></span>
                 </a>
-                <a href="login.html" class="btn" id="openLoginBtn">Login/Register</a>
+                <?php userMenu(); ?>
             </div>
             <div class="break"></div>
             <ul class="nav-links">
@@ -164,7 +160,7 @@ $subscribeError = isset($_GET['subscribe_error']);
                                 <li><a href="hotdeals.php#shell-shocker"><i class="fa-solid fa-bolt"></i> Shell Shocker</a></li>
                                 <li><a href="hotdeals.php#clearance"><i class="fa-solid fa-tags"></i> Clearance Deals</a></li>
                                 <li><a href="hotdeals.php#email-deals"><i class="fa-regular fa-envelope"></i> Email Deals</a></li>
-                                <li><a href="contact.html?subject=trade-in"><i class="fa-solid fa-rotate"></i> Trade In</a></li>
+                                <li><a href="contact.php?subject=trade-in"><i class="fa-solid fa-rotate"></i> Trade In</a></li>
                             </ul>
                             <p class="mega-menu-heading">Help me build&hellip;</p>
                             <ul class="mega-menu-plain">
@@ -172,7 +168,7 @@ $subscribeError = isset($_GET['subscribe_error']);
                                 <li><a href="shop.php?category=Computer%20Systems">Workstation</a></li>
                                 <li><a href="shop.php?category=Networking">Home Network</a></li>
                                 <li><a href="shop.php?category=Gaming%20%26%20VR">Game Room</a></li>
-                                <li><a href="contact.html?subject=build">Server / NAS (ask us)</a></li>
+                                <li><a href="contact.php?subject=build">Server / NAS (ask us)</a></li>
                             </ul>
                         </div>
                         <div class="mega-menu-col mega-menu-products">
@@ -194,10 +190,11 @@ $subscribeError = isset($_GET['subscribe_error']);
                 <li><a href="shop.php">Shop</a></li>
                 <li><a href="hotdeals.php">Hot Deals</a></li>
                 <li><a href="pc-builder.php">PC Builder</a></li>
-                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="contact.php">Contact Us</a></li>
             </ul>
         </nav>
     </header>
+<?php flashMessage(); ?>
     <main class="deals-page">
         <section class="page-hero">
             <img src="Images/Logo.png" alt="Quantum Gear logo" class="page-hero-logo">
@@ -227,7 +224,7 @@ $subscribeError = isset($_GET['subscribe_error']);
                         <s><?= money($shellShocker['old_price']) ?></s>
                     </p>
                     <p class="deal-saving"><i class="fa-solid fa-tag"></i> You save <?= money($shellShocker['old_price'] - $shellShocker['price']) ?> &middot; only <?= (int) $shellShocker['stock'] ?> left</p>
-                    <button class="add-cart-btn"><i class="fa-solid fa-cart-shopping"></i> Add to Cart</button>
+                    <?php addToCartForm($shellShocker); ?>
                 </div>
             </article>
 <?php else: ?>
@@ -285,8 +282,8 @@ if ($clearance) {
                 <p>Parts that work together, picked by our team</p>
             </div>
             <div class="bundle-cards">
-<?php foreach ($bundles as $bundle): ?>
-                <article class="bundle-card" data-ids="<?= h(implode(",", array_column($bundle['items'], 'product_id'))) ?>">
+<?php foreach ($bundles as $i => $bundle): ?>
+                <article class="bundle-card" id="bundle-<?= $i ?>">
                     <div class="bundle-head">
                         <i class="fa-solid <?= h($bundle['icon']) ?>"></i>
                         <div>
@@ -311,8 +308,16 @@ if ($clearance) {
                         <p class="deal-saving">Includes <?= money($bundle['saving']) ?> of today's deals</p>
 <?php endif; ?>
                     </div>
-                    <button type="button" class="add-bundle-btn"><i class="fa-solid fa-cart-plus"></i> Add bundle to cart</button>
-                    <p class="bundle-message" role="status"></p>
+                    <!-- Adds one of each product (PHP/shopping_cart/cart.php, action=bundle) -->
+                    <form method="post" action="PHP/shopping_cart/cart.php">
+                        <input type="hidden" name="action" value="bundle">
+<?php foreach ($bundle['items'] as $item): ?>
+                        <input type="hidden" name="product_ids[]" value="<?= (int) $item['product_id'] ?>">
+<?php endforeach; ?>
+                        <?= returnField("hotdeals.php#bundle-$i") ?>
+
+                        <button type="submit" class="add-bundle-btn"><i class="fa-solid fa-cart-plus"></i> Add bundle to cart</button>
+                    </form>
                 </article>
 <?php endforeach; ?>
             </div>
@@ -401,7 +406,7 @@ if ($clearance) {
                     <li><a href="shop.php">Shop</a></li>
                     <li><a href="hotdeals.php">Hot Deals</a></li>
                     <li><a href="pc-builder.php">PC Builder</a></li>
-                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="contact.php">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -418,8 +423,8 @@ if ($clearance) {
         <div class="footer-bottom">
             <p>&copy; 2026 Quantum Gear. All rights reserved.</p>
             <ul class="footer-legal">
-                <li><a href="contact.html#terms">Terms &amp; Conditions</a></li>
-                <li><a href="contact.html#privacy">Privacy Policy</a></li>
+                <li><a href="contact.php#terms">Terms &amp; Conditions</a></li>
+                <li><a href="contact.php#privacy">Privacy Policy</a></li>
             </ul>
         </div>
     </footer>

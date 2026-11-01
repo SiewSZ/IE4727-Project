@@ -3,11 +3,11 @@
 // Cancelling puts the items back in stock; a cancelled order can't be reopened
 // (the stock may already be sold again), so the customer would place a new order instead.
 // Expects POST fields: order_id, status
-// Replies with JSON: {"ok": true} or {"error": "..."}
+// Then back to admin.php (Orders tab), at the order's row
 
-require_once __DIR__ . "/../products/common.php";   // $conn, respond(), requirePost(), requireAdmin()
+require_once __DIR__ . "/../products/common.php";   // $conn, goBack(), requirePost(), requireAdmin()
 require_once __DIR__ . "/mailer.php";               // sendOrderEmail()
-requirePost();
+requirePost("admin.php?tab=orders");
 requireAdmin();
 
 const STATUSES = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
@@ -16,7 +16,7 @@ $orderId = (int) ($_POST['order_id'] ?? 0);
 $status = $_POST['status'] ?? '';
 
 if (!in_array($status, STATUSES, true)) {
-    respond(400, ["error" => "Please choose a valid status."]);
+    goBack("admin.php?tab=orders", "Please choose a valid status.");
 }
 
 mysqli_begin_transaction($conn);
@@ -53,7 +53,7 @@ try {
     mysqli_commit($conn);
 } catch (RuntimeException $e) {
     mysqli_rollback($conn);
-    respond(400, ["error" => $e->getMessage()]);
+    goBack("admin.php?tab=orders", $e->getMessage());
 }
 
 // Cancelling restocked these products: tell anyone waiting for them
@@ -81,6 +81,5 @@ if ($status !== $order['status']) {
         . "\r\n\r\nYou can follow your orders on the My Orders page.");
 }
 
-mysqli_close($conn);
-respond(200, ["ok" => true]);
+goBack("admin.php?tab=orders#order-$orderId", "Order #$orderId is now $status.", "success");
 ?>

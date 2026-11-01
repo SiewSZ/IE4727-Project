@@ -604,7 +604,7 @@ Dark palette:
     color: #cbd5e1;
 }
 
-/* Admin Sales Report (JS/report.js) */
+/* Admin Sales Report (admin.php) */
 .dark-mode .admin-toolbar input[type="date"] {
     border-color: #24324a;
     background: #0b1120;
@@ -615,6 +615,7 @@ Dark palette:
 .dark-mode .report-heading small,
 .dark-mode .report-change,
 .dark-mode .report-highlights span,
+.dark-mode .highlight-more li,
 .dark-mode .report-axis,
 .dark-mode .report-readout,
 .dark-mode .report-chart-max {

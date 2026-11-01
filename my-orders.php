@@ -4,10 +4,9 @@
 // Statuses are changed by admins on the Orders tab (PHP/orders/status.php), which also emails the customer.
 
 require_once __DIR__ . "/PHP/db_connect.php";
-require_once __DIR__ . "/PHP/users/auth.php";        // the session and refreshSessionUser()
+require_once __DIR__ . "/PHP/page.php";              // the session, header (cart, sign-in, search) and messages
 require_once __DIR__ . "/PHP/products/render.php";   // h(), money()
 
-refreshSessionUser($conn);   // signs out an account that has been deleted
 $signedIn = !empty($_SESSION['user_id']);
 
 $orders = [];
@@ -67,7 +66,6 @@ function formatDate($timestamp)
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="JS/theme.js"></script>
     <script src="JS/menu.js" defer></script>
-    <script src="JS/session.js" defer></script>
     <title>My Orders | Quantum Gear</title>
 </head>
 <body>
@@ -75,21 +73,18 @@ function formatDate($timestamp)
         <nav>
             <div class="nav-top">
                 <img src="Images/logo.png" alt="Logo" class="logo">
-                <div class="search-box">
-                    <input type="text" placeholder="Search...">
-                    <i class="fa fa-search"></i>
-                </div>
+<?php searchBox(); ?>
                 <!-- Light / dark slider: the knob sits under the active mode's icon (JS/theme.js) -->
                 <button type="button" class="theme-toggle" id="themeToggle" role="switch" aria-checked="false" aria-label="Light mode">
                     <span class="theme-knob"></span>
                     <i class="fa-solid fa-sun" aria-hidden="true"></i>
                     <i class="fa-solid fa-moon" aria-hidden="true"></i>
                 </button>
-                <a href="order.html" class="cart-icon" aria-label="Cart">
+                <a href="order.php" class="cart-icon" aria-label="Cart">
                     <i class="fa-solid fa-cart-shopping"></i>
-                    <span class="cart-count">0</span>
+                    <span class="cart-count"><?= cartCount() ?></span>
                 </a>
-                <a href="login.html" class="btn" id="openLoginBtn">Login/Register</a>
+                <?php userMenu(); ?>
             </div>
             <div class="break"></div>
             <ul class="nav-links">
@@ -103,7 +98,7 @@ function formatDate($timestamp)
                                 <li><a href="hotdeals.php#shell-shocker"><i class="fa-solid fa-bolt"></i> Shell Shocker</a></li>
                                 <li><a href="hotdeals.php#clearance"><i class="fa-solid fa-tags"></i> Clearance Deals</a></li>
                                 <li><a href="hotdeals.php#email-deals"><i class="fa-regular fa-envelope"></i> Email Deals</a></li>
-                                <li><a href="contact.html?subject=trade-in"><i class="fa-solid fa-rotate"></i> Trade In</a></li>
+                                <li><a href="contact.php?subject=trade-in"><i class="fa-solid fa-rotate"></i> Trade In</a></li>
                             </ul>
                             <p class="mega-menu-heading">Help me build&hellip;</p>
                             <ul class="mega-menu-plain">
@@ -111,7 +106,7 @@ function formatDate($timestamp)
                                 <li><a href="shop.php?category=Computer%20Systems">Workstation</a></li>
                                 <li><a href="shop.php?category=Networking">Home Network</a></li>
                                 <li><a href="shop.php?category=Gaming%20%26%20VR">Game Room</a></li>
-                                <li><a href="contact.html?subject=build">Server / NAS (ask us)</a></li>
+                                <li><a href="contact.php?subject=build">Server / NAS (ask us)</a></li>
                             </ul>
                         </div>
                         <div class="mega-menu-col mega-menu-products">
@@ -133,10 +128,11 @@ function formatDate($timestamp)
                 <li><a href="shop.php">Shop</a></li>
                 <li><a href="hotdeals.php">Hot Deals</a></li>
                 <li><a href="pc-builder.php">PC Builder</a></li>
-                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="contact.php">Contact Us</a></li>
             </ul>
         </nav>
     </header>
+<?php flashMessage(); ?>
     <main class="orders-page">
         <div class="orders-title">
             <h1><i class="fa-solid fa-box-open"></i> My Orders</h1>
@@ -177,7 +173,7 @@ function formatDate($timestamp)
             </div>
 
 <?php if ($order['status'] === 'Cancelled'): ?>
-            <p class="order-cancelled"><i class="fa-solid fa-circle-xmark"></i> This order was cancelled and you were not charged. Questions? <a href="contact.html?subject=order">Contact us</a></p>
+            <p class="order-cancelled"><i class="fa-solid fa-circle-xmark"></i> This order was cancelled and you were not charged. Questions? <a href="contact.php?subject=order">Contact us</a></p>
 <?php else: ?>
             <ol class="order-steps" aria-label="Order progress">
 <?php foreach (array_values(ORDER_STEPS) as $i => [$icon, $label]): ?>
@@ -271,7 +267,7 @@ function formatDate($timestamp)
                     <li><a href="shop.php">Shop</a></li>
                     <li><a href="hotdeals.php">Hot Deals</a></li>
                     <li><a href="pc-builder.php">PC Builder</a></li>
-                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="contact.php">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -288,8 +284,8 @@ function formatDate($timestamp)
         <div class="footer-bottom">
             <p>&copy; 2026 Quantum Gear. All rights reserved.</p>
             <ul class="footer-legal">
-                <li><a href="contact.html#terms">Terms &amp; Conditions</a></li>
-                <li><a href="contact.html#privacy">Privacy Policy</a></li>
+                <li><a href="contact.php#terms">Terms &amp; Conditions</a></li>
+                <li><a href="contact.php#privacy">Privacy Policy</a></li>
             </ul>
         </div>
     </footer>

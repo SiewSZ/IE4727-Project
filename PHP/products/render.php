@@ -4,10 +4,12 @@
 // $p is a products row joined with its category: name, brand, price, old_price, stock,
 // image_path, rating, reviews, category, icon, product_id (and optionally bestseller => true).
 
-// Database text goes into HTML, so escape it first
-function h($text)
-{
-    return htmlspecialchars((string) $text, ENT_QUOTES);
+// Database text goes into HTML, so escape it first (also defined in PHP/page.php)
+if (!function_exists('h')) {
+    function h($text)
+    {
+        return htmlspecialchars((string) $text, ENT_QUOTES);
+    }
 }
 
 function money($amount)
@@ -69,11 +71,29 @@ function productImage($p)
         : '<i class="fa-solid ' . h($p['icon'] ?: "fa-box") . '"></i>';
 }
 
+// Add to Cart: a form sent to PHP/shopping_cart/cart.php, which puts the product in the session
+// cart and comes back to this card (#product-<id>) with a message. Needs PHP/page.php.
+function addToCartForm($p, $inStock = true)
+{
+    $id = (int) $p['product_id'];
+    ?>
+<form class="add-cart-form" method="post" action="PHP/shopping_cart/cart.php">
+                            <input type="hidden" name="action" value="add">
+                            <input type="hidden" name="product_id" value="<?= $id ?>">
+                            <?= returnField(currentPage() . "#product-$id") ?>
+
+                            <button type="submit" class="add-cart-btn" <?= $inStock ? "" : "disabled" ?>>
+                                <i class="fa-solid fa-cart-shopping"></i> Add to Cart
+                            </button>
+                        </form>
+<?php
+}
+
 function productCard($p)
 {
     $inStock = $p['stock'] > 0;
     ?>
-                <article class="product-card" data-id="<?= (int) $p['product_id'] ?>">
+                <article class="product-card" id="product-<?= (int) $p['product_id'] ?>">
                     <a class="product-image<?= $p['image_path'] ? "" : " no-image" ?>" href="<?= productUrl($p) ?>">
                         <?= productImage($p) ?>
 <?php if (isOnSale($p)): ?>
@@ -89,9 +109,7 @@ function productCard($p)
 <?php if (isOnSale($p)): ?>
                         <p class="deal-saving"><i class="fa-solid fa-tag"></i> You save <?= money($p['old_price'] - $p['price']) ?></p>
 <?php endif; ?>
-                        <button class="add-cart-btn" <?= $inStock ? "" : "disabled" ?>>
-                            <i class="fa-solid fa-cart-shopping"></i> Add to Cart
-                        </button>
+                        <?php addToCartForm($p, $inStock); ?>
                     </div>
                 </article>
 <?php

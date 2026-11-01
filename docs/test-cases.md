@@ -16,10 +16,10 @@ All tests passed. Test accounts and orders were deleted afterwards.
 | A2 | Sign in with a wrong password | Correct username, wrong password | "Incorrect username/email or password." | HTTP | Pass |
 | A3 | Lock after repeated wrong passwords | 5 wrong passwords in a row | 5th attempt: "account is locked for 5 minutes"; correct password still refused while locked | HTTP + Database | Pass |
 | A4 | Unlock after the lock expires | Correct password after the lock time | Signed in; failed count reset to 0 | HTTP + Database | Pass |
-| A5 | Admin endpoints refuse other users | Request the order list / delete a product while signed out, or as a customer | "Only admins can do this." | HTTP | Pass |
-| A6 | Requests without the CSRF token are refused | Admin action and Place Order with no token, then a wrong token | "Your session has expired. Please refresh the page and try again." | HTTP | Pass |
-| A7 | Requests with the CSRF token work | Same admin action with the token from `me.php` | Action succeeds | HTTP + Browser (admin page buttons) | Pass |
-| A8 | Password hashes never leave the server | Load the admin Users list | Reply contains no password data | HTTP | Pass |
+| A5 | Admin pages refuse other users | Open `admin.php` / delete a product while signed out, or as a customer | Sent to the sign-in page: "Please sign in with an admin account to open the admin page." | HTTP | Pass |
+| A6 | Requests without the CSRF token are refused | Admin action and Place Order with no token, then a wrong token | "Your session has expired. Please try again." | HTTP | Pass |
+| A7 | Requests with the CSRF token work | Same admin action with the token PHP wrote into the form | Action succeeds | HTTP + Browser (admin page buttons) | Pass |
+| A8 | Password hashes never leave the server | Load the admin Users tab | Page contains no password data | HTTP | Pass |
 
 ## Admin: users
 
@@ -103,7 +103,7 @@ All tests passed. Test accounts and orders were deleted afterwards.
 
 | # | Test | Input data | Expected output | Method | Result |
 |---|---|---|---|---|---|
-| G1 | Search suggestions | Type "AMD" in the header search | 4 AMD products with pictures and prices, "See all 4 results" | Browser | Pass |
+| G1 | Header search | Type "AMD" in the header search (product names are suggested while typing), press Enter | `shop.php?q=AMD` lists the AMD products | HTTP + Browser | Pass |
 | G2 | Menu category links | Open `shop.php?category=Gaming & VR` | That category ticked; 3 products shown | Browser | Pass |
 | G3 | Missing product | `product.php?id=9999` | "Product not found" page with HTTP 404 | HTTP | Pass |
 | G4 | Hot Deals filters | `hotdeals.php?category=Components & Storage&sort=price-asc` | Only that category, cheapest first | HTTP | Pass |

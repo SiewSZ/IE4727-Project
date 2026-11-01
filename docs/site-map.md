@@ -8,11 +8,11 @@ flowchart TD
     Shop["Shop<br/>shop.php"]
     Product["Product details<br/>product.php?id="]
     Deals["Hot Deals<br/>hotdeals.php"]
-    Cart["Cart<br/>order.html"]
+    Cart["Cart<br/>order.php"]
     Orders["My Orders<br/>my-orders.php"]
-    Contact["Contact Us + Terms & Privacy<br/>contact.html"]
+    Contact["Contact Us + Terms & Privacy<br/>contact.php"]
     Login["Login / Register<br/>login.html"]
-    Admin["Admin<br/>admin.html"]
+    Admin["Admin<br/>admin.php"]
     Builder["PC Builder<br/>pc-builder.php"]
 
     Home -->|category tiles, product rows, search| Shop
